@@ -1,0 +1,28 @@
+services:
+  elearning:
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bin/dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgresql:
+        condition: service_started
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+  postgresql:
+    image: postgres:18
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: pg_isready -U postgres -h postgresql
+      interval: 5s
+volumes:
+  db_data:
+  bundle_cache:
