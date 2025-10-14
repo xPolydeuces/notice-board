@@ -45,6 +45,9 @@ gem "view_component"
 # Dry family
 gem "dry-initializer" # A simple way to create initializer methods
 
+# Lograge for 1 line logging
+gem "lograge"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
