@@ -39,5 +39,8 @@ module Elearning
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Use SQL instead of Ruby to dump the database schema
+    config.active_record.schema_format = :sql
   end
 end
