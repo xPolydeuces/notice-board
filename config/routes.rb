@@ -16,4 +16,7 @@ Rails.application.routes.draw do
 
   # Sidekiq web interface
   mount Sidekiq::Web => "/sidekiq"
+
+  # Devise routes for user authentication
+  devise_for :users
 end
