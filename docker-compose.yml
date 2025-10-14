@@ -23,6 +23,13 @@ services:
     healthcheck:
       test: pg_isready -U postgres -h postgresql
       interval: 5s
+  dragonfly:
+    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    ulimits:
+      memlock: -1
+    volumes:
+      - dragonflydata:/data
 volumes:
   db_data:
   bundle_cache:
+  dragonflydata:
