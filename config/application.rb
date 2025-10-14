@@ -19,6 +19,7 @@ require "action_view/railtie"
 Bundler.require(*Rails.groups)
 
 module Elearning
+  # Modern eLearning platform
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
