@@ -16,4 +16,7 @@ bundle exec database_consistency
 echo "[ bin/ci ] Linting Ruby code for consistency."
 bundle exec rubocop
 
+echo "[ bin/ci ] Running tests"
+bin/rails rspec
+
 echo "[ bin/ci ] Done"
