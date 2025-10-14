@@ -48,6 +48,12 @@ gem "dry-initializer" # A simple way to create initializer methods
 # Lograge for 1 line logging
 gem "lograge"
 
+# Interactor for business logic
+gem "interactor-rails"
+
+# Haml for HTML templates
+gem "haml-rails"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
@@ -78,8 +84,8 @@ group :development, :test do
   # Capybara for feature and system tests
   gem "capybara"
 
-  # Interactor for business logic
-  gem "interactor-rails"
+  # HTML to Haml converter
+  gem "html2haml"
 end
 
 group :development do
