@@ -60,6 +60,7 @@ group :development, :test do
 
   # Rubocop for code style
   gem "rubocop", require: false
+  gem "rubocop-capybara", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
@@ -70,6 +71,9 @@ group :development, :test do
 
   # Rspec as testing framework
   gem "rspec-rails"
+
+  # Capybara for feature and system tests
+  gem "capybara"
 end
 
 group :development do

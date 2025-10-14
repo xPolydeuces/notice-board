@@ -17,6 +17,6 @@ echo "[ bin/ci ] Linting Ruby code for consistency."
 bundle exec rubocop
 
 echo "[ bin/ci ] Running tests"
-bin/rails rspec
+bundle exec rspec
 
 echo "[ bin/ci ] Done"

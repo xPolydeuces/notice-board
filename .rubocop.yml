@@ -3,6 +3,7 @@ plugins:
   - rubocop-performance
   - rubocop-rspec
   - rubocop-rspec_rails
+  - rubocop-capybara
 
 AllCops:
   TargetRailsVersion: 8.0
