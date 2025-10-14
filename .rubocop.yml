@@ -1,4 +1,8 @@
-plugins: rubocop-rails
+plugins:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
+  - rubocop-rspec_rails
 
 AllCops:
   TargetRailsVersion: 8.0

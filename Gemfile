@@ -60,10 +60,16 @@ group :development, :test do
 
   # Rubocop for code style
   gem "rubocop", require: false
+  gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
+  gem "rubocop-rspec", require: false
+  gem "rubocop-rspec_rails", require: false
 
   # Avoid various issues due to inconsistencies and inefficiencies between a database schema and application models
   gem "database_consistency", require: false
+
+  # Rspec as testing framework
+  gem "rspec-rails"
 end
 
 group :development do
