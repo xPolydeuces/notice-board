@@ -74,6 +74,9 @@ group :development, :test do
 
   # Capybara for feature and system tests
   gem "capybara"
+
+  # Interactor for business logic
+  gem "interactor-rails"
 end
 
 group :development do

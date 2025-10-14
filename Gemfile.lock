@@ -134,6 +134,11 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    interactor (3.2.0)
+      ostruct
+    interactor-rails (2.3.0)
+      interactor (~> 3.0)
+      railties (>= 7.0)
     io-console (0.8.1)
     irb (1.15.2)
       pp (>= 0.6.0)
@@ -415,6 +420,7 @@ DEPENDENCIES
   devise
   dotenv-rails
   dry-initializer
+  interactor-rails
   jsbundling-rails
   kamal
   pg
