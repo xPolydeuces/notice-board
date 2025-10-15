@@ -44,7 +44,7 @@ Rails.application.configure do
   config.active_job.verbose_enqueue_logs = true
 
   # Raises error for missing translations.
-  # config.i18n.raise_on_missing_translations = true
+  config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
   config.action_view.annotate_rendered_view_with_filenames = true
@@ -59,6 +59,9 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { address: "127.0.0.1", port: 1025 }
   config.action_mailer.raise_delivery_errors = false
+
+  # Replace the default in-process and non-durable queuing backend for Active Job.
+  config.active_job.queue_adapter = :sidekiq
 
   # Enable Prosopite to find N+1 queries
   config.after_initialize do
