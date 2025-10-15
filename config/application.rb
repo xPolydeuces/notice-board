@@ -42,5 +42,10 @@ module Elearning
 
     # Use SQL instead of Ruby to dump the database schema
     config.active_record.schema_format = :sql
+
+    # Use Polish as the default locale
+    config.i18n.default_locale = :pl
+
+    config.i18n.available_locales = %i[pl en]
   end
 end
