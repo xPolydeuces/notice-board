@@ -15,7 +15,8 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   # Sidekiq web interface
-  mount Sidekiq::Web => "/sidekiq"
+  mount Sidekiq::Web, at: "sidekiq"
+  mount PgHero::Engine, at: "pghero"
 
   # Devise routes for user authentication
   devise_for :users
