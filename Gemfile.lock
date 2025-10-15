@@ -267,6 +267,8 @@ GEM
     pg (1.6.2-x86_64-linux-musl)
     pg_query (6.1.0)
       google-protobuf (>= 3.25.3)
+    pghero (3.7.0)
+      activerecord (>= 7.1)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -506,6 +508,7 @@ DEPENDENCIES
   lograge
   pg
   pg_query
+  pghero
   propshaft
   prosopite
   puma

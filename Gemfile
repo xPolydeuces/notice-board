@@ -65,6 +65,9 @@ gem "rails-i18n"
 gem "pg_query"
 gem "prosopite"
 
+# PGHero for database monitoring
+gem "pghero"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
