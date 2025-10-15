@@ -86,6 +86,9 @@ group :development, :test do
   # Avoid various issues due to inconsistencies and inefficiencies between a database schema and application models
   gem "database_consistency", require: false
 
+  # Detect inconsistencies between a database schema and application models
+  gem "active_record_doctor"
+
   # Rspec as testing framework
   gem "rspec-rails"
 

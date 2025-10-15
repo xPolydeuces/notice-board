@@ -60,6 +60,8 @@ jobs:
         run: bin/rails assets:precompile
       - name: Checking for database consistency
         run: bundle exec database_consistency
+      - name: Checking for database schema inconsistencies
+        run: bundle exec rake active_record_doctor
       - name: Run tests
         run: bundle exec rspec
 

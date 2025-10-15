@@ -26,3 +26,6 @@ Metrics/MethodLength:
   CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
   Exclude:
     - 'db/migrate/*'
+
+Metrics/BlockLength:
+  CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
