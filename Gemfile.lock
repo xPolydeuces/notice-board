@@ -334,6 +334,11 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
+    rspec-sidekiq (5.2.0)
+      rspec-core (~> 3.0)
+      rspec-expectations (~> 3.0)
+      rspec-mocks (~> 3.0)
+      sidekiq (>= 5, < 9)
     rspec-support (3.13.6)
     rubocop (1.81.1)
       json (~> 2.3)
@@ -481,6 +486,7 @@ DEPENDENCIES
   rails
   rails-i18n
   rspec-rails
+  rspec-sidekiq
   rubocop
   rubocop-capybara
   rubocop-factory_bot
