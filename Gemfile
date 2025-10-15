@@ -89,6 +89,12 @@ group :development, :test do
 
   # HTML to Haml converter
   gem "html2haml"
+
+  # Factories for database seeding
+  gem "factory_bot_rails"
+
+  # Faker for generating fake data
+  gem "faker"
 end
 
 group :development do
