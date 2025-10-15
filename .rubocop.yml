@@ -29,3 +29,5 @@ Metrics/MethodLength:
 
 Metrics/BlockLength:
   CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
+  Exclude:
+    - 'config/**/*.rb'
