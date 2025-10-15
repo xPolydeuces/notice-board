@@ -38,6 +38,7 @@ gem "sidekiq"
 
 # Authentication framework
 gem "devise"
+gem "devise-i18n"
 
 # A framework for creating reusable, testable & encapsulated view components
 gem "view_component"
