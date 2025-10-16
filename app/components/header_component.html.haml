@@ -17,8 +17,7 @@
 
       .md:hidden
         %button{class: "text-black hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-200", "aria-label" => "Open menu", "data-action" => "click->mobile-menu#toggle"}
-          %svg{class: "h-6 w-6", "fill" => "none", "stroke" => "currentColor", "viewBox" => "0 0 24 24"}
-            %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", "d" => "M4 6h16M4 12h16M4 18h16"}
+          = lucide_icon("menu", class: "h-6 w-6")
 
   .md:hidden{"data-mobile-menu-target" => "menu"}
     .px-2.pt-2.pb-3.space-y-1.sm:px-3.bg-white.border-b.border-gray-200
