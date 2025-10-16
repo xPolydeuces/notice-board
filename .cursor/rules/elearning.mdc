@@ -35,6 +35,7 @@ alwaysApply: true
      *   Prosopite is used for N+1 query detection in development and test environments (`config/initializers/prosopite.rb`, `config/environments/development.rb`, `config/environments/test.rb`).
  *   **Interactors:** Uses the `interactor` gem pattern for service objects (e.g., `app/interactors/enroll_in_programming_course.rb`).
  * **Dry.rb** Use dry.rb gems for code standards.
+ * **Design and UI** Simple, elegant design mostly dony with typographic, text and white space.
 
  ## Project Structure Highlights
 
