@@ -1,10 +1,10 @@
 .min-h-screen.flex.items-center.justify-center.bg-white.px-4
   .w-full.max-w-md
     .text-center.mb-12
-      %h1.text-4xl.font-bold.text-black.tracking-tight.mb-4
-        SIGN UP
+      %h1.text-4xl.font-bold.text-black.tracking-tight.mb-4.uppercase
+        = t('.title')
       %p.text-lg.text-gray-600.font-light
-        Create your learning account
+        = t('.create_your_learning_account')
 
     = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-8" }) do |f|
       = render "devise/shared/error_messages", resource: resource
