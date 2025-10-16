@@ -6,4 +6,7 @@ class ApplicationViewComponent < ViewComponent::Base
   module Types
     include Dry.Types()
   end
+
+  # Lucide Icons helper
+  delegate :lucide_icon, to: :helpers
 end
