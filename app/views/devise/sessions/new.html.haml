@@ -1,10 +1,10 @@
 .min-h-screen.flex.items-center.justify-center.bg-white.px-4
   .w-full.max-w-md
     .text-center.mb-12
-      %h1.text-4xl.font-bold.text-black.tracking-tight.mb-4
-        SIGN IN
+      %h1.text-4xl.font-bold.text-black.tracking-tight.mb-4.uppercase
+        = t('.sign_in')
       %p.text-lg.text-gray-600.font-light
-        Access your learning dashboard
+        = t('.access_your_learning_dashboard')
 
     = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-8" }) do |f|
       .space-y-6

@@ -102,6 +102,8 @@ pl:
         we_need_your_current_password_to_confirm_your_changes: "potrzebujemy Twojego bieżącego hasła, aby potwierdzić zmiany"
       new:
         sign_up: Zarejestruj się
+        title: Dołącz do nas
+        create_your_learning_account: Utwórz swoje konto e-learningowe
       signed_up: Witaj! Rejestracja zakończyła się pomyślnie.
       signed_up_but_inactive: "Konto zostało utworzone pomyślnie. Zanim się jednak zalogujesz, musi ono zostać jeszcze aktywowane."
       signed_up_but_locked: "Konto zostało utworzone pomyślnie. Nie możesz się jednak zalogować, ponieważ jest ono zablokowane."
@@ -113,6 +115,7 @@ pl:
       already_signed_out: Wylogowano pomyślnie.
       new:
         sign_in: Zaloguj się
+        access_your_learning_dashboard: Uzyskaj dostęp do swojej tablicy e-learningowej
       signed_in: Zalogowano pomyślnie.
       signed_out: Wylogowano pomyślnie.
     shared:
