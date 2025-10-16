@@ -45,6 +45,7 @@ gem "view_component"
 
 # Dry family
 gem "dry-initializer" # A simple way to create initializer methods
+gem "dry-types" # Type system for Ruby
 
 # Lograge for 1 line logging
 gem "lograge"
