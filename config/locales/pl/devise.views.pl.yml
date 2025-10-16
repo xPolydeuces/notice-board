@@ -25,12 +25,6 @@ pl:
         unconfirmed_email: Niepotwierdzony adres e-mail
         unlock_token: Token odblokowywujący
         updated_at: Data uaktualnienia
-    models:
-      user:
-        one:
-        few:
-        many:
-        other:
   devise:
     confirmations:
       confirmed: Twój adres e-mail został potwierdzony.

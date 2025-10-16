@@ -2,9 +2,9 @@
   .w-full.max-w-md
     .text-center.mb-12
       %h1.text-4xl.font-bold.text-black.tracking-tight.mb-4
-        RESET PASSWORD
+        = t('.forgot_your_password')
       %p.text-lg.text-gray-600.font-light
-        Enter your email to receive reset instructions
+        = t('.enter_your_email_to_receive_reset_instructions')
 
     = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-8" }) do |f|
       = render "devise/shared/error_messages", resource: resource
