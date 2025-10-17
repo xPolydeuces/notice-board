@@ -2,19 +2,25 @@ require "rails_helper"
 
 RSpec.describe Misc::LocaleSelectorComponent, type: :component do
   describe "rendering" do
-    it "renders locale selector with available locales" do
+    it "renders locale selector dropdown with current locale" do
       component = render_inline(described_class.new(current_locale: "pl"))
 
       expect(component.css(".locale-selector")).to be_present
+      expect(component.css("button")).to be_present
       expect(component.text).to include("Polski")
-      expect(component.text).to include("English")
+      expect(component.text).to include("🇵🇱")
     end
 
-    it "highlights current locale" do
+    it "shows current locale in button and other locales in dropdown" do
       component = render_inline(described_class.new(current_locale: "en"))
 
-      expect(component.css("span").text).to include("English")
-      expect(component.css("a").text).to include("Polski")
+      button = component.css("button")
+      expect(button.text).to include("English")
+      expect(button.text).to include("🇺🇸")
+
+      dropdown_links = component.css(".absolute a")
+      expect(dropdown_links.text).to include("Polski")
+      expect(dropdown_links.text).to include("🇵🇱")
     end
 
     it "generates correct URLs for locale switching" do
@@ -22,6 +28,15 @@ RSpec.describe Misc::LocaleSelectorComponent, type: :component do
 
       links = component.css("a")
       expect(links.first["href"]).to include("locale=en")
+    end
+
+    it "includes Stimulus controller data attributes" do
+      component = render_inline(described_class.new(current_locale: "pl"))
+
+      expect(component.css('[data-controller="locale-dropdown"]')).to be_present
+      expect(component.css('[data-action="click->locale-dropdown#toggle"]')).to be_present
+      expect(component.css('[data-locale-dropdown-target="button"]')).to be_present
+      expect(component.css('[data-locale-dropdown-target="menu"]')).to be_present
     end
   end
 end

@@ -6,7 +6,6 @@
           = Constants::APPLICATION_NAME
 
       .hidden.md:flex.items-center.space-x-8
-        = locale_selector
         - if user_signed_in?
           = link_to t(".links.dashboard"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
           = link_to t(".links.courses"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
@@ -15,6 +14,7 @@
         - else
           = link_to t(".links.sign_in"), new_user_session_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
           = link_to t(".links.sign_up"), new_user_registration_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
+        = locale_selector
 
       .md:hidden
         %button{class: "text-black hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-200", "aria-label" => "Open menu", "data-action" => "click->mobile-menu#toggle"}

@@ -22,6 +22,14 @@ module Misc
       end
     end
 
+    def locale_flag(locale)
+      case locale
+      when 'pl' then '🇵🇱'
+      when 'en' then '🇺🇸'
+      else '🌐'
+      end
+    end
+
     def locale_url(locale)
       url_for(locale: locale)
     end
