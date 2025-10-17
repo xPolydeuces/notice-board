@@ -114,6 +114,9 @@ group :development, :test do
 
   # Faker for generating fake data
   gem "faker"
+
+  # Debugger for Ruby
+  gem "byebug"
 end
 
 group :development do
