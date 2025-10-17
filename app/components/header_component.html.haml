@@ -12,8 +12,8 @@
           = link_to t(".links.profile"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
           = link_to t(".links.sign_out"), destroy_user_session_path, method: :delete, class: "text-sm font-medium text-red-600 uppercase tracking-wide hover:text-red-800 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-red-50 border border-red-200 hover:border-red-300"
         - else
-          = link_to t("devise.sessions.new.sign_in"), new_user_session_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
-          = link_to t("devise.registrations.new.sign_up"), new_user_registration_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
+          = link_to t(".links.sign_in"), new_user_session_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
+          = link_to t(".links.sign_up"), new_user_registration_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
 
       .md:hidden
         %button{class: "text-black hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-200", "aria-label" => "Open menu", "data-action" => "click->mobile-menu#toggle"}
@@ -27,5 +27,5 @@
         = link_to t(".links.profile"), "#", class: "block px-3 py-2 text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:bg-gray-50 hover:underline transition-all duration-200 rounded-sm"
         = link_to t(".links.sign_out"), destroy_user_session_path, method: :delete, class: "block px-3 py-2 text-sm font-medium text-red-600 uppercase tracking-wide hover:text-red-800 hover:bg-red-50 hover:underline transition-all duration-200 rounded-sm border border-red-200 hover:border-red-300"
       - else
-        = link_to t("devise.sessions.new.sign_in"), new_user_session_path, class: "block px-3 py-2 text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:bg-gray-50 hover:underline transition-all duration-200 rounded-sm"
-        = link_to t("devise.registrations.new.sign_up"), new_user_registration_path, class: "block px-3 py-2 text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:bg-gray-50 hover:underline transition-all duration-200 rounded-sm"
+        = link_to t(".links.sign_in"), new_user_session_path, class: "block px-3 py-2 text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:bg-gray-50 hover:underline transition-all duration-200 rounded-sm"
+        = link_to t(".links.sign_up"), new_user_registration_path, class: "block px-3 py-2 text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:bg-gray-50 hover:underline transition-all duration-200 rounded-sm"

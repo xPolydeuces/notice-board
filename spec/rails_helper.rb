@@ -51,4 +51,5 @@ RSpec.configure do |config|
   config.include ViewComponent::SystemSpecHelpers, type: :feature
   config.include ViewComponent::SystemSpecHelpers, type: :system
   config.include Capybara::RSpecMatchers, type: :component
+  config.include FactoryBot::Syntax::Methods
 end
