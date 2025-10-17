@@ -6,6 +6,10 @@ module Misc
       @current_locale = current_locale.to_s
     end
 
+    def mobile_version=(value)
+      @mobile_version = value
+    end
+
     private
 
     attr_reader :current_locale
@@ -32,6 +36,11 @@ module Misc
 
     def locale_url(locale)
       url_for(locale: locale)
+    end
+
+    def mobile_version?
+      # We'll pass this as a parameter to determine mobile vs desktop rendering
+      @mobile_version ||= false
     end
   end
 end
