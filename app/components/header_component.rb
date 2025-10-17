@@ -9,4 +9,8 @@ class HeaderComponent < ApplicationViewComponent
   def user_signed_in?
     current_user.present?
   end
+
+  def locale_selector
+    render(Misc::LocaleSelectorComponent.new(current_locale: I18n.locale))
+  end
 end

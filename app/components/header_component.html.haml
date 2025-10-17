@@ -6,6 +6,7 @@
           = Constants::APPLICATION_NAME
 
       .hidden.md:flex.items-center.space-x-8
+        = locale_selector
         - if user_signed_in?
           = link_to t(".links.dashboard"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
           = link_to t(".links.courses"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
@@ -21,6 +22,8 @@
 
   .md:hidden{"data-mobile-menu-target" => "menu"}
     .px-2.pt-2.pb-3.space-y-1.sm:px-3.bg-white.border-b.border-gray-200
+      .px-3.py-2.border-b.border-gray-100
+        = locale_selector
       - if user_signed_in?
         = link_to t(".links.dashboard"), "#", class: "block px-3 py-2 text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:bg-gray-50 hover:underline transition-all duration-200 rounded-sm"
         = link_to t(".links.courses"), "#", class: "block px-3 py-2 text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:bg-gray-50 hover:underline transition-all duration-200 rounded-sm"
