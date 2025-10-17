@@ -49,5 +49,8 @@ module Elearning
 
     # Enable query log tags to check SQL source in logs
     config.active_record.query_log_tags_enabled = true
+
+    # Turn off useless generators
+    config.generators.helper = false
   end
 end
