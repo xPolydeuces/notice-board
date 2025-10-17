@@ -1,7 +1,18 @@
-.locale-selector.flex.items-center.space-x-2
-  - available_locales.each do |locale|
-    - if locale == current_locale
-      %span.text-sm.font-medium.text-gray-900.px-2.py-1.bg-gray-100.rounded
-        = locale_name(locale)
-    - else
-      = link_to locale_name(locale), locale_url(locale), class: "text-sm font-medium text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-50 transition-colors duration-200"
+.locale-selector.relative{"data-controller" => "locale-dropdown"}
+  %button{"data-action" => "click->locale-dropdown#toggle", "data-locale-dropdown-target" => "button", class: "flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200 border border-gray-200 hover:border-gray-300"}
+    %span.text-lg
+      = locale_flag(current_locale)
+    %span
+      = locale_name(current_locale)
+    %svg.w-4.h-4{"fill" => "none", "stroke" => "currentColor", "viewBox" => "0 0 24 24"}
+      %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", "d" => "M19 9l-7 7-7-7"}
+
+  .absolute.right-0.mt-2.w-48.bg-white.rounded-md.shadow-lg.border.border-gray-200.z-50.hidden{"data-locale-dropdown-target" => "menu"}
+    .py-1
+      - available_locales.each do |locale|
+        - if locale != current_locale
+          = link_to locale_url(locale), class: "flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200" do
+            %span.text-lg
+              = locale_flag(locale)
+            %span
+              = locale_name(locale)
