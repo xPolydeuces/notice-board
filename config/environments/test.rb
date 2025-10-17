@@ -45,4 +45,7 @@ Rails.application.configure do
     Prosopite.rails_logger = true
     Prosopite.raise = true
   end
+
+  # Test locale is English
+  config.i18n.default_locale = :en
 end
