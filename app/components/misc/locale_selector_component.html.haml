@@ -1,7 +1,7 @@
 - if mobile_version?
   .locale-selector-mobile
     .text-xs.font-medium.text-gray-500.uppercase.tracking-wide.mb-2
-      = t(".language", default: "Language")
+      = t(".language")
     .space-y-1
       - available_locales.each do |locale|
         - if locale == current_locale
