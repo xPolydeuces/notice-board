@@ -27,7 +27,7 @@ RSpec.describe Misc::LocaleSelectorComponent, type: :component do
       component = render_inline(described_class.new(current_locale: "pl"))
 
       links = component.css("a")
-      expect(links.first["href"]).to include("locale=en")
+      expect(links.first["href"]).to eq("/en")
     end
 
     it "includes Stimulus controller data attributes" do

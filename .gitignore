@@ -47,3 +47,6 @@ spec/examples.txt
 
 # Coverage
 /coverage
+
+# Debugger
+.byebug_history
