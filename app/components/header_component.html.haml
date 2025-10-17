@@ -10,7 +10,7 @@
           = link_to t(".links.dashboard"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
           = link_to t(".links.courses"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
           = link_to t(".links.profile"), "#", class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
-          = link_to t(".links.sign_out"), destroy_user_session_path, method: :delete, class: "text-sm font-medium text-red-600 uppercase tracking-wide hover:text-red-800 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-red-50 border border-red-200 hover:border-red-300"
+          = button_to t(".links.sign_out"), destroy_user_session_path, method: :delete, class: "text-sm font-medium cursor-pointer text-red-600 uppercase tracking-wide hover:text-red-800 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-red-50 border border-red-200 hover:border-red-300"
         - else
           = link_to t(".links.sign_in"), new_user_session_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
           = link_to t(".links.sign_up"), new_user_registration_path, class: "text-sm font-medium text-black uppercase tracking-wide hover:text-gray-600 hover:underline transition-all duration-200 px-2 py-1 rounded-sm hover:bg-gray-50"
