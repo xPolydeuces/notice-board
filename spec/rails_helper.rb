@@ -53,3 +53,8 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :component
   config.include FactoryBot::Syntax::Methods
 end
+
+RSpec::Sidekiq.configure do |config|
+  # Disable warnings from Sidekiq
+  config.warn_when_jobs_not_processed_by_sidekiq = false
+end
