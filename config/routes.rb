@@ -11,13 +11,16 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  root "dashboard#index"
+  # Locale scope for internationalization
+  scope "(:locale)", locale: /#{I18n.available_locales.join('|')}/ do
+    # Defines the root path route ("/")
+    root "dashboard#index"
+
+    # Devise routes for user authentication
+    devise_for :users
+  end
 
   # Sidekiq web interface
   mount Sidekiq::Web, at: "sidekiq"
   mount PgHero::Engine, at: "pghero"
-
-  # Devise routes for user authentication
-  devise_for :users
 end
