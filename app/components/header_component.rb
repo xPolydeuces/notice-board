@@ -11,12 +11,10 @@ class HeaderComponent < ApplicationViewComponent
   end
 
   def locale_selector
-    render(Misc::LocaleSelectorComponent.new(current_locale: I18n.locale))
+    render(Misc::LocaleSelectorComponent.new(user_locale: I18n.locale))
   end
 
   def mobile_locale_selector
-    component = Misc::LocaleSelectorComponent.new(current_locale: I18n.locale)
-    component.mobile_version = true
-    render(component)
+    render(Misc::LocaleSelectorComponent.new(user_locale: I18n.locale, mobile_version: true))
   end
 end

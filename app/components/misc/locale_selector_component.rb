@@ -1,18 +1,11 @@
 module Misc
   class LocaleSelectorComponent < ApplicationViewComponent
-    AVAILABLE_LOCALES = %w[pl en].freeze
+    AVAILABLE_LOCALES = %i[pl en].freeze
 
-    def initialize(current_locale: I18n.locale)
-      @current_locale = current_locale.to_s
-    end
-
-    def mobile_version=(value)
-      @mobile_version = value
-    end
+    option :user_locale, Types::Symbol
+    option :mobile_version, Types::Bool.optional, default: -> { false }
 
     private
-
-    attr_reader :current_locale
 
     def available_locales
       AVAILABLE_LOCALES
@@ -20,16 +13,16 @@ module Misc
 
     def locale_name(locale)
       case locale
-      when 'pl' then 'Polski'
-      when 'en' then 'English'
-      else locale.upcase
+      when :pl then 'Polski'
+      when :en then 'English'
+      else locale.to_s.upcase
       end
     end
 
     def locale_flag(locale)
       case locale
-      when 'pl' then '🇵🇱'
-      when 'en' then '🇺🇸'
+      when :pl then '🇵🇱'
+      when :en then '🇺🇸'
       else '🌐'
       end
     end
@@ -48,7 +41,7 @@ module Misc
     end
 
     def mobile_version?
-      @mobile_version ||= false
+      @mobile_version
     end
   end
 end
