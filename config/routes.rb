@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Locale scope for internationalization
-  scope "(:locale)", locale: /#{I18n.available_locales.join("|")}/ do
+  scope "(:locale)", locale: /#{I18n.available_locales.join('|')}/ do
     # Defines the root path route ("/")
     root "dashboard#index"
 
