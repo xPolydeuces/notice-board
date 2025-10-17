@@ -30,12 +30,12 @@ RSpec.describe HeaderComponent, type: :component do
 
     it "renders sign in link" do
       render_inline(described_class.new(current_user: current_user))
-      expect(page).to have_link("Log in", href: "/users/sign_in")
+      expect(page).to have_link("Log in", href: "/en/users/sign_in")
     end
 
     it "renders sign up link" do
       render_inline(described_class.new(current_user: current_user))
-      expect(page).to have_link("Sign up", href: "/users/sign_up")
+      expect(page).to have_link("Sign up", href: "/en/users/sign_up")
     end
   end
 end
