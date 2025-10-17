@@ -124,4 +124,7 @@ end
 group :test do
   # Sidekiq testing helpers
   gem "rspec-sidekiq"
+
+  # Code coverage for tests
+  gem "simplecov", require: false
 end
