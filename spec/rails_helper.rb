@@ -52,3 +52,8 @@ RSpec.configure do |config|
   config.include ViewComponent::SystemSpecHelpers, type: :system
   config.include Capybara::RSpecMatchers, type: :component
 end
+
+RSpec::Sidekiq.configure do |config|
+  # Disable warnings from Sidekiq
+  config.warn_when_jobs_not_processed_by_sidekiq = false
+end
