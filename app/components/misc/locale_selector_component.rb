@@ -1,4 +1,5 @@
 module Misc
+  # Component for selecting the locale of the application
   class LocaleSelectorComponent < ApplicationViewComponent
     AVAILABLE_LOCALES = %i[pl en].freeze
 
@@ -13,17 +14,17 @@ module Misc
 
     def locale_name(locale)
       case locale
-      when :pl then 'Polski'
-      when :en then 'English'
+      when :pl then "Polski"
+      when :en then "English"
       else locale.to_s.upcase
       end
     end
 
     def locale_flag(locale)
       case locale
-      when :pl then '🇵🇱'
-      when :en then '🇺🇸'
-      else '🌐'
+      when :pl then "🇵🇱"
+      when :en then "🇺🇸"
+      else "🌐"
       end
     end
 
