@@ -117,6 +117,9 @@ group :development, :test do
 
   # Debugger for Ruby
   gem "byebug"
+
+  # Authorization framework
+  gem "action_policy"
 end
 
 group :development do
