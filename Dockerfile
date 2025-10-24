@@ -16,7 +16,8 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 postgresql-client watchman && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 postgresql-client && \
+    curl -fsSL https://raw.githubusercontent.com/facebook/watchman/main/install.sh | bash -s -- --install-dir=/usr/local/bin && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
