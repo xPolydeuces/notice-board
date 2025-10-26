@@ -135,4 +135,7 @@ group :test do
 
   # one-liners to test common Rails functionality that
   gem "shoulda-matchers"
+
+  # Clean up the database between tests
+  gem "database_cleaner-active_record"
 end
