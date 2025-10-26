@@ -25,6 +25,7 @@ end
 
 RSpec.shared_examples "a model with uniqueness scope validation" do |subject, attribute, scope|
   it "validates uniqueness of #{attribute} with scope #{scope}" do
+    create(subject) # Existing record to test against
     expect(build(subject)).to validate_uniqueness_of(attribute).scoped_to(scope)
   end
 end
