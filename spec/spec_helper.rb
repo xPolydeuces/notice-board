@@ -98,4 +98,19 @@ RSpec.configure do |config|
   config.after do
     Prosopite.finish
   end
+
+  # Database cleaner
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+    # Fixtures
+    FactoryBot.create(:role, :admin)
+    FactoryBot.create(:role, :teacher)
+  end
+
+  config.around do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
 end
