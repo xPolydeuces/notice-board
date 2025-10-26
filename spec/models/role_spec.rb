@@ -1,10 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Role, type: :model do
-  describe "validations" do
-    it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_uniqueness_of(:name) }
-  end
+  it_behaves_like "a valid factory"
+  it_behaves_like "a model with presence validation", :name
+  it_behaves_like "a model with uniqueness validation", :name
 
   describe "scopes" do
     describe "admin" do
