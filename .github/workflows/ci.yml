@@ -6,26 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Security audit dependencies
-        run: bundle exec bundle audit check --update
-      - name: Security audit application code
-        run: bundle exec brakeman -q -w2
-      - name: Lint Ruby files
-        run: bundle exec rubocop
-
-  test:
+  ci:
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -58,10 +39,5 @@ jobs:
         run: bin/rails db:schema:load
       - name: Precompile assets
         run: bin/rails assets:precompile
-      - name: Checking for database consistency
-        run: bundle exec database_consistency
-      - name: Checking for database schema inconsistencies
-        run: bundle exec rake active_record_doctor
-      - name: Run tests
-        run: bundle exec rspec
-
+      - name: Run CI Script
+        run: bin/ci
