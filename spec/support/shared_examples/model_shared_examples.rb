@@ -22,3 +22,13 @@ RSpec.shared_examples "a model with uniqueness validation" do |attribute|
     expect(subject).to validate_uniqueness_of(attribute)
   end
 end
+
+RSpec.shared_examples "a model with uniqueness scope validation" do |subject, attribute, scope|
+  it "validates uniqueness of #{attribute} with scope #{scope}" do
+    expect(build(subject)).to validate_uniqueness_of(attribute).scoped_to(scope)
+  end
+end
+
+RSpec.shared_examples "a model with belongs_to association" do |association|
+  it { expect(subject).to belong_to(association) }
+end
