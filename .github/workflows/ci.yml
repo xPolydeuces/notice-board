@@ -62,8 +62,6 @@ jobs:
         run: bundle exec database_consistency
       - name: Checking for database schema inconsistencies
         run: bundle exec rake active_record_doctor
-      - name: Seed database
-        run: bundle exec rails db:seed
       - name: Run tests
         run: bundle exec rspec
 

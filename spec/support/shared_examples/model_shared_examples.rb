@@ -9,6 +9,17 @@ RSpec.shared_examples "a valid factory" do |factory_name = nil|
   it "can be created" do
     expect { create(factory_name) }.not_to raise_error
   end
+
+  it "can be built without database writes" do
+    expect { build_stubbed(factory_name) }.not_to raise_error
+  end
+
+  it "can be created multiple times without conflicts" do
+    expect do
+      create(factory_name)
+      create(factory_name)
+    end.not_to raise_error
+  end
 end
 
 RSpec.shared_examples "a model with presence validation" do |attribute|
