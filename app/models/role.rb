@@ -1,3 +1,4 @@
+# Application Roles for user authorization
 class Role < ApplicationRecord
   ADMIN_ID = 1
   TEACHER_ID = 2
