@@ -228,13 +228,6 @@ CREATE INDEX index_user_roles_on_role_id ON public.user_roles USING btree (role_
 
 
 --
--- Name: index_user_roles_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_roles_on_user_id ON public.user_roles USING btree (user_id);
-
-
---
 -- Name: index_user_roles_on_user_id_and_role_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -278,6 +271,7 @@ ALTER TABLE ONLY public.user_roles
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251026085440'),
 ('20251026084225'),
 ('20251026081439'),
 ('20251014193007');
