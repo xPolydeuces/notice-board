@@ -4,11 +4,11 @@ FactoryBot.define do
     role
 
     trait :admin do
-      role { Role.find_by(name: "Admin") || create(:role, name: "Admin") }
+      role { Role.find_by(name: "Admin") }
     end
 
     trait :teacher do
-      role { Role.find_by(name: "Teacher") || create(:role, name: "Teacher") }
+      role { Role.find_by(name: "Teacher") }
     end
   end
 end
