@@ -50,3 +50,6 @@ spec/examples.txt
 
 # Debugger
 .byebug_history
+
+# Database consistency
+database_consistency*.txt
