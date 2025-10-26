@@ -132,4 +132,7 @@ group :test do
 
   # Code coverage for tests
   gem "simplecov", require: false
+
+  # one-liners to test common Rails functionality that
+  gem "shoulda-matchers"
 end
