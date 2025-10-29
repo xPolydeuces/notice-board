@@ -1,7 +1,5 @@
 Feature: User login
-  In order to access my account
-  As a registered user
-  I want to log in
+  User wants to log in to their account. This is the basic flow of the application.
 
   Scenario: Successful login
     Given a user exists with email "patryk@example.com" and password "secret"

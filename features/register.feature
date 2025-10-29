@@ -1,7 +1,5 @@
 Feature: User registration
-  In order to create an account
-  As a visitor
-  I want to register
+  User wants to register a new account. This is the basic flow of the application.
 
   Scenario: Successful registration
     When I register as "patryk@example.com" with password "secret"
