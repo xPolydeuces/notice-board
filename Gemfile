@@ -138,4 +138,7 @@ group :test do
 
   # Clean up the database between tests
   gem "database_cleaner-active_record"
+
+  # Cucumber for acceptance tests
+  gem "cucumber-rails"
 end
