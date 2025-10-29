@@ -140,5 +140,5 @@ group :test do
   gem "database_cleaner-active_record"
 
   # Cucumber for acceptance tests
-  gem "cucumber-rails"
+  gem "cucumber-rails", require: false
 end
