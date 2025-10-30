@@ -1,7 +1,8 @@
 # Application Roles for user authorization
 class Role < ApplicationRecord
   ADMIN_ID = 1
-  TEACHER_ID = 2
+  GENERAL_ID = 2
+  LOCATION_ID = 3
 
   validates :name, presence: true, uniqueness: true
 
@@ -9,7 +10,11 @@ class Role < ApplicationRecord
     find(ADMIN_ID)
   end
 
-  def self.teacher
-    find(TEACHER_ID)
+  def self.general
+    find(GENERAL_ID)
+  end
+
+  def self.location
+    find(LOCATION_ID)
   end
 end

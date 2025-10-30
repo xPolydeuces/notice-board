@@ -5,4 +5,5 @@
 return if Rails.env.test?
 
 Role.find_or_create_by!(name: "Admin", id: Role::ADMIN_ID)
-Role.find_or_create_by!(name: "Teacher", id: Role::TEACHER_ID)
+Role.find_or_create_by!(name: "General", id: Role::GENERAL_ID)
+Role.find_or_create_by!(name: "Location", id: Role::LOCATION_ID)

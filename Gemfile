@@ -114,9 +114,6 @@ group :development, :test do
   # Faker for generating fake data
   gem "faker"
 
-  # Debugger for Ruby
-  gem "byebug"
-
   # Authorization framework
   gem "action_policy"
 end
@@ -138,7 +135,4 @@ group :test do
 
   # Clean up the database between tests
   gem "database_cleaner-active_record"
-
-  # Cucumber for acceptance tests
-  gem "cucumber-rails", require: false
 end
