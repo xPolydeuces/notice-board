@@ -1,5 +1,5 @@
 services:
-  elearning:
+  noticeboard:
     stdin_open: true
     tty: true
     build:
@@ -29,11 +29,6 @@ services:
       memlock: -1
     volumes:
       - dragonflydata:/data
-  mailcatcher:
-    image: sj26/mailcatcher
-    ports:
-      - "1080:1080"
-      - "1025:1025"
 volumes:
   db_data:
   bundle_cache:
