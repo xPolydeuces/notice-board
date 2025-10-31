@@ -14,8 +14,6 @@
     %link{:href => "/icon.png", :rel => "apple-touch-icon"}/
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
-  %body.bg-white.text-black
-    = render HeaderComponent.new(current_user: current_user)
     %p.notice= notice
     %p.alert= alert
     = yield
