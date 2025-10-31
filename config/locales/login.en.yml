@@ -1,0 +1,22 @@
+# English translations for login and app branding
+en:
+  app:
+    name: "Admin Panel"
+    subtitle: "Notice Board"
+    company_name: COMPANY_NAME
+    rights: "All rights reserved"
+  
+  devise:
+    sessions:
+      new:
+        title: "Login - Admin Panel"
+        sign_in: "Sign In"
+        username_placeholder: "Enter your username"
+        password_placeholder: "Enter your password"
+        remember_me: "Remember me"
+  
+  activerecord:
+    attributes:
+      user:
+        username: "Username"
+        password: "Password"

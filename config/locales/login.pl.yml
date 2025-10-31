@@ -1,0 +1,22 @@
+# Polish translations for login and app branding
+pl:
+  app:
+    name: "Panel Administracyjny"
+    subtitle: "Tablica Ogłoszeń"
+    company_name: COMPANY_NAME
+    rights: "Wszelkie prawa zastrzeżone"
+  
+  devise:
+    sessions:
+      new:
+        title: "Logowanie - Panel Administracyjny"
+        sign_in: "Zaloguj się"
+        username_placeholder: "Wprowadź nazwę użytkownika"
+        password_placeholder: "Wprowadź hasło"
+        remember_me: "Zapamiętaj mnie"
+  
+  activerecord:
+    attributes:
+      user:
+        username: "Nazwa użytkownika"
+        password: "Hasło"
