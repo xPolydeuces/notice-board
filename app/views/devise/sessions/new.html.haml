@@ -1,9 +1,9 @@
 !!!
-%html{lang: "pl"}
+%html{lang: I18n.locale}
   %head
     %meta{charset: "UTF-8"}/
     %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}/
-    %title Logowanie - Panel Administracyjny
+    %title= t('devise.sessions.new.title', default: 'Logowanie - Panel Administracyjny')
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
@@ -11,43 +11,54 @@
     
   %body.min-h-screen.flex.items-center.justify-center{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
     .w-full.max-w-md.px-6
-      / Logo and Title
-      .text-center.mb-8
-        %img.mx-auto.mb-6{src: "https://www.mza.waw.pl/wp-content/themes/mza/img/mza_logo.svg", alt: "MZA Logo", class: "h-24"}
-        %h1.text-3xl.font-bold.mb-2{class: "text-[#FA812F]"} Panel Administracyjny
-        %p.text-gray-600 Tablica Ogłoszeń
-      
-      / Login Form Card
-      .bg-white.rounded-lg.shadow-lg.p-8
-        %h2.text-2xl.font-bold.mb-6.text-center.text-gray-800 Logowanie
+      / Combined Card - Logo, Title, and Form
+      .bg-white.rounded-lg.shadow-xl.overflow-hidden
+        / Logo and Title Section
+        .p-8.text-center.bg-white
+          %img.mx-auto.mb-4{src: AppConfig::LOGO_URL, alt: "Logo", class: "h-20"}
+          %h1.text-3xl.font-bold.mb-2{class: "text-[#FA812F]"}= t('app.name', default: AppConfig::APP_NAME)
+          %p.text-gray-600= t('app.subtitle', default: AppConfig::APP_SUBTITLE)
         
-        / Flash Messages
-        - if alert.present?
-          .mb-4.p-4.rounded-md.bg-red-50.border.border-red-200
-            %p.text-red-800.font-semibold= alert
+        / Divider
+        .h-px.bg-gray-200
         
-        - if notice.present?
-          .mb-4.p-4.rounded-md.bg-green-50.border.border-green-200
-            %p.text-green-800.font-semibold= notice
+        / Login Form Section
+        .p-8
+          %h2.text-2xl.font-bold.mb-6.text-center.text-gray-800= t('devise.sessions.new.sign_in', default: 'Logowanie')
+          
+          / Flash Messages
+          - if alert.present?
+            .mb-4.p-4.rounded-md.bg-red-50.border.border-red-200
+              %p.text-red-800.text-sm.font-semibold= alert
+          
+          - if notice.present?
+            .mb-4.p-4.rounded-md.bg-green-50.border.border-green-200
+              %p.text-green-800.text-sm.font-semibold= notice
+          
+          / Login Form
+          = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-5" }) do |f|
+            / Username Field
+            .form-group
+              = f.label :username, t('activerecord.attributes.user.username', default: 'Nazwa użytkownika'), class: "block text-sm font-bold text-gray-700 mb-2"
+              = f.text_field :username, autofocus: true, autocomplete: "username", class: "w-full px-4 py-3 border-2 border-[#FEF3E2] rounded-md focus:outline-none focus:border-[#FA812F] transition-colors", placeholder: t('devise.sessions.new.username_placeholder', default: 'Wprowadź nazwę użytkownika')
+            
+            / Password Field
+            .form-group
+              = f.label :password, t('activerecord.attributes.user.password', default: 'Hasło'), class: "block text-sm font-bold text-gray-700 mb-2"
+              = f.password_field :password, autocomplete: "current-password", class: "w-full px-4 py-3 border-2 border-[#FEF3E2] rounded-md focus:outline-none focus:border-[#FA812F] transition-colors", placeholder: t('devise.sessions.new.password_placeholder', default: 'Wprowadź hasło')
+            
+            / Remember Me
+            - if devise_mapping.rememberable?
+              .flex.items-center
+                = f.check_box :remember_me, class: "h-4 w-4 text-[#FA812F] border-gray-300 rounded focus:ring-[#FA812F]"
+                = f.label :remember_me, t('devise.sessions.new.remember_me', default: 'Zapamiętaj mnie'), class: "ml-2 text-sm text-gray-700"
+            
+            / Submit Button
+            .form-group.pt-2
+              = f.submit t('devise.sessions.new.sign_in', default: 'Zaloguj się'), class: "w-full py-3 px-4 bg-[#FA812F] hover:bg-[#E87020] text-white font-bold rounded-md transition-colors cursor-pointer shadow-md hover:shadow-lg"
         
-        / Login Form
-        = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f|
-          / Username Field
-          .form-group
-            = f.label :username, "Nazwa użytkownika", class: "block text-sm font-bold text-gray-700 mb-2"
-            = f.text_field :username, autofocus: true, autocomplete: "username", class: "w-full px-4 py-3 border-2 border-[#FEF3E2] rounded-md focus:outline-none focus:border-[#FA812F] transition-colors", placeholder: "Wprowadź nazwę użytkownika"
-          
-          / Password Field
-          .form-group
-            = f.label :password, "Hasło", class: "block text-sm font-bold text-gray-700 mb-2"
-            = f.password_field :password, autocomplete: "current-password", class: "w-full px-4 py-3 border-2 border-[#FEF3E2] rounded-md focus:outline-none focus:border-[#FA812F] transition-colors", placeholder: "Wprowadź hasło"
-          
-          / Remember Me
-          - if devise_mapping.rememberable?
-            .flex.items-center
-              = f.check_box :remember_me, class: "h-4 w-4 text-[#FA812F] border-gray-300 rounded focus:ring-[#FA812F]"
-              = f.label :remember_me, "Zapamiętaj mnie", class: "ml-2 text-sm text-gray-700"
-          
-          / Submit Button
-          .form-group
-            = f.submit "Zaloguj się", class: "w-full py-3 px-4 bg-[#FA812F] hover:bg-[#E87020] text-white font-bold rounded-md transition-colors cursor-pointer"
+        / Footer
+        .px-8.pb-8.text-center.text-sm.text-gray-500
+          .border-t.border-gray-200.pt-6
+            %p= t('app.company_name', default: AppConfig::COMPANY_NAME)
+            %p.text-xs.mt-1.text-gray-400= "© #{Time.current.year} #{t('app.rights', default: 'Wszelkie prawa zastrzeżone')}"
