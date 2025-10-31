@@ -14,6 +14,7 @@ services:
     volumes:
       - .:/rails
       - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
   postgresql:
     image: postgres:17
     volumes:
@@ -33,3 +34,4 @@ volumes:
   db_data:
   bundle_cache:
   dragonflydata:
+  node_modules:

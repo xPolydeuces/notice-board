@@ -2,8 +2,8 @@
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t elearning .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name elearning elearning
+# docker build -t noticeboard .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name noticeboard noticeboard
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
@@ -39,7 +39,7 @@ ARG BUN_VERSION=1.2.3
 RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
 
 # Install application gems
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock* ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile

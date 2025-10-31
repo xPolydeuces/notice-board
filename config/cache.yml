@@ -1,24 +1,20 @@
 default: &default
-  primary:
+  store_options:
     redis_url: <%= ENV.fetch("REDIS_URL") { "redis://dragonfly:6379/1" } %>
     max_size: <%= 256.megabytes %>
     namespace: <%= Rails.env %>
 
 development:
   <<: *default
-  primary:
-    redis_url: <%= ENV.fetch("REDIS_URL") { "redis://dragonfly:6379/1" } %>
 
 test:
   <<: *default
-  primary:
+  store_options:
     redis_url: <%= ENV.fetch("REDIS_URL") { "redis://dragonfly:6379/2" } %>
+    namespace: test
 
 production:
   <<: *default
-  primary:
-    # In production, use environment variable for Redis URL
-    # Example: redis://your-dragonfly-host:6379/1
+  store_options:
     redis_url: <%= ENV.fetch("REDIS_URL") %>
-    # Cap age of oldest cache entry to fulfill retention policies (uncomment if needed)
-    # max_age: <%= 60.days.to_i %>
+    namespace: production
