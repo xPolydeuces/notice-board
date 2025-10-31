@@ -7,7 +7,7 @@
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
-    = javascript_importmap_tags
+    = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
     
   %body.min-h-screen.flex.items-center.justify-center{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
     .w-full.max-w-md.px-6
@@ -51,8 +51,3 @@
           / Submit Button
           .form-group
             = f.submit "Zaloguj się", class: "w-full py-3 px-4 bg-[#FA812F] hover:bg-[#E87020] text-white font-bold rounded-md transition-colors cursor-pointer"
-        
-        / Footer Text
-        .mt-6.text-center.text-sm.text-gray-500
-          %p Miejskie Zakłady Autobusowe Sp. z o.o.
-          %p.text-xs.mt-1 © 2025 Wszelkie prawa zastrzeżone

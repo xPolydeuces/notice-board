@@ -1,4 +1,8 @@
-# A root view for the application
+# frozen_string_literal: true
+
 class DashboardController < ApplicationController
-  def index; end
+  def index
+    # Placeholder for public notice board display
+    # Will be implemented in Phase 5
+  end
 end

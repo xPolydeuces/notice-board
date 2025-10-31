@@ -1,26 +1,41 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  # Devise routes
+  devise_for :users, skip: [:registrations], controllers: {
+    sessions: "devise/sessions"
+  }
 
   # Locale scope for internationalization
   scope "(:locale)", locale: /#{I18n.available_locales.join('|')}/ do
-    # Defines the root path route ("/")
+    # Public display (notice board)
     root "dashboard#index"
 
-    # Devise routes for user authentication
-    devise_for :users
+    # Admin namespace
+    namespace :admin do
+      root "dashboard#index"
+      
+      resources :users
+      resources :locations
+      resources :news_posts do
+        member do
+          patch :archive
+          patch :restore
+          patch :publish
+          patch :unpublish
+        end
+      end
+      resources :rss_feeds
+      resource :password, only: [:edit, :update]
+    end
   end
 
-  # Sidekiq web interface
-  mount Sidekiq::Web, at: "sidekiq"
-  mount PgHero::Engine, at: "pghero"
+  # Authenticated admin tools
+  authenticate :user, ->(user) { user.admin? } do
+    mount Sidekiq::Web, at: "sidekiq"
+    mount PgHero::Engine, at: "pghero"
+  end
 end
