@@ -27,6 +27,77 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: locations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.locations (
+    id bigint NOT NULL,
+    code character varying NOT NULL,
+    name character varying NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: locations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.locations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: locations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.locations_id_seq OWNED BY public.locations.id;
+
+
+--
+-- Name: news_posts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.news_posts (
+    id bigint NOT NULL,
+    title character varying NOT NULL,
+    content text NOT NULL,
+    post_type character varying NOT NULL,
+    location_id bigint,
+    user_id bigint NOT NULL,
+    published boolean DEFAULT false NOT NULL,
+    published_at timestamp(6) without time zone,
+    archived boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: news_posts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.news_posts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: news_posts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.news_posts_id_seq OWNED BY public.news_posts.id;
+
+
+--
 -- Name: roles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -55,6 +126,40 @@ CREATE SEQUENCE public.roles_id_seq
 --
 
 ALTER SEQUENCE public.roles_id_seq OWNED BY public.roles.id;
+
+
+--
+-- Name: rss_feeds; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rss_feeds (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    url character varying NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    last_fetched_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: rss_feeds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rss_feeds_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rss_feeds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rss_feeds_id_seq OWNED BY public.rss_feeds.id;
 
 
 --
@@ -104,7 +209,7 @@ ALTER SEQUENCE public.user_roles_id_seq OWNED BY public.user_roles.id;
 
 CREATE TABLE public.users (
     id bigint NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
+    email character varying,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp(6) without time zone,
@@ -115,7 +220,9 @@ CREATE TABLE public.users (
     current_sign_in_ip character varying,
     last_sign_in_ip character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    username character varying,
+    location_id bigint
 );
 
 
@@ -139,10 +246,31 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: locations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.locations ALTER COLUMN id SET DEFAULT nextval('public.locations_id_seq'::regclass);
+
+
+--
+-- Name: news_posts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.news_posts ALTER COLUMN id SET DEFAULT nextval('public.news_posts_id_seq'::regclass);
+
+
+--
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.roles ALTER COLUMN id SET DEFAULT nextval('public.roles_id_seq'::regclass);
+
+
+--
+-- Name: rss_feeds id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rss_feeds ALTER COLUMN id SET DEFAULT nextval('public.rss_feeds_id_seq'::regclass);
 
 
 --
@@ -168,11 +296,35 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: locations locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.locations
+    ADD CONSTRAINT locations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: news_posts news_posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.news_posts
+    ADD CONSTRAINT news_posts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.roles
     ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rss_feeds rss_feeds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rss_feeds
+    ADD CONSTRAINT rss_feeds_pkey PRIMARY KEY (id);
 
 
 --
@@ -200,10 +352,73 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: index_locations_on_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_locations_on_active ON public.locations USING btree (active);
+
+
+--
+-- Name: index_locations_on_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_locations_on_code ON public.locations USING btree (code);
+
+
+--
+-- Name: index_news_posts_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_archived ON public.news_posts USING btree (archived);
+
+
+--
+-- Name: index_news_posts_on_location_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_location_id ON public.news_posts USING btree (location_id);
+
+
+--
+-- Name: index_news_posts_on_location_id_and_published; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_location_id_and_published ON public.news_posts USING btree (location_id, published);
+
+
+--
+-- Name: index_news_posts_on_post_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_post_type ON public.news_posts USING btree (post_type);
+
+
+--
+-- Name: index_news_posts_on_published; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_published ON public.news_posts USING btree (published);
+
+
+--
+-- Name: index_news_posts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_user_id ON public.news_posts USING btree (user_id);
+
+
+--
 -- Name: index_roles_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_roles_on_name ON public.roles USING btree (name);
+
+
+--
+-- Name: index_rss_feeds_on_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rss_feeds_on_active ON public.rss_feeds USING btree (active);
 
 
 --
@@ -228,10 +443,40 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
+-- Name: index_users_on_location_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_location_id ON public.users USING btree (location_id);
+
+
+--
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
+
+
+--
+-- Name: index_users_on_username; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (username);
+
+
+--
+-- Name: news_posts fk_rails_0870e2541b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.news_posts
+    ADD CONSTRAINT fk_rails_0870e2541b FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: news_posts fk_rails_2c37a32e6c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.news_posts
+    ADD CONSTRAINT fk_rails_2c37a32e6c FOREIGN KEY (location_id) REFERENCES public.locations(id);
 
 
 --
@@ -251,12 +496,26 @@ ALTER TABLE ONLY public.user_roles
 
 
 --
+-- Name: users fk_rails_5d96f79c2b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT fk_rails_5d96f79c2b FOREIGN KEY (location_id) REFERENCES public.locations(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251031070006'),
+('20251031070005'),
+('20251031070004'),
+('20251031070003'),
+('20251031070002'),
+('20251031070001'),
 ('20251026085440'),
 ('20251026084225'),
 ('20251026081439'),
