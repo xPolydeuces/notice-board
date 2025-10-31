@@ -1,0 +1,77 @@
+!!!
+%html{lang: "pl"}
+  %head
+    %meta{charset: "UTF-8"}/
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}/
+    %title Panel Administracyjny
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
+    
+    / Trix Rich Text Editor
+    %link{rel: "stylesheet", type: "text/css", href: "https://unpkg.com/trix@2.0.8/dist/trix.css"}/
+    %script{type: "text/javascript", src: "https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"}
+    
+  %body.min-h-screen{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
+    .container.max-w-7xl.mx-auto.p-5
+      .flex.gap-5.min-h-screen
+        
+        / Sidebar
+        .w-64.rounded-lg.p-5.border-r-2{class: "bg-[#FEF3E2] border-[#FAB12F]", style: "flex-shrink: 0;"}
+          / Logo Section
+          .mb-8.text-center
+            %img.mx-auto.mb-4{src: "https://www.mza.waw.pl/wp-content/themes/mza/img/mza_logo.svg", alt: "MZA Logo", style: "max-width: 80%; height: auto;"}
+            %h2.text-2xl.font-bold.mb-3{class: "text-[#FA812F]"} Panel Administracyjny
+            
+            / User Info
+            .text-sm.text-gray-600.text-left.space-y-1
+              %p
+                Użytkownik:
+                %strong.text-gray-800= current_user.username
+              %p
+                Rola:
+                %strong.text-gray-800= current_user.role.upcase
+              - if current_user.location_role? && current_user.location.present?
+                %p
+                  Oddział:
+                  %strong.text-gray-800= "#{current_user.location.code} #{current_user.location.name}"
+          
+          / Navigation
+          %nav
+            = link_to admin_news_posts_path, class: "block w-full p-3 mb-2 rounded-md text-left transition-all #{controller_name == 'news_posts' ? 'bg-[#FA812F] text-white font-bold' : 'hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+              📰 Aktualności
+            
+            - if current_user.admin?
+              = link_to admin_locations_path, class: "block w-full p-3 mb-2 rounded-md text-left transition-all #{controller_name == 'locations' ? 'bg-[#FA812F] text-white font-bold' : 'hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+                📍 Lokalizacje
+              
+              = link_to admin_rss_feeds_path, class: "block w-full p-3 mb-2 rounded-md text-left transition-all #{controller_name == 'rss_feeds' ? 'bg-[#FA812F] text-white font-bold' : 'hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+                📡 RSS
+              
+              = link_to admin_users_path, class: "block w-full p-3 mb-2 rounded-md text-left transition-all #{controller_name == 'users' ? 'bg-[#FA812F] text-white font-bold' : 'hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+                👥 Użytkownicy
+          
+          / User Menu Section
+          .mt-8.pt-5.border-t-2{class: "border-[#FAB12F]"}
+            .text-xs.text-gray-500.font-bold.uppercase.mb-3 Konto
+            
+            = link_to edit_admin_password_path, class: "block w-full p-3 mb-2 rounded-md text-left transition-all #{controller_name == 'passwords' ? 'bg-[#FA812F] text-white font-bold' : 'hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+              🔐 Zmień hasło
+            
+            = button_to destroy_user_session_path, method: :delete, data: { turbo: false }, class: "w-full mt-3 py-3 px-5 bg-[#DD0303] hover:bg-[#BB0202] text-white font-bold rounded-md transition-colors cursor-pointer" do
+              Wyloguj się
+        
+        / Main Content
+        .flex-1.p-5
+          / Flash Messages
+          - if notice.present?
+            .mb-5.p-4.rounded-md.font-bold{class: "bg-green-100 text-green-800 border-2 border-green-300"}
+              = notice
+          
+          - if alert.present?
+            .mb-5.p-4.rounded-md.font-bold{class: "bg-red-100 text-red-800 border-2 border-red-300"}
+              = alert
+          
+          / Page Content
+          = yield
