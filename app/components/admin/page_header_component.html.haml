@@ -1,0 +1,13 @@
+.mb-8
+  .flex.items-center.justify-between
+    .flex.items-center.gap-3
+      - if icon
+        .w-12.h-12.rounded-lg.bg-gradient-to-br.from-amber-100.to-orange-100.flex.items-center.justify-center
+          = lucide_icon(icon, class: "w-6 h-6 text-amber-600")
+      .div
+        %h1.text-3xl.font-bold.text-gray-900= title
+        - if subtitle
+          %p.mt-1.text-sm.text-gray-500= subtitle
+    - if content.present?
+      .flex.items-center.gap-2
+        = content

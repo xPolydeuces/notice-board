@@ -1,0 +1,33 @@
+pl:
+  app:
+    name: "Tablica Ogłoszeń"
+  
+  admin:
+    panel: "Panel Administratora"
+    access_denied: "Brak dostępu do panelu administratora"
+    
+    dashboard:
+      title: "Panel Główny"
+      subtitle: "Witaj w panelu administracyjnym"
+      statistics: "Statystyki"
+      users: "Użytkownicy"
+      locations: "Lokalizacje"
+      news_posts: "Ogłoszenia"
+      rss_feeds: "Kanały RSS"
+    
+    navigation_component:
+      dashboard: "Panel Główny"
+      users: "Użytkownicy"
+      locations: "Lokalizacje"
+      news_posts: "Ogłoszenia"
+      rss_feeds: "Kanały RSS"
+    
+    user_info_component:
+      admin: "Administrator"
+      general: "Redaktor"
+      location: "Lokalizacja: %{location}"
+      user: "Użytkownik"
+      sign_out: "Wyloguj"
+    
+    page_header_component:
+      actions: "Akcje"

@@ -1,22 +1,17 @@
-# Polish translations for login and app branding
 pl:
-  app:
-    name: "Panel Administracyjny"
-    subtitle: "Tablica Ogłoszeń"
-    company_name: COMPANY_NAME
-    rights: "Wszelkie prawa zastrzeżone"
-  
   devise:
     sessions:
       new:
-        title: "Logowanie - Panel Administracyjny"
-        sign_in: "Zaloguj się"
-        username_placeholder: "Wprowadź nazwę użytkownika"
-        password_placeholder: "Wprowadź hasło"
-        remember_me: "Zapamiętaj mnie"
-  
-  activerecord:
-    attributes:
-      user:
+        title: "Logowanie"
+        subtitle: "Zaloguj się do panelu administracyjnego"
         username: "Nazwa użytkownika"
         password: "Hasło"
+        remember_me: "Zapamiętaj mnie"
+        sign_in: "Zaloguj się"
+    failure:
+      invalid: "Nieprawidłowa nazwa użytkownika lub hasło."
+      unauthenticated: "Musisz się zalogować lub zarejestrować, aby kontynuować."
+      already_authenticated: "Jesteś już zalogowany."
+    sessions:
+      signed_in: "Zalogowano pomyślnie."
+      signed_out: "Wylogowano pomyślnie."

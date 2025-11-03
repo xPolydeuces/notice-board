@@ -1,0 +1,136 @@
+pl:
+  app:
+    name: "Tablica Ogłoszeń"
+  
+  hello: "Witaj"
+  
+  # Rails system translations
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " i "
+      last_word_connector: " i "
+  
+  # Date and time formats
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d %b"
+      long: "%d %B %Y"
+    
+    day_names:
+      - niedziela
+      - poniedziałek
+      - wtorek
+      - środa
+      - czwartek
+      - piątek
+      - sobota
+    
+    abbr_day_names:
+      - nd
+      - pn
+      - wt
+      - śr
+      - cz
+      - pt
+      - sb
+    
+    month_names:
+      - ~
+      - styczeń
+      - luty
+      - marzec
+      - kwiecień
+      - maj
+      - czerwiec
+      - lipiec
+      - sierpień
+      - wrzesień
+      - październik
+      - listopad
+      - grudzień
+    
+    abbr_month_names:
+      - ~
+      - sty
+      - lut
+      - mar
+      - kwi
+      - maj
+      - cze
+      - lip
+      - sie
+      - wrz
+      - paź
+      - lis
+      - gru
+  
+  time:
+    formats:
+      default: "%d.%m.%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%d %B %Y %H:%M:%S"
+    am: "przed południem"
+    pm: "po południu"
+  
+  # Common words
+  actions: "Akcje"
+  back: "Wróć"
+  cancel: "Anuluj"
+  create: "Utwórz"
+  delete: "Usuń"
+  edit: "Edytuj"
+  save: "Zapisz"
+  show: "Pokaż"
+  update: "Aktualizuj"
+  
+  # Confirmations
+  are_you_sure: "Czy jesteś pewien?"
+  
+  # Flash messages
+  created: "Utworzono pomyślnie"
+  updated: "Zaktualizowano pomyślnie"
+  deleted: "Usunięto pomyślnie"
+  
+  # Number formatting
+  number:
+    format:
+      separator: ","
+      delimiter: " "
+      precision: 2
+    currency:
+      format:
+        format: "%n %u"
+        unit: "PLN"
+        separator: ","
+        delimiter: " "
+        precision: 2
+  
+  # Errors
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      inclusion: "nie znajduje się na liście dopuszczalnych wartości"
+      exclusion: "znajduje się na liście zarezerwowanych wartości"
+      invalid: "jest nieprawidłowe"
+      confirmation: "nie zgadza się z potwierdzeniem"
+      accepted: "musi zostać zaakceptowane"
+      empty: "nie może być puste"
+      blank: "nie może być puste"
+      present: "musi być puste"
+      too_long: "jest za długie (maksymalnie %{count} znaków)"
+      too_short: "jest za krótkie (minimum %{count} znaków)"
+      wrong_length: "ma nieprawidłową długość (powinna wynosić %{count} znaków)"
+      not_a_number: "nie jest liczbą"
+      not_an_integer: "musi być liczbą całkowitą"
+      greater_than: "musi być większe niż %{count}"
+      greater_than_or_equal_to: "musi być większe lub równe %{count}"
+      equal_to: "musi być równe %{count}"
+      less_than: "musi być mniejsze niż %{count}"
+      less_than_or_equal_to: "musi być mniejsze lub równe %{count}"
+      other_than: "musi być inne niż %{count}"
+      odd: "musi być nieparzyste"
+      even: "musi być parzyste"
+      required: "musi istnieć"
+      taken: "zostało już zajęte"

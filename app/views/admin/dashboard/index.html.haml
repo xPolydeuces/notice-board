@@ -1,55 +1,44 @@
-.mb-5
-  %h1.text-3xl.font-bold{class: "text-gray-800"} Dashboard
+- content_for :title, t('admin.dashboard.title')
 
-.grid.grid-cols-1.md_grid-cols-2.lg_grid-cols-3.gap-5
-  / Total News Posts
-  .bg-white.rounded-lg.p-6.shadow
-    .flex.items-center.justify-between
-      %div
-        %p.text-gray-500.text-sm.font-semibold Wszystkie aktualności
-        %p.text-3xl.font-bold{class: "text-[#FA812F]"}= @stats[:total_news_posts]
-      .text-4xl 📰
-  
-  / Published Posts
-  .bg-white.rounded-lg.p-6.shadow
-    .flex.items-center.justify-between
-      %div
-        %p.text-gray-500.text-sm.font-semibold Opublikowane
-        %p.text-3xl.font-bold.text-green-600= @stats[:published_posts]
-      .text-4xl ✅
-  
-  / Draft Posts
-  .bg-white.rounded-lg.p-6.shadow
-    .flex.items-center.justify-between
-      %div
-        %p.text-gray-500.text-sm.font-semibold Szkice
-        %p.text-3xl.font-bold.text-yellow-600= @stats[:draft_posts]
-      .text-4xl 📝
-  
-  - if current_user.admin?
-    / Total Users
-    .bg-white.rounded-lg.p-6.shadow
-      .flex.items-center.justify-between
-        %div
-          %p.text-gray-500.text-sm.font-semibold Użytkownicy
-          %p.text-3xl.font-bold{class: "text-[#FA812F]"}= @stats[:total_users]
-        .text-4xl 👥
-    
-    / Total Locations
-    .bg-white.rounded-lg.p-6.shadow
-      .flex.items-center.justify-between
-        %div
-          %p.text-gray-500.text-sm.font-semibold Lokalizacje
-          %p.text-3xl.font-bold{class: "text-[#FA812F]"}= @stats[:total_locations]
-        .text-4xl 📍
+= render Admin::PageHeaderComponent.new(
+  title: t('admin.dashboard.title'),
+  subtitle: t('admin.dashboard.subtitle'),
+  icon: 'layout-dashboard'
+)
 
-.mt-8.bg-white.rounded-lg.p-6.shadow
-  %h2.text-xl.font-bold.mb-4 Witaj w Panelu Administracyjnym!
-  %p.text-gray-600.mb-3
-    Jesteś zalogowany jako
-    %strong= current_user.username
-    z rolą
-    %strong= current_user.role.upcase
+.grid.grid-cols-1.md_grid-cols-2.lg_grid-cols-4.gap-6
+  / Users Card
+  .bg-white.rounded-lg.shadow.p-6
+    .flex.items-center.justify-between
+      .div
+        %p.text-sm.font-medium.text-gray-600= t('admin.dashboard.users')
+        %p.text-3xl.font-bold.text-gray-900= @stats[:users_count]
+      .w-12.h-12.rounded-lg.bg-blue-100.flex.items-center.justify-center
+        = lucide_icon('users', class: 'w-6 h-6 text-blue-600')
   
-  %p.text-gray-600
-    Wybierz opcję z menu po lewej stronie, aby rozpocząć zarządzanie treścią.
+  / Locations Card
+  .bg-white.rounded-lg.shadow.p-6
+    .flex.items-center.justify-between
+      .div
+        %p.text-sm.font-medium.text-gray-600= t('admin.dashboard.locations')
+        %p.text-3xl.font-bold.text-gray-900= @stats[:locations_count]
+      .w-12.h-12.rounded-lg.bg-green-100.flex.items-center.justify-center
+        = lucide_icon('map-pin', class: 'w-6 h-6 text-green-600')
+  
+  / News Posts Card
+  .bg-white.rounded-lg.shadow.p-6
+    .flex.items-center.justify-between
+      .div
+        %p.text-sm.font-medium.text-gray-600= t('admin.dashboard.news_posts')
+        %p.text-3xl.font-bold.text-gray-900= @stats[:news_posts_count]
+      .w-12.h-12.rounded-lg.bg-amber-100.flex.items-center.justify-center
+        = lucide_icon('newspaper', class: 'w-6 h-6 text-amber-600')
+  
+  / RSS Feeds Card
+  .bg-white.rounded-lg.shadow.p-6
+    .flex.items-center.justify-between
+      .div
+        %p.text-sm.font-medium.text-gray-600= t('admin.dashboard.rss_feeds')
+        %p.text-3xl.font-bold.text-gray-900= @stats[:rss_feeds_count]
+      .w-12.h-12.rounded-lg.bg-orange-100.flex.items-center.justify-center
+        = lucide_icon('rss', class: 'w-6 h-6 text-orange-600')

@@ -1,0 +1,38 @@
+pl:
+  devise:
+    sessions:
+      new:
+        title: "Logowanie"
+        subtitle: "Zaloguj się do panelu administracyjnego"
+        username: "Nazwa użytkownika"
+        password: "Hasło"
+        remember_me: "Zapamiętaj mnie"
+        sign_in: "Logowanie"
+      signed_in: "Zalogowano pomyślnie."
+      signed_out: "Wylogowano pomyślnie."
+      already_signed_out: "Użytkownik został już wylogowany."
+    
+    passwords:
+      new:
+        title: "Zapomniałeś hasła?"
+        send_instructions: "Wyślij instrukcje resetowania hasła"
+      edit:
+        title: "Zmień hasło"
+        new_password: "Nowe hasło"
+        confirm_password: "Potwierdź nowe hasło"
+        change_password: "Zmień hasło"
+      send_instructions: "Za chwilę otrzymasz e-mail z instrukcją jak zresetować hasło."
+      send_paranoid_instructions: "Jeśli Twój e-mail istnieje w naszej bazie, za chwilę powinieneś otrzymać link do odzyskania hasła."
+      updated: "Twoje hasło zostało zmienione. Jesteś już zalogowany."
+      updated_not_active: "Twoje hasło zostało zmienione."
+    
+    failure:
+      already_authenticated: "Jesteś już zalogowany."
+      inactive: "Twoje konto nie zostało jeszcze aktywowane."
+      invalid: "Nieprawidłowa nazwa użytkownika lub hasło."
+      last_attempt: "Masz jeszcze jedną próbę zanim Twoje konto zostanie zablokowane."
+      locked: "Twoje konto jest zablokowane."
+      not_found_in_database: "Nieprawidłowa nazwa użytkownika lub hasło."
+      timeout: "Twoja sesja wygasła. Zaloguj się ponownie aby kontynuować."
+      unauthenticated: "Musisz się zalogować lub zarejestrować, aby kontynuować."
+      unconfirmed: "Musisz potwierdzić swoje konto, aby kontynuować."

@@ -9,28 +9,25 @@ Rails.application.routes.draw do
     sessions: "users/sessions"
   }
 
-  # Locale scope for internationalization
-  scope "(:locale)", locale: /#{I18n.available_locales.join('|')}/ do
-    # Public display (notice board)
-    root "dashboard#index"
+  # Public display (notice board)
+  root "dashboard#index"
 
-    # Admin namespace
-    namespace :admin do
-      root "dashboard#index"
-      
-      resources :users
-      resources :locations
-      resources :news_posts do
-        member do
-          patch :archive
-          patch :restore
-          patch :publish
-          patch :unpublish
-        end
+  # Admin namespace
+  namespace :admin do
+    root "dashboard#index"
+    
+    resources :users
+    resources :locations
+    resources :news_posts do
+      member do
+        patch :archive
+        patch :restore
+        patch :publish
+        patch :unpublish
       end
-      resources :rss_feeds
-      resource :password, only: [:edit, :update]
     end
+    resources :rss_feeds
+    resource :password, only: [:edit, :update]
   end
 
   # Authenticated admin tools

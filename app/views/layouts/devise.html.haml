@@ -1,13 +1,14 @@
 !!!
 %html{lang: I18n.locale}
   %head
-    %meta{charset: "UTF-8"}/
-    %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}/
-    %title= content_for?(:title) ? yield(:title) : t('app.name', default: AppConfig::APP_NAME)
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title= t('devise.sessions.new.title', default: 'Logowanie - Panel Administracyjny')
+    %meta{name: "viewport", content: "width=device-width,initial-scale=1"}/
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
-    
-  %body
-    = yield
+  %body.min-h-screen.flex.items-center.justify-center{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
+    .w-full.max-w-md.px-6
+      = render FlashComponent.new(flash: flash) if flash.any?
+      = yield
