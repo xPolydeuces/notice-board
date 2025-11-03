@@ -4,9 +4,9 @@ Rails.application.routes.draw do
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Devise routes
+  # Devise routes (skip registration - admins create users)
   devise_for :users, skip: [:registrations], controllers: {
-    sessions: "devise/sessions"
+    sessions: "users/sessions"
   }
 
   # Locale scope for internationalization
