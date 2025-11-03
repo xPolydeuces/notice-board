@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Admin
+  # Dashboard controller for admin panel home page
   class DashboardController < BaseController
     def index
       @stats = {
-        total_news_posts: NewsPost.active.count,
-        published_posts: NewsPost.published.active.count,
-        draft_posts: NewsPost.unpublished.active.count,
-        total_users: User.count,
-        total_locations: Location.active.count
+        users_count: User.count,
+        locations_count: Location.count,
+        news_posts_count: NewsPost.count,
+        rss_feeds_count: RssFeed.count
       }
     end
   end

@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+# Configure I18n (internationalization) settings
+Rails.application.configure do
+  # Set default locale to Polish
+  config.i18n.default_locale = :pl
+  
+  # Set available locales (only Polish for this app)
+  config.i18n.available_locales = [:pl]
+  
+  # Raise errors on missing translations in development/test
+  config.i18n.raise_on_missing_translations = true if Rails.env.development? || Rails.env.test?
+  
+  # Fall back to default locale if translation is missing
+  config.i18n.fallbacks = true
+end

@@ -1,39 +1,35 @@
 # frozen_string_literal: true
 
 class NewsPost < ApplicationRecord
-  # Constants for post types
-  POST_TYPES = %w[general location].freeze
+  # Enums for content type
+  enum :post_type, { text: 0, rich_text: 1, image_only: 2 }
 
   # Associations
   belongs_to :user
-  belongs_to :location, optional: true
+  belongs_to :location, optional: true  # nil = general post, set = location-specific
 
   # Validations
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true
-  validates :post_type, presence: true, inclusion: { in: POST_TYPES }
-  validates :location, presence: true, if: :location_post?
-
-  # Ensure general posts don't have a location
-  validate :general_posts_cannot_have_location
+  validates :post_type, presence: true
 
   # Scopes
   scope :published, -> { where(published: true) }
   scope :unpublished, -> { where(published: false) }
   scope :archived, -> { where(archived: true) }
   scope :active, -> { where(archived: false) }
-  scope :general, -> { where(post_type: "general") }
-  scope :for_location, ->(location_id) { where(post_type: "location", location_id: location_id) }
+  scope :general, -> { where(location_id: nil) }  # Posts for all locations
+  scope :for_location, ->(location_id) { where(location_id: location_id) }  # Location-specific
   scope :recent, -> { order(created_at: :desc) }
   scope :by_published_date, -> { order(published_at: :desc, created_at: :desc) }
 
-  # Type helpers
+  # Type helpers - check if post is general (no location) or location-specific
   def general?
-    post_type == "general"
+    location_id.nil?
   end
 
-  def location_post?
-    post_type == "location"
+  def location_specific?
+    location_id.present?
   end
 
   # Publishing
@@ -62,11 +58,7 @@ class NewsPost < ApplicationRecord
     "Draft"
   end
 
-  private
-
-  def general_posts_cannot_have_location
-    return unless general? && location_id.present?
-
-    errors.add(:location, "cannot be set for general posts")
+  def scope_badge
+    general? ? "General" : "Location: #{location.code}"
   end
 end

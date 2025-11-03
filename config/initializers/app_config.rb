@@ -1,24 +1,32 @@
-# Application Configuration
-# This file contains branding and configuration settings
+# frozen_string_literal: true
 
+# Application-wide configuration
 module AppConfig
-  # Company/Organization Information
-  COMPANY_NAME = ENV.fetch("COMPANY_NAME")
-  
-  # Logo URL (can be overridden via environment variable)
-  LOGO_URL = ENV.fetch("LOGO_URL")
-  
-  # Application Name
-  APP_NAME = ENV.fetch("APP_NAME")
-  APP_SUBTITLE = ENV.fetch("APP_SUBTITLE")
-  
-  # Brand Colors (Tailwind CSS classes)
-  COLORS = {
-    primary: "#FA812F",
-    primary_hover: "#E87020",
-    secondary: "#FAB12F",
-    cream: "#FEF3E2",
-    danger: "#DD0303",
-    danger_hover: "#BB0202"
+  # Brand colors
+  BRAND_COLORS = {
+    primary: '#FAB12F',
+    secondary: '#FA812F',
+    accent: '#DD0303',
+    background: '#FEF3E2'
   }.freeze
+
+  # Application name and branding
+  APP_NAME = 'Tablica Ogłoszeń'
+  APP_SUBTITLE = 'Panel Administracyjny'
+  COMPANY_NAME = 'MZA'
+  LOGO_URL = 'https://www.mza.waw.pl/wp-content/themes/mza/img/mza_logo.svg'
+
+  # Default pagination
+  DEFAULT_PER_PAGE = 25
+
+  # News post settings
+  NEWS_POST_TITLE_MAX_LENGTH = 200
+  NEWS_POST_CONTENT_MAX_LENGTH = 5000
+
+  # RSS feed settings
+  RSS_FEED_REFRESH_INTERVAL = 15.minutes
+  RSS_FEED_MAX_ITEMS = 10
+
+  # Location settings
+  DEFAULT_LOCATION_PREFIX = 'R-'
 end
