@@ -11,7 +11,8 @@ module Admin
     private
 
     def require_admin_access!
-      unless current_user&.admin? || current_user&.general? || current_user&.location_role?
+      # With enum roles, we can check directly
+      unless current_user&.admin? || current_user&.general? || current_user&.location?
         redirect_to root_path, alert: t('admin.access_denied', default: 'Brak dostępu do panelu administratora')
       end
     end

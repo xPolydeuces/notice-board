@@ -5,5 +5,5 @@
     %p.text-sm.font-medium.text-gray-900.truncate= user.username
     %span.inline-flex.items-center.px-2.py-0.5.rounded.text-xs.font-medium{ class: role_badge_class }
       = role_name
-  = link_to destroy_user_session_path, method: :delete, class: "text-gray-400 hover:text-gray-600", title: t('.sign_out', default: 'Wyloguj') do
+  = button_to destroy_user_session_path, method: :delete, data: {turbo: false}, class: "text-gray-400 hover:text-gray-600", title: t('.sign_out', default: 'Wyloguj') do
     = lucide_icon("log-out", class: "w-5 h-5")

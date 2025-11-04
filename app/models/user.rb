@@ -1,22 +1,64 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  # Devise modules - removed :registerable since admins create users
-  devise :database_authenticatable, :rememberable, :validatable,
+  # Devise modules - using username instead of email for authentication
+  devise :database_authenticatable, :rememberable, :trackable, :timeoutable,
          authentication_keys: [:username]
-
+  
   # Associations
   belongs_to :location, optional: true
-  has_many :user_roles, dependent: :destroy
-  has_many :roles, through: :user_roles
   has_many :news_posts, dependent: :nullify
+
+  # Enums
+  enum :role, { general: 0, location: 1, admin: 2 }, default: :general
 
   # Validations
   validates :username, presence: true, uniqueness: { case_sensitive: false }
-  validates :email, allow_blank: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :location, presence: true, if: :location_role?
+  validates :username, format: { with: /\A[a-zA-Z0-9_]+\z/, message: "może zawierać tylko litery, cyfry i podkreślenia" }
+  validates :username, length: { minimum: 3, maximum: 20 }
+  validates :role, presence: true
+  validates :location, presence: true, if: :location?
+  validates :password, presence: true, on: :create
+  validates :password, length: { minimum: 6 }, allow_blank: true
 
-  # Make email optional for Devise
+  # Callbacks
+  before_validation :downcase_username
+
+  # Scopes
+  scope :alphabetical, -> { order(:username) }
+  scope :by_role, ->(role) { where(role: role) }
+
+  # Permission methods
+  def can_edit_location?(location)
+    admin? || (location? && self.location == location)
+  end
+
+  def can_create_general_news?
+    admin? || general?
+  end
+
+  def can_manage_users?
+    admin?
+  end
+
+  def can_manage_locations?
+    admin?
+  end
+
+  def can_manage_rss_feeds?
+    admin?
+  end
+
+  # Display methods
+  def display_name
+    username
+  end
+
+  def to_s
+    display_name
+  end
+
+  # Override Devise method to use username for authentication
   def email_required?
     false
   end
@@ -25,33 +67,13 @@ class User < ApplicationRecord
     false
   end
 
-  # Role helper methods
-  def admin?
-    roles.exists?(id: Role::ADMIN_ID)
+  def will_save_change_to_email?
+    false
   end
 
-  def general?
-    roles.exists?(id: Role::GENERAL_ID)
-  end
+  private
 
-  def location_role?
-    roles.exists?(id: Role::LOCATION_ID)
-  end
-
-  # For display purposes
-  def role
-    return "admin" if admin?
-    return "general" if general?
-    return "location" if location_role?
-
-    "none"
-  end
-
-  # Check if user can manage posts for a specific location
-  def can_manage_location?(location_id)
-    return true if admin? || general?
-    return false unless location_role?
-
-    self.location_id == location_id
+  def downcase_username
+    self.username = username.to_s.downcase
   end
 end
