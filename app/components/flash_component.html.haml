@@ -1,11 +1,14 @@
 - if render?
-  .space-y-3
-    - flash_messages.each do |type, message|
-      - config = flash_config(type)
-      .flex.items-start.gap-3.p-4.rounded-lg.border{ class: "#{config[:bg]} #{config[:text]} #{config[:border]}" }
-        = lucide_icon(config[:icon], class: "w-5 h-5 flex-shrink-0 mt-0.5")
-        .flex-1
-          %p= message
-        - if dismissible
-          %button.flex-shrink-0.hover:opacity-70{ type: "button", onclick: "this.closest('div').remove()" }
-            = lucide_icon("x", class: "w-5 h-5")
+  - flash_messages.each do |type, message|
+    - if type.to_s == 'notice'
+      .mb-5.p-4.rounded-md.font-bold{class: "bg-green-100 text-green-800 border-2 border-green-300"}
+        = message
+    - elsif type.to_s == 'alert'
+      .mb-5.p-4.rounded-md.font-bold{class: "bg-red-100 text-red-800 border-2 border-red-300"}
+        = message
+    - elsif type.to_s == 'success'
+      .mb-5.p-4.rounded-md.font-bold{class: "bg-green-100 text-green-800 border-2 border-green-300"}
+        = message
+    - elsif type.to_s == 'error'
+      .mb-5.p-4.rounded-md.font-bold{class: "bg-red-100 text-red-800 border-2 border-red-300"}
+        = message
