@@ -1,10 +1,8 @@
 - content_for :title, t('admin.dashboard.title')
 
-= render Admin::PageHeaderComponent.new(
-  title: t('admin.dashboard.title'),
-  subtitle: t('admin.dashboard.subtitle'),
-  icon: 'layout-dashboard'
-)
+= render Admin::PageHeaderComponent.new(title: t('admin.dashboard.title'), subtitle: t('admin.dashboard.subtitle'), icon: 'layout-dashboard')
+  
+
 
 .grid.grid-cols-1.md_grid-cols-2.lg_grid-cols-4.gap-6
   / Users Card
