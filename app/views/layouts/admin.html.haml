@@ -1,34 +1,70 @@
 !!!
-%html
+%html{lang: "pl"}
   %head
-    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %title
-      = yield(:title)
-      = "| #{t('app.name', default: 'Noticeboard')}"
-    %meta{name: "viewport", content: "width=device-width,initial-scale=1"}/
+    %meta{charset: "UTF-8"}/
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}/
+    %title Panel Administracyjny
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
-  %body.bg-gray-50.min-h-screen
-    .flex.h-screen
-      / Sidebar
-      %aside.w-64.bg-white.border-r.border-gray-200.flex.flex-col
-        / Brand Header
-        .p-6.border-b.border-gray-200
-          %h1.text-2xl.font-bold.text-gray-900= t('app.name', default: 'Noticeboard')
-          %p.text-sm.text-gray-500= t('admin.panel', default: 'Panel administratora')
+    
+    / Trix Rich Text Editor
+    %link{rel: "stylesheet", type: "text/css", href: "https://unpkg.com/trix@2.0.8/dist/trix.css"}/
+    %script{type: "text/javascript", src: "https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"}
+    
+  %body.min-h-screen{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
+    .container.max-w-7xl.mx-auto.p-6
+      .flex.gap-6.min-h-screen
         
-        / Navigation
-        .flex-1.overflow-y-auto.py-4
-          = render Admin::NavigationComponent.new(current_user: current_user)
+        / Sidebar - modern glass effect, no borders
+        .w-56.rounded-2xl.p-6.backdrop-blur-sm.bg-white.bg-opacity-60.shadow-xl{style: "flex-shrink: 0;"}
+          / Logo Section
+          .mb-10.text-center
+            %img.mx-auto.mb-5{src: AppConfig::LOGO_URL, alt: "MZA Logo", style: "max-width: 75%; height: auto;"}
+            %h2.text-xl.font-semibold.tracking-tight{class: "text-[#FA812F]"} Panel Administracyjny
+            
+            / User Info - clean, minimal
+            .mt-6.pt-6.border-t.border-gray-200
+              .text-center
+                .text-sm.font-medium.text-gray-900= current_user.username
+                - if Rails.env.development?
+                  .text-xs.text-gray-500.mt-1= current_user.role.capitalize
+          
+          / Navigation - modern spacing and icons
+          %nav.mt-8.space-y-2
+            = link_to admin_news_posts_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'news_posts' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+              = lucide_icon('newspaper', class: 'w-5 h-5')
+              %span Aktualności
+            
+            - if current_user.admin?
+              = link_to admin_locations_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'locations' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+                = lucide_icon('map-pin', class: 'w-5 h-5')
+                %span Lokalizacje
+              
+              = link_to admin_rss_feeds_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'rss_feeds' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+                = lucide_icon('rss', class: 'w-5 h-5')
+                %span RSS
+              
+              = link_to admin_users_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'users' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+                = lucide_icon('users', class: 'w-5 h-5')
+                %span Użytkownicy
+          
+          / User Menu Section - cleaner divider
+          .mt-auto.pt-6.border-t.border-gray-200
+            = link_to edit_admin_password_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'passwords' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
+              = lucide_icon('lock', class: 'w-5 h-5')
+              %span Zmień hasło
+            
+            = button_to destroy_user_session_path, method: :delete, data: { turbo: false }, class: "flex items-center justify-center gap-2 w-full mt-4 py-3 px-4 bg-[#DD0303] hover:bg-[#BB0202] text-white text-sm font-semibold rounded-xl shadow-md transition-all cursor-pointer" do
+              = lucide_icon('log-out', class: 'w-4 h-4')
+              %span Wyloguj się
         
-        / User Info at Bottom
-        .border-t.border-gray-200.p-4
-          = render Admin::UserInfoComponent.new(user: current_user)
-      
-      / Main Content
-      %main.flex-1.overflow-y-auto
-        .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-8
-          = render FlashComponent.new(flash: flash)
-          = yield
+        / Main Content - modern card
+        .flex-1
+          .bg-white.rounded-2xl.shadow-lg.p-8.min-h-full
+            / Flash Messages
+            = render FlashComponent.new(flash: flash) if flash.any?
+            
+            / Page Content
+            = yield
