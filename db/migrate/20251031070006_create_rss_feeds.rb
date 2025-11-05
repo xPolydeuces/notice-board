@@ -1,4 +1,4 @@
-class CreateRssFeeds < ActiveRecord::Migration[8.0]
+class CreateRssFeeds < ActiveRecord::Migration[8.1]
   def change
     create_table :rss_feeds do |t|
       t.string :name, null: false
