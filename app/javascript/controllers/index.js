@@ -4,9 +4,6 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
-
 import LocaleDropdownController from "./locale_dropdown_controller"
 application.register("locale-dropdown", LocaleDropdownController)
 

@@ -2,6 +2,8 @@
 
 module Admin
   # User info component for admin sidebar
+  # PERFORMANCE NOTE: When rendering this component in a list, ensure you preload :location
+  # Example: User.includes(:location).all
   class UserInfoComponent < ApplicationViewComponent
     option :user, Types.Instance(User)
 
