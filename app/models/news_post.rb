@@ -5,8 +5,8 @@ class NewsPost < ApplicationRecord
   enum :post_type, { text: 0, rich_text: 1, image_only: 2 }
 
   # Associations
-  belongs_to :user, inverse_of: :news_posts
-  belongs_to :location, optional: true, inverse_of: :news_posts
+  belongs_to :user, inverse_of: :news_posts, counter_cache: true
+  belongs_to :location, optional: true, inverse_of: :news_posts, counter_cache: true
 
   # Validations
   validates :title, presence: true, length: { maximum: 255 }
@@ -22,6 +22,13 @@ class NewsPost < ApplicationRecord
   scope :for_location, ->(location_id) { where(location_id: location_id) }  # Location-specific
   scope :recent, -> { order(created_at: :desc) }
   scope :by_published_date, -> { order(published_at: :desc, created_at: :desc) }
+
+  # Eager loading associations to avoid N+1 queries
+  scope: with_associations, -> { includes(:user, :location) }
+
+  # Combined scope for displaying posts
+  scope :for_display, -> { published.active.with_associations.by_published_date }
+
 
   # Type helpers - check if post is general (no location) or location-specific
   def general?

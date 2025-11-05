@@ -6,7 +6,7 @@ class User < ApplicationRecord
          authentication_keys: [:username]
   
   # Associations
-  belongs_to :location, optional: true, inverse_of: :users
+  belongs_to :location, optional: true, inverse_of: :users, counter_cache: true
   has_many :news_posts, dependent: :nullify, inverse_of: :user
 
   # Enums
