@@ -1,6 +1,7 @@
 .min-h-screen.flex.items-center.justify-center{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
   .text-center.p-8
-    %img.mx-auto.mb-8{src: "https://www.mza.waw.pl/wp-content/themes/mza/img/mza_logo.svg", alt: "MZA Logo", class: "h-32"}
+    - if AppConfig::LOGO_URL.present?
+      %img.mx-auto.mb-8{src: AppConfig::LOGO_URL, alt: "#{AppConfig::COMPANY_NAME} Logo", class: "h-32"}
     %h1.text-4xl.font-bold.mb-4{class: "text-[#FA812F]"} Tablica Ogłoszeń
     %p.text-xl.text-gray-700.mb-8 Publiczny widok będzie dostępny wkrótce
     

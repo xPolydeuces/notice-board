@@ -11,10 +11,10 @@ module AppConfig
   }.freeze
 
   # Application name and branding
-  APP_NAME = 'Tablica Ogłoszeń'
-  APP_SUBTITLE = 'Panel Administracyjny'
-  COMPANY_NAME = 'MZA'
-  LOGO_URL = 'https://www.mza.waw.pl/wp-content/themes/mza/img/mza_logo.svg'
+  APP_NAME = ENV.fetch('APP_NAME', 'Tablica Ogłoszeń')
+  APP_SUBTITLE = ENV.fetch('APP_SUBTITLE', 'Panel Administracyjny')
+  COMPANY_NAME = ENV.fetch('COMPANY_NAME', 'Your Company')
+  LOGO_URL = ENV.fetch('LOGO_URL', '')
 
   # Default pagination
   DEFAULT_PER_PAGE = 25
