@@ -52,5 +52,8 @@ module Noticeboard
 
     # Turn off useless generators
     config.generators.helper = false
+
+    # Use Rack::Attack for rate limiting and blocking abusive requests
+    config.middleware.use Rack::Attack
   end
 end
