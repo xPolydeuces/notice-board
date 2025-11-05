@@ -23,10 +23,13 @@ export default class extends Controller {
   }
 
   connect() {
-    document.addEventListener("click", this.clickOutside.bind(this))
+    // Store bound function reference to properly remove listener in disconnect
+    this.boundClickOutside = this.clickOutside.bind(this)
+    document.addEventListener("click", this.boundClickOutside)
   }
 
   disconnect() {
-    document.removeEventListener("click", this.clickOutside.bind(this))
+    // Remove the same function reference that was added in connect
+    document.removeEventListener("click", this.boundClickOutside)
   }
 }
