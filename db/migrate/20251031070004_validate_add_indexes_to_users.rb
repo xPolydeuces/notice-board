@@ -1,4 +1,4 @@
-class ValidateAddIndexesToUsers < ActiveRecord::Migration[8.0]
+class ValidateAddIndexesToUsers < ActiveRecord::Migration[8.1]
   disable_ddl_transaction!
   
   def change

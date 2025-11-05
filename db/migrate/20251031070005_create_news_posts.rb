@@ -1,4 +1,4 @@
-class CreateNewsPosts < ActiveRecord::Migration[8.0]
+class CreateNewsPosts < ActiveRecord::Migration[8.1]
   def change
     create_table :news_posts do |t|
       t.string :title, null: false

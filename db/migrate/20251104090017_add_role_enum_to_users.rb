@@ -1,5 +1,5 @@
-class AddRoleEnumToUsers < ActiveRecord::Migration[8.0]
-disable_ddl_transaction!
+class AddRoleEnumToUsers < ActiveRecord::Migration[8.1]
+  disable_ddl_transaction!
 
   def up
     # Add role column as integer (for enum)
