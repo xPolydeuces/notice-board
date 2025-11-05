@@ -3,21 +3,11 @@
 # Clear existing data (development only)
 if Rails.env.development?
   puts "🧹 Clearing existing data..."
-  UserRole.destroy_all
   NewsPost.destroy_all
   User.destroy_all
   Location.destroy_all
   RssFeed.destroy_all
-  Role.destroy_all
 end
-
-# Create Roles
-puts "👥 Creating roles..."
-admin_role = Role.find_or_create_by!(name: 'admin')
-general_role = Role.find_or_create_by!(name: 'general')
-location_role = Role.find_or_create_by!(name: 'location')
-
-puts "✅ Created #{Role.count} roles"
 
 # Create Locations
 puts "📍 Creating locations..."
@@ -39,27 +29,27 @@ puts "👤 Creating users..."
 admin = User.find_or_create_by!(username: 'admin') do |user|
   user.password = 'password123'
   user.password_confirmation = 'password123'
+  user.role = :admin
   user.email = nil
 end
-admin.user_roles.find_or_create_by!(role: admin_role)
 
 # General user (can manage general posts for all locations)
 general_user = User.find_or_create_by!(username: 'redaktor') do |user|
   user.password = 'password123'
   user.password_confirmation = 'password123'
+  user.role = :general
   user.email = nil
 end
-general_user.user_roles.find_or_create_by!(role: general_role)
 
 # Location users (can only manage their location's posts)
 locations.each_with_index do |location, index|
-  user = User.find_or_create_by!(username: "lokalizacja#{index + 1}") do |u|
-    u.password = 'password123'
-    u.password_confirmation = 'password123'
-    u.location = location
-    u.email = nil
+  User.find_or_create_by!(username: "lokalizacja#{index + 1}") do |user|
+    user.password = 'password123'
+    user.password_confirmation = 'password123'
+    user.role = :location
+    user.location = location
+    user.email = nil
   end
-  user.user_roles.find_or_create_by!(role: location_role)
 end
 
 puts "✅ Created #{User.count} users"
@@ -67,7 +57,7 @@ puts "✅ Created #{User.count} users"
 # Create sample News Posts
 if Rails.env.development?
   puts "📰 Creating sample news posts..."
-  
+
   # General posts (location: nil) - visible on ALL location screens
   NewsPost.find_or_create_by!(
     title: 'Witamy w systemie tablicy ogłoszeń'
@@ -96,13 +86,11 @@ if Rails.env.development?
   # Location-specific posts - visible only on that location's screen
   locations.each_with_index do |location, index|
     # Get the location user
-    location_user = User.joins(:user_roles, :roles)
-                        .where(location: location, roles: { name: 'location' })
-                        .first
-    
+    location_user = User.find_by(location: location, role: :location)
+
     # Alternate between text and rich_text
     post_type = index.even? ? :text : :rich_text
-    
+
     NewsPost.find_or_create_by!(
       title: "Ogłoszenie dla #{location.code}"
     ) do |post|
@@ -126,8 +114,10 @@ puts "\n" + "="*50
 puts "🎉 Seed completed successfully!"
 puts "="*50
 puts "📊 Summary:"
-puts "  - Roles: #{Role.count}"
 puts "  - Users: #{User.count}"
+puts "    • Admins: #{User.admin.count}"
+puts "    • General: #{User.general.count}"
+puts "    • Location: #{User.location.count}"
 puts "  - Locations: #{Location.count}"
 puts "  - News Posts: #{NewsPost.count}"
 puts "  - RSS Feeds: #{RssFeed.count}"
@@ -141,4 +131,8 @@ puts "\n📝 How posts work:"
 puts "  - General posts (location: nil) → shown on ALL location screens"
 puts "  - Location posts (location: R-1) → shown only on that location's screen"
 puts "  - Post types: text, rich_text, image_only"
+puts "\n👥 User roles:"
+puts "  - Admin: Can manage everything (users, locations, RSS, all posts)"
+puts "  - General: Can create/edit general posts visible on all screens"
+puts "  - Location: Can only create/edit posts for their assigned location"
 puts "="*50

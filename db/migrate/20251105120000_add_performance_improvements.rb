@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AddPerformanceImprovements < ActiveRecord::Migration[8.1]
+  disable_ddl_transaction!
+
   def change
     # Add counter caches
     safety_assured do
@@ -9,9 +11,9 @@ class AddPerformanceImprovements < ActiveRecord::Migration[8.1]
     end
 
     # Add composite indexes for better query performance
-    add_index :news_posts, [:published, :archived, :created_at], name: 'index_news_posts_on_published_archived_created'
-    add_index :news_posts, [:location_id, :published, :archived], name: 'index_news_posts_on_location_published_archived'
-    add_index :news_posts, [:published_at, :archived], name: 'index_news_posts_on_published_at_archived'
+    add_index :news_posts, [:published, :archived, :created_at], name: 'index_news_posts_on_published_archived_created', algorithm: :concurrently
+    add_index :news_posts, [:location_id, :published, :archived], name: 'index_news_posts_on_location_published_archived', algorithm: :concurrently
+    add_index :news_posts, [:published_at, :archived], name: 'index_news_posts_on_published_at_archived', algorithm: :concurrently
 
     # Reset counter caches to accurate values
     reversible do |dir|
