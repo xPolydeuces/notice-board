@@ -1,75 +1,78 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails"
+gem "rails", "~> 8.1.0"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
-gem "propshaft"
+gem "propshaft", "~> 1.3"
 # Use postgresql as the database for Active Record
-gem "pg"
+gem "pg", "~> 1.6"
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma"
+gem "puma", "~> 7.1"
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
-gem "jsbundling-rails"
+gem "jsbundling-rails", "~> 1.3"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
+gem "turbo-rails", "~> 2.0"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
+gem "stimulus-rails", "~> 1.3"
 # Bundle and process CSS [https://github.com/rails/cssbundling-rails]
-gem "cssbundling-rails"
+gem "cssbundling-rails", "~> 1.4"
 # Authorization framework
-gem "action_policy"
+gem "action_policy", "~> 0.7.5"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[windows jruby]
 # Use the database-backed adapters for Rails.cache
-gem "solid_cache"
+gem "solid_cache", "~> 1.0"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem "bootsnap", "~> 1.18", require: false
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
-gem "kamal", require: false
+gem "kamal", "~> 2.8", require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-gem "thruster", require: false
+gem "thruster", "~> 0.1", require: false
 
 # Background job processing
-gem "sidekiq"
+gem "sidekiq", "~> 8.0"
 
 # Authentication framework
-gem "devise"
-gem "devise-i18n"
+gem "devise", "~> 4.9"
+gem "devise-i18n", "~> 1.15"
 
 # A framework for creating reusable, testable & encapsulated view components
-gem "view_component"
+gem "view_component", "~> 4.1"
 
 # Dry family
-gem "dry-initializer" # A simple way to create initializer methods
-gem "dry-types" # Type system for Ruby
+gem "dry-initializer", "~> 3.2" # A simple way to create initializer methods
+gem "dry-types", "~> 1.8" # Type system for Ruby
 
 # Lograge for 1 line logging
-gem "lograge"
+gem "lograge", "~> 0.14"
 
 # Interactor for business logic
-gem "interactor-rails"
+gem "interactor-rails", "~> 2.3"
 
 # Haml for HTML templates
-gem "haml-rails"
+gem "haml-rails", "~> 3.0"
 
 # Catch unsafe migrations in development
-gem "strong_migrations"
+gem "strong_migrations", "~> 2.5"
 
 # Internationalization for Rails
-gem "rails-i18n"
+gem "rails-i18n", "~> 8.0"
 
 # Find N+1 queries
-gem "pg_query"
-gem "prosopite"
+gem "pg_query", "~> 6.1"
+gem "prosopite", "~> 2.1"
 
 # PGHero for database monitoring
-gem "pghero"
+gem "pghero", "~> 3.7"
 
 # Lucide Icons for Rails
-gem "lucide-rails"
+gem "lucide-rails", "~> 0.7"
+
+# Rack middleware for rate limiting
+gem "rack-attack", "~> 6.7"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
