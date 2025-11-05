@@ -6,8 +6,8 @@ class User < ApplicationRecord
          authentication_keys: [:username]
   
   # Associations
-  belongs_to :location, optional: true
-  has_many :news_posts, dependent: :nullify
+  belongs_to :location, optional: true, inverse_of: :users
+  has_many :news_posts, dependent: :nullify, inverse_of: :user
 
   # Enums
   enum :role, { general: 0, location: 1, admin: 2 }, default: :general

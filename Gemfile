@@ -16,10 +16,10 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Bundle and process CSS [https://github.com/rails/cssbundling-rails]
 gem "cssbundling-rails"
-
+# Authorization framework
+gem "action_policy"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[windows jruby]
-
 # Use the database-backed adapters for Rails.cache
 gem "solid_cache"
 
@@ -113,9 +113,6 @@ group :development, :test do
 
   # Faker for generating fake data
   gem "faker"
-
-  # Authorization framework
-  gem "action_policy"
 end
 
 group :development do

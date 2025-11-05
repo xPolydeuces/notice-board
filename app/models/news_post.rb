@@ -5,8 +5,8 @@ class NewsPost < ApplicationRecord
   enum :post_type, { text: 0, rich_text: 1, image_only: 2 }
 
   # Associations
-  belongs_to :user
-  belongs_to :location, optional: true  # nil = general post, set = location-specific
+  belongs_to :user, inverse_of: :news_posts
+  belongs_to :location, optional: true, inverse_of: :news_posts
 
   # Validations
   validates :title, presence: true, length: { maximum: 255 }

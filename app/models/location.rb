@@ -2,8 +2,8 @@
 
 class Location < ApplicationRecord
   # Associations
-  has_many :users, dependent: :nullify
-  has_many :news_posts, dependent: :nullify
+  has_many :users, dependent: :nullify, inverse_of: :location
+  has_many :news_posts, dependent: :nullify, inverse_of: :location
 
   # Validations
   validates :code, presence: true, uniqueness: { case_sensitive: false }
