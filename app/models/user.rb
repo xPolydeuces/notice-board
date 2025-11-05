@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   # Validations
   validates :username, presence: true, uniqueness: { case_sensitive: false }
-  validates :username, format: { with: /\A[a-zA-Z0-9_]+\z/, message: "może zawierać tylko litery, cyfry i podkreślenia" }
+  validates :username, format: { with: /\A[a-zA-Z0-9_]+\z/ }
   validates :username, length: { minimum: 3, maximum: 20 }
   validates :role, presence: true
   validates :location, presence: true, if: :location?

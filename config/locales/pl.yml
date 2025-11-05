@@ -134,3 +134,11 @@ pl:
       even: "musi być parzyste"
       required: "musi istnieć"
       taken: "zostało już zajęte"
+      
+activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            username:
+              invalid: "może zawierać tylko litery, cyfry i podkreślenia"
