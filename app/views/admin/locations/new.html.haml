@@ -1,0 +1,7 @@
+
+- content_for :title, t('admin.locations.new')
+
+= render Admin::PageHeaderComponent.new(title: t('admin.locations.new'), subtitle: t('admin.locations.new_subtitle'), icon: 'map-pin')
+
+.bg-white.shadow.rounded-lg.p-6
+  = render 'form', location: @location

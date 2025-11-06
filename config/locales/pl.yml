@@ -141,4 +141,9 @@ activerecord:
         user:
           attributes:
             username:
-              invalid: "może zawierać tylko litery, cyfry i podkreślenia"
+             invalid: "może zawierać tylko litery, cyfry i podkreślenia"
+    attributes:
+      location:
+        code: "Kod"
+        name: "Nazwa"
+        active: "Aktywna" 

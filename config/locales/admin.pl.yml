@@ -24,10 +24,49 @@ pl:
     
     user_info_component:
       admin: "Administrator"
-      general: "Redaktor"
+      general: "Ogólny"
       location: "Lokalizacja: %{location}"
       user: "Użytkownik"
       sign_out: "Wyloguj"
     
     page_header_component:
       actions: "Akcje"
+
+    locations:
+      title: "Lokalizacje"
+      subtitle: "Zarządzaj lokalizacjami oddziałów"
+      new: "Dodaj Lokalizację"
+      edit: "Edytuj"
+      delete: "Usuń"
+      delete_confirm: "Czy na pewno chcesz usunąć tę lokalizację?"
+      created: "Lokalizacja została utworzona"
+      updated: "Lokalizacja została zaktualizowana"
+      deleted: "Lokalizacja została usunięta"
+      cannot_delete: "Nie można usunąć lokalizacji przypisanej do użytkowników lub ogłoszeń"
+      no_locations: "Brak lokalizacji"
+      new_subtitle: "Utwórz nową lokalizację"
+      table:
+        code: "Kod"
+        name: "Nazwa"
+        status: "Status"
+        users_count: "Użytkownicy"
+        news_posts_count: "Ogłoszenia"
+        actions: "Akcje"
+      status:
+        active: "Aktywna"
+        inactive: "Nieaktywna"
+      form:
+        code: "Kod lokalizacji"
+        code_placeholder: "np. R-1, R-2, R-3"
+        code_help: "Krótki kod identyfikujący lokalizację (3 znaki maksymalnie)"
+        name: "Nazwa lokalizacji"
+        name_placeholder: "np. Woronicza, Stalowa"
+        active: "Aktywna"
+        active_help: "Tylko aktywne lokalizacje są widoczne przy tworzeniu użytkowników i ogłoszeń"
+        cancel: "Anuluj"
+        submit: "Zapisz"
+        errors:
+          one: "Formularz zawiera 1 błąd"
+          few: "Formularz zawiera %{count} błędy"
+          many: "Formularz zawiera %{count} błędów"
+          other: "Formularz zawiera %{count} błędów"
