@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :news_post do
     association :user
     association :location, optional: true
-    title { Faker::Lorem.sentence }
-    content { Faker::Lorem.paragraph }
+    sequence(:title) { |n| "News Post Title #{n}" }
+    content { "This is the content of the news post." }
     post_type { :text }
     published { false }
     archived { false }

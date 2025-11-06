@@ -5,8 +5,8 @@ Rails.application.configure do
   # Set default locale to Polish
   config.i18n.default_locale = :pl
   
-  # Set available locales (only Polish for this app)
-  config.i18n.available_locales = [:pl]
+  # Set available locales (Polish and English)
+  config.i18n.available_locales = [:pl, :en]
   
   # Raise errors on missing translations in development/test
   config.i18n.raise_on_missing_translations = true if Rails.env.development? || Rails.env.test?
