@@ -36,7 +36,8 @@ CREATE TABLE public.locations (
     name character varying NOT NULL,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    news_posts_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -74,7 +75,8 @@ CREATE TABLE public.news_posts (
     published_at timestamp(6) without time zone,
     archived boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT check_news_posts_post_type CHECK (((post_type)::text = ANY ((ARRAY['general'::character varying, 'location'::character varying])::text[])))
 );
 
 
@@ -160,7 +162,8 @@ CREATE TABLE public.users (
     updated_at timestamp(6) without time zone NOT NULL,
     username character varying,
     location_id bigint,
-    role integer DEFAULT 0 NOT NULL
+    role integer DEFAULT 0 NOT NULL,
+    news_posts_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -295,6 +298,13 @@ CREATE INDEX index_news_posts_on_location_id_and_published ON public.news_posts 
 
 
 --
+-- Name: index_news_posts_on_location_published_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_location_published_archived ON public.news_posts USING btree (location_id, published, archived);
+
+
+--
 -- Name: index_news_posts_on_post_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -309,6 +319,20 @@ CREATE INDEX index_news_posts_on_published ON public.news_posts USING btree (pub
 
 
 --
+-- Name: index_news_posts_on_published_archived_created; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_published_archived_created ON public.news_posts USING btree (published, archived, created_at);
+
+
+--
+-- Name: index_news_posts_on_published_at_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_news_posts_on_published_at_archived ON public.news_posts USING btree (published_at, archived);
+
+
+--
 -- Name: index_news_posts_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -320,6 +344,13 @@ CREATE INDEX index_news_posts_on_user_id ON public.news_posts USING btree (user_
 --
 
 CREATE INDEX index_rss_feeds_on_active ON public.rss_feeds USING btree (active);
+
+
+--
+-- Name: index_rss_feeds_on_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rss_feeds_on_url ON public.rss_feeds USING btree (url);
 
 
 --
@@ -388,6 +419,11 @@ ALTER TABLE ONLY public.users
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251105120004'),
+('20251105120003'),
+('20251105120002'),
+('20251105120001'),
+('20251105120000'),
 ('20251104090017'),
 ('20251104073453'),
 ('20251031070006'),

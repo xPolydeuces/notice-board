@@ -27,21 +27,25 @@ class AddPerformanceImprovements < ActiveRecord::Migration[8.1]
     reversible do |dir|
       dir.up do
         if column_exists?(:users, :news_posts_count)
-          execute <<-SQL.squish
-            UPDATE users
-            SET news_posts_count = (
-              SELECT COUNT(*) FROM news_posts WHERE news_posts.user_id = users.id
-            )
-          SQL
+          safety_assured do
+            execute <<-SQL.squish
+              UPDATE users
+              SET news_posts_count = (
+                SELECT COUNT(*) FROM news_posts WHERE news_posts.user_id = users.id
+              )
+            SQL
+          end
         end
  
         if column_exists?(:locations, :news_posts_count)
-          execute <<-SQL.squish
-            UPDATE locations
-            SET news_posts_count = (
-              SELECT COUNT(*) FROM news_posts WHERE news_posts.location_id = locations.id
-            )
-          SQL
+          safety_assured do
+            execute <<-SQL.squish
+              UPDATE locations
+              SET news_posts_count = (
+                SELECT COUNT(*) FROM news_posts WHERE news_posts.location_id = locations.id
+              )
+            SQL
+          end
         end
       end
     end
