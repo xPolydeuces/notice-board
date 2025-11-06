@@ -1,7 +1,6 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -35,9 +34,10 @@ CREATE TABLE public.locations (
     code character varying NOT NULL,
     name character varying NOT NULL,
     active boolean DEFAULT true NOT NULL,
+    news_posts_count integer DEFAULT 0 NOT NULL,
+    users_count integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    news_posts_count integer DEFAULT 0 NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -75,8 +75,7 @@ CREATE TABLE public.news_posts (
     published_at timestamp(6) without time zone,
     archived boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT check_news_posts_post_type CHECK (((post_type)::text = ANY ((ARRAY['general'::character varying, 'location'::character varying])::text[])))
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -158,12 +157,12 @@ CREATE TABLE public.users (
     last_sign_in_at timestamp(6) without time zone,
     current_sign_in_ip character varying,
     last_sign_in_ip character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
     username character varying,
     location_id bigint,
     role integer DEFAULT 0 NOT NULL,
-    news_posts_count integer DEFAULT 0 NOT NULL
+    news_posts_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -419,21 +418,4 @@ ALTER TABLE ONLY public.users
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20251105120004'),
-('20251105120003'),
-('20251105120002'),
-('20251105120001'),
-('20251105120000'),
-('20251104090017'),
-('20251104073453'),
-('20251031070006'),
-('20251031070005'),
-('20251031070004'),
-('20251031070003'),
-('20251031070002'),
-('20251031070001'),
-('20251026085440'),
-('20251026084225'),
-('20251026081439'),
-('20251014193007');
-
+('20251106000001');

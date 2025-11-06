@@ -24,7 +24,7 @@ class NewsPost < ApplicationRecord
   scope :by_published_date, -> { order(published_at: :desc, created_at: :desc) }
 
   # Eager loading associations to avoid N+1 queries
-  scope: with_associations, -> { includes(:user, :location) }
+  scope :with_associations, -> { includes(:user, :location) }
 
   # Combined scope for displaying posts
   scope :for_display, -> { published.active.with_associations.by_published_date }
