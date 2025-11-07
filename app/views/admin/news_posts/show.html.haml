@@ -1,0 +1,96 @@
+- content_for :title, @news_post.title
+
+= render Admin::PageHeaderComponent.new(title: @news_post.title, subtitle: t('admin.news_posts.show_subtitle'), icon: 'newspaper') do
+  .flex.gap-2
+    = link_to admin_news_posts_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FA812F]" do
+      = lucide_icon('arrow-left', class: 'w-4 h-4 mr-2')
+      = t('admin.news_posts.back')
+    = link_to edit_admin_news_post_path(@news_post), class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#FA812F] hover:bg-[#E87020] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FA812F]" do
+      = lucide_icon('pencil', class: 'w-4 h-4 mr-2')
+      = t('admin.news_posts.edit')
+
+.bg-white.shadow.rounded-lg.overflow-hidden
+  .px-6.py-5.border-b.border-gray-200
+    .flex.flex-wrap.gap-2
+      / Status badges
+      - if @news_post.archived?
+        %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-gray-100.text-gray-800
+          = lucide_icon('archive', class: 'w-4 h-4 mr-1')
+          = t('admin.news_posts.status.archived')
+      - elsif @news_post.published?
+        %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-green-100.text-green-800
+          = lucide_icon('check-circle', class: 'w-4 h-4 mr-1')
+          = t('admin.news_posts.status.published')
+      - else
+        %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-yellow-100.text-yellow-800
+          = lucide_icon('clock', class: 'w-4 h-4 mr-1')
+          = t('admin.news_posts.status.draft')
+
+      / Type badge
+      %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-blue-100.text-blue-800
+        = t("admin.news_posts.types.#{@news_post.post_type}")
+
+      / Location badge
+      - if @news_post.location
+        %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-purple-100.text-purple-800
+          = lucide_icon('map-pin', class: 'w-4 h-4 mr-1')
+          = @news_post.location.full_name
+      - else
+        %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-gray-100.text-gray-800
+          = t('admin.news_posts.general')
+
+  .px-6.py-5
+    .grid.grid-cols-1.md_grid-cols-2.gap-6.mb-6
+      .div
+        %dt.text-sm.font-medium.text-gray-500= t('admin.news_posts.show.author')
+        %dd.mt-1.text-sm.text-gray-900= @news_post.user.username
+
+      .div
+        %dt.text-sm.font-medium.text-gray-500= t('admin.news_posts.show.created_at')
+        %dd.mt-1.text-sm.text-gray-900= l(@news_post.created_at, format: :long)
+
+      - if @news_post.published_at
+        .div
+          %dt.text-sm.font-medium.text-gray-500= t('admin.news_posts.show.published_at')
+          %dd.mt-1.text-sm.text-gray-900= l(@news_post.published_at, format: :long)
+
+      .div
+        %dt.text-sm.font-medium.text-gray-500= t('admin.news_posts.show.updated_at')
+        %dd.mt-1.text-sm.text-gray-900= l(@news_post.updated_at, format: :long)
+
+    .border-t.border-gray-200.pt-6
+      %h3.text-lg.font-medium.text-gray-900.mb-4= t('admin.news_posts.show.content')
+      .prose.max-w-none
+        - if @news_post.plain_text?
+          = simple_format(@news_post.content)
+        - elsif @news_post.rich_text?
+          = @news_post.rich_content
+        - elsif @news_post.image_only? && @news_post.image.attached?
+          = image_tag @news_post.image, class: 'max-w-full h-auto rounded-lg shadow-lg'
+
+  / Action buttons
+  .px-6.py-4.bg-gray-50.border-t.border-gray-200.flex.justify-between.items-center
+    .flex.gap-2
+      - unless @news_post.archived?
+        - if @news_post.published?
+          = button_to unpublish_admin_news_post_path(@news_post), method: :patch, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" do
+            = lucide_icon('x-circle', class: 'w-4 h-4 mr-2')
+            = t('admin.news_posts.unpublish')
+        - else
+          = button_to publish_admin_news_post_path(@news_post), method: :patch, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do
+            = lucide_icon('send', class: 'w-4 h-4 mr-2')
+            = t('admin.news_posts.publish')
+
+      - if @news_post.archived?
+        = button_to restore_admin_news_post_path(@news_post), method: :patch, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do
+          = lucide_icon('archive-restore', class: 'w-4 h-4 mr-2')
+          = t('admin.news_posts.restore')
+      - else
+        = button_to archive_admin_news_post_path(@news_post), method: :patch, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FA812F]" do
+          = lucide_icon('archive', class: 'w-4 h-4 mr-2')
+          = t('admin.news_posts.archive')
+
+    .div
+      = button_to admin_news_post_path(@news_post), method: :delete, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500", data: { turbo_confirm: t('admin.news_posts.delete_confirm') } do
+        = lucide_icon('trash-2', class: 'w-4 h-4 mr-2')
+        = t('admin.news_posts.delete')

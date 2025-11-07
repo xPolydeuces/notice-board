@@ -63,7 +63,7 @@ if Rails.env.development?
     title: 'Witamy w systemie tablicy ogłoszeń'
   ) do |post|
     post.content = 'To jest ogłoszenie generalne widoczne na wszystkich lokalizacjach.'
-    post.post_type = :text
+    post.post_type = :plain_text
     post.location = nil  # nil = general post
     post.user = general_user
     post.published = true
@@ -74,7 +74,7 @@ if Rails.env.development?
   NewsPost.find_or_create_by!(
     title: 'Ważne ogłoszenie dla wszystkich'
   ) do |post|
-    post.content = 'To jest kolejne ogłoszenie generalne z formatowaniem tekstu.'
+    post.rich_content = 'To jest kolejne ogłoszenie generalne z formatowaniem tekstu.'
     post.post_type = :rich_text
     post.location = nil  # nil = general post
     post.user = admin
@@ -88,13 +88,18 @@ if Rails.env.development?
     # Get the location user
     location_user = User.find_by(location: location, role: :location)
 
-    # Alternate between text and rich_text
-    post_type = index.even? ? :text : :rich_text
+    # Alternate between plain_text and rich_text
+    post_type = index.even? ? :plain_text : :rich_text
 
     NewsPost.find_or_create_by!(
       title: "Ogłoszenie dla #{location.code}"
     ) do |post|
-      post.content = "To jest ogłoszenie widoczne tylko na ekranie lokalizacji #{location.name}."
+      content_text = "To jest ogłoszenie widoczne tylko na ekranie lokalizacji #{location.name}."
+      if post_type == :plain_text
+        post.content = content_text
+      else
+        post.rich_content = content_text
+      end
       post.post_type = post_type
       post.location = location  # Set location = location-specific
       post.user = location_user
@@ -130,7 +135,7 @@ end
 puts "\n📝 How posts work:"
 puts "  - General posts (location: nil) → shown on ALL location screens"
 puts "  - Location posts (location: R-1) → shown only on that location's screen"
-puts "  - Post types: text, rich_text, image_only"
+puts "  - Post types: plain_text, rich_text, image_only"
 puts "\n👥 User roles:"
 puts "  - Admin: Can manage everything (users, locations, RSS, all posts)"
 puts "  - General: Can create/edit general posts visible on all screens"

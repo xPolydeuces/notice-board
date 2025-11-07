@@ -26,6 +26,9 @@ Rails.application.configure do
   config.consider_all_requests_local = true
   config.cache_store = :memory_store
 
+  # Store uploaded files on the local file system (see config/storage.yml for options).
+  config.active_storage.service = :test
+
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
 

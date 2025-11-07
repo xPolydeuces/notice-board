@@ -2,16 +2,36 @@
 
 class NewsPost < ApplicationRecord
   # Enums for content type
-  enum :post_type, { text: 0, rich_text: 1, image_only: 2 }
+  enum :post_type, { plain_text: 0, rich_text: 1, image_only: 2 }
 
   # Associations
   belongs_to :user, inverse_of: :news_posts, counter_cache: true
   belongs_to :location, optional: true, inverse_of: :news_posts, counter_cache: true
 
+  # ActiveStorage and ActionText
+  has_rich_text :rich_content  # For rich_text type posts
+  has_one_attached :image      # For image_only type posts
+
   # Validations
   validates :title, presence: true, length: { maximum: 255 }
-  validates :content, presence: true
+  validates :content, presence: true, if: :plain_text?
   validates :post_type, presence: true
+  validate :validate_post_type_content
+
+  private
+
+  def validate_post_type_content
+    case post_type.to_sym
+    when :plain_text
+      errors.add(:content, "can't be blank for text posts") if content.blank?
+    when :rich_text
+      errors.add(:rich_content, "can't be blank for rich text posts") if rich_content.body.blank?
+    when :image_only
+      errors.add(:image, "must be attached for image-only posts") unless image.attached?
+    end
+  end
+
+  public
 
   # Scopes
   scope :published, -> { where(published: true) }

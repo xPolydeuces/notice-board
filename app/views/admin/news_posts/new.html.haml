@@ -1,0 +1,6 @@
+- content_for :title, t('admin.news_posts.new')
+
+= render Admin::PageHeaderComponent.new(title: t('admin.news_posts.new'), subtitle: t('admin.news_posts.new_subtitle'), icon: 'plus-circle')
+
+.bg-white.shadow.rounded-lg.p-6 
+    = render 'form', news_post: @news_post
