@@ -38,6 +38,46 @@ RSpec.describe Location, type: :model do
         expect(described_class.ordered).to eq([location_a, location_b, location_c])
       end
     end
+
+    describe ".with_active_posts" do
+      let!(:location_with_active) { create(:location, code: "LOC-1") }
+      let!(:location_with_archived) { create(:location, code: "LOC-2") }
+      let!(:location_with_draft) { create(:location, code: "LOC-3") }
+      let!(:location_without_posts) { create(:location, code: "LOC-4") }
+
+      before do
+        create(:news_post, location: location_with_active, published: true, archived: false)
+        create(:news_post, location: location_with_archived, published: true, archived: true)
+        create(:news_post, location: location_with_draft, published: false, archived: false)
+      end
+
+      it "returns only locations with published and non-archived posts" do
+        result = described_class.with_active_posts
+        expect(result).to include(location_with_active)
+        expect(result).not_to include(location_with_archived)
+        expect(result).not_to include(location_with_draft)
+        expect(result).not_to include(location_without_posts)
+      end
+
+      it "returns distinct locations" do
+        # Create multiple active posts for same location
+        create(:news_post, location: location_with_active, published: true, archived: false)
+        create(:news_post, location: location_with_active, published: true, archived: false)
+
+        result = described_class.with_active_posts
+        expect(result.count).to eq(1)
+        expect(result.first).to eq(location_with_active)
+      end
+
+      it "is chainable with other scopes" do
+        inactive_location = create(:location, code: "INACTIVE", active: false)
+        create(:news_post, location: inactive_location, published: true, archived: false)
+
+        result = described_class.active.with_active_posts.ordered
+        expect(result).to include(location_with_active)
+        expect(result).not_to include(inactive_location)
+      end
+    end
   end
 
   describe "#full_name" do
