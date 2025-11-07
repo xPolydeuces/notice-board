@@ -45,7 +45,21 @@
     / Rich text content
     .div{id: 'rich_text_content_field', style: news_post.post_type == 'rich_text' ? '' : 'display: none;'}
       = f.label :rich_content, t('admin.news_posts.form.rich_content'), class: 'block text-sm font-medium text-gray-700 mb-2'
-      = f.rich_text_area :rich_content, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F]'
+      .bg-blue-50.border.border-blue-200.rounded-md.p-3.mb-3
+        .flex.items-start
+          = lucide_icon('info', class: 'w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5')
+          .text-sm.text-blue-800
+            %strong Edytor tekstu:
+            %ul.list-disc.ml-5.mt-1
+              %li Użyj przycisków na górze, aby formatować tekst
+              %li
+                %strong B
+                \= pogrubienie,
+                %strong I
+                \= kursywa
+              %li Możesz dodawać listy punktowane i numerowane
+              %li Twórz nagłówki, cytaty i linki
+      = f.rich_text_area :rich_content
       %p.mt-1.text-sm.text-gray-500= t('admin.news_posts.form.rich_content_help')
 
     / Image upload
