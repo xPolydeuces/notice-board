@@ -45,7 +45,7 @@ class CreateInitialSchema < ActiveRecord::Migration[8.1]
     # News posts table
     create_table :news_posts do |t|
       t.string :title, null: false
-      t.text :content, null: false
+      t.text :content  # Nullable: rich_text uses ActionText, image_only uses ActiveStorage
       t.string :post_type, null: false
       t.references :location, foreign_key: true
       t.references :user, null: false, foreign_key: true
