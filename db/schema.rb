@@ -1,0 +1,129 @@
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
+#
+# It's strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema[8.1].define(version: 2025_11_07_101500) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "name", null: false
+    t.boolean "active", default: true, null: false
+    t.integer "news_posts_count", default: 0, null: false
+    t.integer "users_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_locations_on_active"
+    t.index ["code"], name: "index_locations_on_code", unique: true
+  end
+
+  create_table "news_posts", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "content"
+    t.string "post_type", null: false
+    t.bigint "location_id"
+    t.bigint "user_id", null: false
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.boolean "archived", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["archived"], name: "index_news_posts_on_archived"
+    t.index ["location_id", "published", "archived"], name: "index_news_posts_on_location_published_archived"
+    t.index ["location_id", "published"], name: "index_news_posts_on_location_id_and_published"
+    t.index ["location_id"], name: "index_news_posts_on_location_id"
+    t.index ["post_type"], name: "index_news_posts_on_post_type"
+    t.index ["published", "archived", "created_at"], name: "index_news_posts_on_published_archived_created"
+    t.index ["published"], name: "index_news_posts_on_published"
+    t.index ["published_at", "archived"], name: "index_news_posts_on_published_at_archived"
+    t.index ["user_id"], name: "index_news_posts_on_user_id"
+  end
+
+  create_table "rss_feeds", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "url", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "last_fetched_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_rss_feeds_on_active"
+    t.index ["url"], name: "index_rss_feeds_on_url", unique: true
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.string "username"
+    t.bigint "location_id"
+    t.integer "role", default: 0, null: false
+    t.integer "news_posts_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["location_id"], name: "index_users_on_location_id"
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["role"], name: "index_users_on_role"
+    t.index ["username"], name: "index_users_on_username", unique: true
+  end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "news_posts", "locations"
+  add_foreign_key "news_posts", "users"
+  add_foreign_key "users", "locations"
+end
