@@ -1,0 +1,278 @@
+/* Custom Trix Editor Styles */
+
+/* Editor Container */
+trix-editor {
+  @apply rounded-md border border-gray-300 shadow-sm min-h-[300px] p-4;
+  @apply focus:ring-2 focus:ring-[#FA812F] focus:border-[#FA812F];
+  @apply transition-all duration-200;
+}
+
+trix-editor:focus {
+  outline: none;
+}
+
+/* Toolbar Styling */
+trix-toolbar {
+  @apply rounded-t-md border border-gray-300 bg-gray-50;
+  @apply sticky top-0 z-10;
+}
+
+trix-toolbar .trix-button-row {
+  @apply flex flex-wrap gap-1 p-2;
+}
+
+trix-toolbar .trix-button-group {
+  @apply flex gap-1 items-center border-r border-gray-300 pr-2 mr-2;
+}
+
+trix-toolbar .trix-button-group:last-child {
+  @apply border-r-0 mr-0;
+}
+
+trix-toolbar .trix-button-group-spacer {
+  @apply grow;
+}
+
+/* Toolbar Buttons */
+trix-toolbar .trix-button {
+  @apply inline-flex items-center justify-center w-8 h-8 rounded;
+  @apply bg-white border border-gray-300 text-gray-700;
+  @apply hover:bg-gray-100 hover:border-gray-400;
+  @apply focus:outline-none focus:ring-2 focus:ring-[#FA812F] focus:ring-offset-1;
+  @apply transition-all duration-150;
+  @apply cursor-pointer;
+}
+
+/* Lucide icon SVG styling */
+trix-toolbar .trix-button svg {
+  @apply w-4 h-4;
+  stroke: currentColor;
+}
+
+trix-toolbar .trix-button.trix-active svg {
+  stroke: currentColor;
+}
+
+trix-toolbar .trix-button:not(:disabled):hover {
+  @apply bg-gray-100 border-gray-400;
+}
+
+trix-toolbar .trix-button.trix-active {
+  @apply bg-[#FA812F] text-white border-[#FA812F];
+}
+
+trix-toolbar .trix-button:disabled {
+  @apply opacity-40 cursor-not-allowed;
+}
+
+/* Custom Clear Formatting Button */
+trix-toolbar .trix-button--icon-clear {
+  @apply text-red-600;
+}
+
+trix-toolbar .trix-button--icon-clear svg {
+  stroke: currentColor;
+}
+
+trix-toolbar .trix-button--icon-clear:hover {
+  @apply bg-red-50 border-red-300;
+}
+
+/* Dialogs (for link, etc.) */
+trix-toolbar .trix-dialog {
+  @apply absolute top-full left-0 mt-1 p-3 rounded-md;
+  @apply bg-white border border-gray-300 shadow-lg;
+  @apply z-20;
+}
+
+trix-toolbar .trix-dialog__link-fields {
+  @apply flex gap-2;
+}
+
+trix-toolbar .trix-dialog__link-fields .trix-input {
+  @apply rounded border-gray-300 shadow-sm;
+  @apply focus:border-[#FA812F] focus:ring-[#FA812F];
+}
+
+trix-toolbar .trix-dialog .trix-button {
+  @apply px-3 h-8 w-auto;
+}
+
+trix-toolbar .trix-dialog .trix-button--dialog {
+  @apply bg-[#FA812F] text-white border-[#FA812F];
+  @apply hover:bg-[#E87020];
+}
+
+/* Editor Content Styling */
+trix-editor h1 {
+  @apply text-2xl font-bold mb-4 mt-6;
+}
+
+trix-editor blockquote {
+  @apply border-l-4 border-[#FA812F] pl-4 my-4 italic text-gray-700;
+}
+
+trix-editor code {
+  @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
+}
+
+trix-editor pre {
+  @apply bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto my-4;
+}
+
+trix-editor ul {
+  @apply list-disc list-inside my-4 space-y-2;
+}
+
+trix-editor ol {
+  @apply list-decimal list-inside my-4 space-y-2;
+}
+
+trix-editor li {
+  @apply ml-4;
+}
+
+trix-editor a {
+  @apply text-[#FA812F] underline hover:text-[#E87020];
+}
+
+trix-editor strong {
+  @apply font-bold;
+}
+
+trix-editor em {
+  @apply italic;
+}
+
+trix-editor del {
+  @apply line-through;
+}
+
+/* Attachments */
+trix-editor .attachment {
+  @apply inline-block my-2 max-w-full;
+}
+
+trix-editor .attachment__caption {
+  @apply text-sm text-gray-600 mt-1;
+}
+
+trix-editor .attachment__progress {
+  @apply h-1 bg-gray-200 rounded-full overflow-hidden;
+}
+
+trix-editor .attachment__progress-bar {
+  @apply h-full bg-[#FA812F] transition-all duration-300;
+}
+
+trix-editor .attachment--preview {
+  @apply rounded-md overflow-hidden border border-gray-300;
+}
+
+trix-editor .attachment--preview img {
+  @apply max-w-full h-auto;
+}
+
+/* File Upload Button */
+trix-toolbar .trix-button--icon-attach {
+  position: relative;
+}
+
+/* Counter Display */
+.trix-counter {
+  @apply text-sm text-gray-600 mt-2 flex justify-between items-center;
+  @apply px-1;
+}
+
+.trix-counter .word-count,
+.trix-counter .character-count {
+  @apply flex items-center gap-1;
+}
+
+.trix-counter strong {
+  @apply font-medium text-gray-700;
+}
+
+.trix-counter .count {
+  @apply font-semibold text-gray-900;
+}
+
+.trix-counter .max {
+  @apply text-gray-500;
+}
+
+/* Save Status */
+.save-status {
+  @apply text-sm font-medium;
+}
+
+/* Placeholder */
+trix-editor:empty:not(:focus)::before {
+  @apply text-gray-400;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  trix-toolbar .trix-button-group {
+    @apply pr-1 mr-1;
+  }
+
+  trix-toolbar .trix-button {
+    @apply w-7 h-7 text-sm;
+  }
+
+  trix-editor {
+    @apply min-h-[200px] p-3;
+  }
+
+  .trix-counter {
+    @apply flex-col items-start gap-1;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  trix-toolbar {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  trix-toolbar .trix-button {
+    @apply bg-gray-900 border-gray-700 text-gray-300;
+  }
+
+  trix-toolbar .trix-button:not(:disabled):hover {
+    @apply bg-gray-700 border-gray-600;
+  }
+
+  trix-toolbar .trix-button.trix-active {
+    @apply bg-[#FA812F] text-white;
+  }
+
+  trix-editor {
+    @apply bg-gray-900 border-gray-700 text-gray-100;
+  }
+
+  trix-editor blockquote {
+    @apply text-gray-300;
+  }
+
+  trix-editor code {
+    @apply bg-gray-800 text-gray-300;
+  }
+}
+
+/* Animation for save status */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.save-status {
+  animation: fadeIn 0.3s ease-out;
+}

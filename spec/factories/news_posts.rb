@@ -4,7 +4,7 @@ FactoryBot.define do
     association :location, optional: true
     sequence(:title) { |n| "News Post Title #{n}" }
     content { "This is the content of the news post." }
-    post_type { :text }
+    post_type { :plain_text }
     published { false }
     archived { false }
 

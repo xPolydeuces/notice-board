@@ -9,3 +9,9 @@ application.register("locale-dropdown", LocaleDropdownController)
 
 import MobileMenuController from "./mobile_menu_controller"
 application.register("mobile-menu", MobileMenuController)
+
+import PostTypeController from "./post_type_controller"
+application.register("post-type", PostTypeController)
+
+import TrixEditorController from "./trix_editor_controller"
+application.register("trix-editor", TrixEditorController)
