@@ -21,12 +21,12 @@ class NewsPost < ApplicationRecord
   private
 
   def validate_post_type_content
-    case post_type.to_sym
-    when :plain_text
+    case post_type
+    when "plain_text"
       errors.add(:content, "can't be blank for text posts") if content.blank?
-    when :rich_text
+    when "rich_text"
       errors.add(:rich_content, "can't be blank for rich text posts") if rich_content.body.blank?
-    when :image_only
+    when "image_only"
       errors.add(:image, "must be attached for image-only posts") unless image.attached?
     end
   end
