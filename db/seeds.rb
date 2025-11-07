@@ -30,7 +30,6 @@ admin = User.find_or_create_by!(username: 'admin') do |user|
   user.password = 'password123'
   user.password_confirmation = 'password123'
   user.role = :admin
-  user.email = nil
 end
 
 # General user (can manage general posts for all locations)
@@ -38,7 +37,6 @@ general_user = User.find_or_create_by!(username: 'redaktor') do |user|
   user.password = 'password123'
   user.password_confirmation = 'password123'
   user.role = :general
-  user.email = nil
 end
 
 # Location users (can only manage their location's posts)
@@ -48,7 +46,6 @@ locations.each_with_index do |location, index|
     user.password_confirmation = 'password123'
     user.role = :location
     user.location = location
-    user.email = nil
   end
 end
 
