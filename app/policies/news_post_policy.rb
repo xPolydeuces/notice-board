@@ -32,18 +32,16 @@ class NewsPostPolicy < ApplicationPolicy
   end
 
   # Scope to filter news posts visible to the user
-  class Scope < ::ActionPolicy::Base::Scope
-    def resolve
-      if user.admin?
-        # Admins see all posts
-        scope
-      elsif user.location?
-        # Location users see only their location's posts
-        scope.where(location_id: user.location_id)
-      else
-        # General users see all posts
-        scope
-      end
+  scope_for :relation do |relation|
+    if user.admin?
+      # Admins see all posts
+      relation
+    elsif user.location?
+      # Location users see only their location's posts
+      relation.where(location_id: user.location_id)
+    else
+      # General users see all posts
+      relation
     end
   end
 
