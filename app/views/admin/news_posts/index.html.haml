@@ -6,7 +6,7 @@
     = t('admin.news_posts.new')
 
 / Filters section
-- if current_user.admin?
+- if current_user.admin_or_superadmin?
   .bg-white.shadow.rounded-lg.p-4.mb-6
     = form_with url: admin_news_posts_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-4 gap-4" do |f|
       .div
@@ -34,7 +34,7 @@
           = t('admin.news_posts.table.title')
         %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
           = t('admin.news_posts.table.type')
-        - if current_user.admin?
+        - if current_user.admin_or_superadmin?
           %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
             = t('admin.news_posts.table.location')
         %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
@@ -48,7 +48,7 @@
     %tbody.bg-white.divide-y.divide-gray-200
       - if @news_posts.empty?
         %tr
-          %td.px-6.py-4.text-center.text-gray-500{colspan: current_user.admin? ? 7 : 6}
+          %td.px-6.py-4.text-center.text-gray-500{colspan: current_user.admin_or_superadmin? ? 7 : 6}
             = t('admin.news_posts.no_posts')
       - else
         - @news_posts.each do |post|
@@ -68,7 +68,7 @@
                   = t("admin.news_posts.types.#{post.post_type}", default: post.post_type.humanize)
                 - else
                   = t('admin.news_posts.types.unknown', default: 'Nieznany')
-            - if current_user.admin?
+            - if current_user.admin_or_superadmin?
               %td.px-6.py-4.whitespace-nowrap
                 - if post.location
                   %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800

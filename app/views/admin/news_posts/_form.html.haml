@@ -24,10 +24,10 @@
       %p.mt-1.text-sm.text-gray-500= t('admin.news_posts.form.post_type_help')
 
     / Location selection - only for admins and location users
-    - if current_user.admin? || current_user.location?
+    - if current_user.admin_or_superadmin? || current_user.location?
       .div
         = f.label :location_id, t('admin.news_posts.form.location'), class: 'block text-sm font-medium text-gray-700 mb-2'
-        - if current_user.admin?
+        - if current_user.admin_or_superadmin?
           = f.select :location_id, options_from_collection_for_select(@locations, :id, :full_name, news_post.location_id), { include_blank: t('admin.news_posts.form.general_post') }, class: 'mt-1 block w-full py-2 rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm'
           %p.mt-1.text-sm.text-gray-500= t('admin.news_posts.form.location_help')
         - elsif current_user.location?

@@ -1,0 +1,6 @@
+- content_for :title, t('admin.users.new')
+
+= render Admin::PageHeaderComponent.new(title: t('admin.users.new'), subtitle: t('admin.users.new_subtitle'), icon: 'users')
+
+.bg-white.shadow.rounded-lg.p-6
+  = render 'form', user: @user

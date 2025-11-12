@@ -23,14 +23,21 @@ module Admin
 
     # Use this in controllers that require admin-only access
     def require_admin!
-      return if current_user&.admin?
+      return if current_user&.admin_or_superadmin?
 
       redirect_to admin_root_path, alert: t('admin.unauthorized', default: 'Brak uprawnień')
     end
 
     # Use this in controllers that require location or admin access
     def require_location_or_admin!
-      return if current_user&.admin? || current_user&.location?
+      return if current_user&.admin_or_superadmin? || current_user&.location?
+
+      redirect_to admin_root_path, alert: t('admin.unauthorized', default: 'Brak uprawnień')
+    end
+
+    # Use this in controllers that require superadmin-only access
+    def require_superadmin!
+      return if current_user&.superadmin?
 
       redirect_to admin_root_path, alert: t('admin.unauthorized', default: 'Brak uprawnień')
     end

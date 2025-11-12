@@ -13,7 +13,7 @@ module Admin
       @news_posts = @news_posts.where(published: params[:published]) if params[:published].present?
       @news_posts = @news_posts.where(archived: params[:archived]) if params[:archived].present?
 
-      @locations = Location.active.ordered if current_user.admin?
+      @locations = Location.active.ordered if current_user.admin_or_superadmin?
     end
 
     def show
@@ -104,7 +104,7 @@ module Admin
 
     def authorize_news_post
       # Admins can edit everything
-      return if current_user.admin?
+      return if current_user.admin_or_superadmin?
 
       # Location users can only edit their location's posts
       if current_user.location?
@@ -138,7 +138,7 @@ module Admin
     end
 
     def available_locations
-      if current_user.admin?
+      if current_user.admin_or_superadmin?
         Location.active.ordered
       elsif current_user.location?
         Location.where(id: current_user.location_id)

@@ -1,0 +1,52 @@
+= form_with model: [:admin, user], local: true do |f|
+  .space-y-6
+    - if user.errors.any?
+      .bg-red-50.border.border-red-200.rounded-md.p-4
+        .flex
+          = lucide_icon('alert-circle', class: 'w-5 h-5 text-red-400 mr-3 flex-shrink-0 mt-0.5')
+          .div
+            %h3.text-sm.font-medium.text-red-800
+              = t('admin.users.form.errors', count: user.errors.count)
+            .mt-2.text-sm.text-red-700
+              %ul.list-disc.list-inside
+                - user.errors.full_messages.each do |message|
+                  %li= message
+
+    .grid.grid-cols-1.md_grid-cols-2.gap-6
+      / Username field
+      .div
+        = f.label :username, t('admin.users.form.username'), class: 'block text-sm font-medium text-gray-700 mb-2'
+        = f.text_field :username, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm', placeholder: t('admin.users.form.username_placeholder'), required: true
+        %p.mt-1.text-sm.text-gray-500= t('admin.users.form.username_help')
+
+      / Role field
+      .div
+        = f.label :role, t('admin.users.form.role'), class: 'block text-sm font-medium text-gray-700 mb-2'
+        - available_roles = User.roles.keys.reject { |r| r == 'superadmin' }
+        = f.select :role, options_for_select(available_roles.map { |role| [t("admin.users.roles.#{role}"), role] }, user.role), {}, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm', required: true
+
+      / Location field (only for location role)
+      .div
+        = f.label :location_id, t('admin.users.form.location'), class: 'block text-sm font-medium text-gray-700 mb-2'
+        = f.collection_select :location_id, Location.active.ordered, :id, :name, { include_blank: t('admin.users.form.no_location') }, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm'
+        %p.mt-1.text-sm.text-gray-500= t('admin.users.form.location_help')
+
+    / Password fields
+    .grid.grid-cols-1.md_grid-cols-2.gap-6
+      .div
+        = f.label :password, t('admin.users.form.password'), class: 'block text-sm font-medium text-gray-700 mb-2'
+        = f.password_field :password, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm', placeholder: t('admin.users.form.password_placeholder'), required: user.new_record?
+        %p.mt-1.text-sm.text-gray-500
+          - if user.new_record?
+            = t('admin.users.form.password_help_new')
+          - else
+            = t('admin.users.form.password_help_edit')
+
+      .div
+        = f.label :password_confirmation, t('admin.users.form.password_confirmation'), class: 'block text-sm font-medium text-gray-700 mb-2'
+        = f.password_field :password_confirmation, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm', placeholder: t('admin.users.form.password_confirmation_placeholder'), required: user.new_record?
+
+    / Action buttons
+    .flex.items-center.justify-end.gap-3.pt-5.border-t.border-gray-200
+      = link_to t('admin.users.form.cancel'), admin_users_path, class: 'px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FA812F]'
+      = f.submit t('admin.users.form.submit'), class: 'inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#FA812F] hover:bg-[#E87020] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FA812F]'

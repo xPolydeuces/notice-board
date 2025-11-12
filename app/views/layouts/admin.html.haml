@@ -34,15 +34,15 @@
               = lucide_icon('newspaper', class: 'w-5 h-5')
               %span Aktualności
             
-            - if current_user.admin?
+            - if current_user.admin_or_superadmin?
               = link_to admin_locations_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'locations' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
                 = lucide_icon('map-pin', class: 'w-5 h-5')
                 %span Lokalizacje
-              
+
               = link_to admin_rss_feeds_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'rss_feeds' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
                 = lucide_icon('rss', class: 'w-5 h-5')
                 %span RSS
-              
+
               = link_to admin_users_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'users' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
                 = lucide_icon('users', class: 'w-5 h-5')
                 %span Użytkownicy

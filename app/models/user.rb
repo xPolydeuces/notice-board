@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :news_posts, dependent: :nullify, inverse_of: :user
 
   # Enums
-  enum :role, { general: 0, location: 1, admin: 2 }, default: :general
+  enum :role, { general: 0, location: 1, admin: 2, superadmin: 3 }, default: :general
 
   # Validations
   validates :username, presence: true, uniqueness: { case_sensitive: false }
@@ -30,23 +30,31 @@ class User < ApplicationRecord
 
   # Permission methods
   def can_edit_location?(location)
-    admin? || (location? && self.location == location)
+    admin_or_superadmin? || (location? && self.location == location)
   end
 
   def can_create_general_news?
-    admin? || general?
+    admin_or_superadmin? || general?
   end
 
   def can_manage_users?
-    admin?
+    admin_or_superadmin?
   end
 
   def can_manage_locations?
-    admin?
+    admin_or_superadmin?
   end
 
   def can_manage_rss_feeds?
-    admin?
+    admin_or_superadmin?
+  end
+
+  def can_delete_admin?
+    superadmin?
+  end
+
+  def admin_or_superadmin?
+    admin? || superadmin?
   end
 
   # Display methods
