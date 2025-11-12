@@ -3,10 +3,13 @@
 module Admin
   # Base controller for all admin controllers
   class BaseController < ApplicationController
+    include ActionPolicy::Controller
     before_action :authenticate_user!
     before_action :require_admin_access!
-    
+
     layout 'admin'
+
+    authorize :user, through: :current_user
 
     private
 
