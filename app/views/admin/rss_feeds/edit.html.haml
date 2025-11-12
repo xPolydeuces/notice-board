@@ -1,0 +1,6 @@
+- content_for :title, t('admin.rss_feeds.edit')
+
+= render Admin::PageHeaderComponent.new(title: t('admin.rss_feeds.edit'), subtitle: t('admin.rss_feeds.edit_subtitle', name: @rss_feed.name), icon: 'rss')
+
+.bg-white.shadow.rounded-lg.p-6
+  = render 'form', rss_feed: @rss_feed
