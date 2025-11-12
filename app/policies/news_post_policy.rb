@@ -32,7 +32,7 @@ class NewsPostPolicy < ApplicationPolicy
   end
 
   # Scope to filter news posts visible to the user
-  scope_for :relation do |relation|
+  scope_for :active_record_relation do |relation|
     if user.admin?
       # Admins see all posts
       relation
