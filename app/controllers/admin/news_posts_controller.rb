@@ -88,6 +88,7 @@ module Admin
     end
 
     def restore
+      authorize! @news_post
       if @news_post.restore!
         redirect_to admin_news_posts_path, notice: t('admin.news_posts.restored')
       else
