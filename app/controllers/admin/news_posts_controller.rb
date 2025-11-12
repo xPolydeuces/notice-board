@@ -29,7 +29,7 @@ module Admin
     def create
       @news_post = NewsPost.new(news_post_params)
       @news_post.user = current_user
-      authortize! @news_post
+      authorize! @news_post
 
       if @news_post.save
         redirect_to admin_news_posts_path, notice: t('admin.news_posts.created')

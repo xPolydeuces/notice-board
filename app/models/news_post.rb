@@ -2,7 +2,7 @@
 
 class NewsPost < ApplicationRecord
   # Enums for content type
-  enum :post_type, { plain_text: 0, rich_text: 1, image_only: 2 }
+  enum :post_type, { plain_text: "plain_text", rich_text: "rich_text", image_only: "image_only" }
 
   # Associations
   belongs_to :user, inverse_of: :news_posts, counter_cache: true
@@ -44,7 +44,7 @@ class NewsPost < ApplicationRecord
   scope :by_published_date, -> { order(published_at: :desc, created_at: :desc) }
 
   # Eager loading associations to avoid N+1 queries
-  scope :with_associations, -> { includes(:user, :location) }
+  scope :with_associations, -> { includes(:user, :location, :rich_text_rich_content, image_attachment: :blob) }
 
   # Combined scope for displaying posts
   scope :for_display, -> { published.active.with_associations.by_published_date }
