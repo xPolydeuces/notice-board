@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { Eraser } from "lucide"
+import { icons } from "lucide"
 
 // Connects to data-controller="trix-editor"
 export default class extends Controller {
@@ -12,12 +12,6 @@ export default class extends Controller {
 
   connect() {
     this.setupEditor()
-    this.createToolbarEnhancements()
-    this.createCounter()
-    this.updateCounter()
-    this.setupAutoSave()
-    this.setupFileUploadHandler()
-    this.setupKeyboardShortcuts()
   }
 
   disconnect() {
@@ -27,6 +21,16 @@ export default class extends Controller {
   setupEditor() {
     // Store reference to Trix editor element
     this.trixEditor = this.editorTarget
+
+    // Wait for Trix to be fully initialized before setting up enhancements
+    this.trixEditor.addEventListener("trix-initialize", () => {
+      this.createToolbarEnhancements()
+      this.createCounter()
+      this.updateCounter()
+      this.setupAutoSave()
+      this.setupFileUploadHandler()
+      this.setupKeyboardShortcuts()
+    })
 
     // Listen to Trix events
     this.trixEditor.addEventListener("trix-change", this.handleChange.bind(this))
@@ -67,18 +71,19 @@ export default class extends Controller {
     button.tabIndex = -1
 
     // Add Lucide Eraser icon
-    const iconSVG = Eraser.toSvg({
-      width: 16,
-      height: 16,
-      strokeWidth: 2.5
-    })
-    button.innerHTML = iconSVG
+    const iconPath = icons['eraser']
+    if (iconPath) {
+      const iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${iconPath}</svg>`
+      button.innerHTML = iconSVG
+    }
 
     button.addEventListener("click", this.clearFormatting.bind(this))
     container.appendChild(button)
   }
 
   clearFormatting() {
+    if (!this.trixEditor || !this.trixEditor.editor) return
+
     const editor = this.trixEditor.editor
     const selectedRange = editor.getSelectedRange()
 
@@ -123,6 +128,7 @@ export default class extends Controller {
 
   updateCounter() {
     if (!this.hasCounterTarget) return
+    if (!this.trixEditor || !this.trixEditor.editor) return
 
     const text = this.trixEditor.editor.getDocument().toString()
     const wordCount = this.countWords(text)
@@ -320,6 +326,7 @@ export default class extends Controller {
   }
 
   clear() {
+    if (!this.trixEditor || !this.trixEditor.editor) return
     this.trixEditor.editor.loadHTML("")
     this.updateCounter()
   }
