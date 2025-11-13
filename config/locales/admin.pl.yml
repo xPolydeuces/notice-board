@@ -106,6 +106,7 @@ pl:
         username_placeholder: "np. jan.kowalski"
         username_help: "3-20 znaków, tylko litery, cyfry i podkreślenia"
         role: "Rola"
+        role_locked: "Rola ADMIN jest zablokowana i nie może być zmieniona"
         location: "Lokalizacja"
         no_location: "Brak lokalizacji"
         location_help: "Wymagane tylko dla użytkowników lokalizacji"
