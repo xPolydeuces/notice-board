@@ -336,8 +336,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
           {
             news_post: {
               title: "Updated Title",
-              content: "Updated content",
-              post_type: "rich_text"
+              content: "Updated content"
             }
           }
         end
@@ -347,7 +346,6 @@ RSpec.describe "Admin::NewsPosts", type: :request do
           news_post.reload
           expect(news_post.title).to eq("Updated Title")
           expect(news_post.content).to eq("Updated content")
-          expect(news_post.post_type).to eq("rich_text")
         end
 
         it "redirects to news posts index" do
@@ -579,7 +577,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
         news_post: {
           title: "Test Post",
           content: "Test content",
-          post_type: "text",
+          post_type: "plain_text",
           location_id: location.id,
           unauthorized_param: "malicious value"
         }
@@ -590,7 +588,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
 
       expect(news_post.title).to eq("Test Post")
       expect(news_post.content).to eq("Test content")
-      expect(news_post.post_type).to eq("text")
+      expect(news_post.post_type).to eq("plain_text")
       expect(news_post).not_to respond_to(:unauthorized_param)
     end
   end

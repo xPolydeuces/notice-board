@@ -33,8 +33,8 @@ class NewsPostPolicy < ApplicationPolicy
 
   # Scope to filter news posts visible to the user
   scope_for :active_record_relation do |relation|
-    if user.admin?
-      # Admins see all posts
+    if user.admin_or_superadmin?
+      # Admins and superadmins see all posts
       relation
     elsif user.location?
       # Location users see only their location's posts
@@ -48,7 +48,7 @@ class NewsPostPolicy < ApplicationPolicy
   private
 
   def admin?
-    user.admin?
+    user.admin_or_superadmin?
   end
 
   def location_match?

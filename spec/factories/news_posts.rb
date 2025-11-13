@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :news_post do
     association :user
-    association :location, optional: true
+    location { create(:location) } # Default: create with a location
     sequence(:title) { |n| "News Post Title #{n}" }
     content { "This is the content of the news post." }
     post_type { :plain_text }

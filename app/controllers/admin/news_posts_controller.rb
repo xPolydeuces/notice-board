@@ -4,6 +4,10 @@ module Admin
   class NewsPostsController < BaseController
     before_action :set_news_post, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :archive, :restore]
 
+    rescue_from ActionPolicy::Unauthorized do |exception|
+      redirect_to admin_news_posts_path, alert: t('admin.unauthorized', default: 'Brak uprawnień')
+    end
+
     def index
       # Use policy scope to filter posts based on user permissions
       @news_posts = authorized_scope(NewsPost.with_associations.recent)
@@ -29,6 +33,7 @@ module Admin
     def create
       @news_post = NewsPost.new(news_post_params)
       @news_post.user = current_user
+      set_location_for_news_post
       authorize! @news_post
 
       if @news_post.save
@@ -46,7 +51,9 @@ module Admin
 
     def update
       authorize! @news_post
-      if @news_post.update(news_post_params)
+      @news_post.assign_attributes(news_post_params)
+      set_location_for_news_post
+      if @news_post.save
         redirect_to admin_news_posts_path, notice: t('admin.news_posts.updated')
       else
         @locations = available_locations
@@ -124,17 +131,25 @@ module Admin
       permitted = [:title, :content, :post_type, :rich_content, :image]
 
       # Use policy to check if user can assign location
-      if allowed_to?(:assign_location?, NewsPost)
+      # Pass a new instance instead of the class to avoid Rack::Attack issues
+      if allowed_to?(:assign_location?, @news_post || NewsPost.new)
         permitted << :location_id
-      elsif current_user.location?
-        # Location users can only create posts for their location
-        params[:news_post][:location_id] = current_user.location_id
-      else
-        # General users can only create general posts (no location)
-        params[:news_post][:location_id] = nil
       end
 
       params.require(:news_post).permit(*permitted)
+    end
+
+    def set_location_for_news_post
+      # Admins can assign any location (or leave it nil)
+      return if allowed_to?(:assign_location?, @news_post)
+
+      # Location users can only create posts for their location
+      if current_user.location?
+        @news_post.location_id = current_user.location_id
+      else
+        # General users can only create general posts (no location)
+        @news_post.location_id = nil
+      end
     end
 
     def available_locations

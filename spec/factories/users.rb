@@ -21,6 +21,11 @@ FactoryBot.define do
       location { nil }
     end
 
+    trait :superadmin do
+      role { :superadmin }
+      location { nil }
+    end
+
     trait :with_location do
       association :location
     end
