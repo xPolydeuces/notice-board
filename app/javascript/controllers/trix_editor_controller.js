@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { icons } from "lucide"
+import { createElement, Eraser } from "lucide"
 
 // Connects to data-controller="trix-editor"
 export default class extends Controller {
@@ -70,11 +70,17 @@ export default class extends Controller {
     button.title = "Wyczyść formatowanie (Clear formatting)"
     button.tabIndex = -1
 
-    // Add Lucide Eraser icon
-    const iconPath = icons['eraser']
-    if (iconPath) {
-      const iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${iconPath}</svg>`
-      button.innerHTML = iconSVG
+    // Add Lucide Eraser icon using createElement
+    try {
+      const iconSVG = createElement(Eraser, {
+        width: '16',
+        height: '16',
+        'stroke-width': '2.5'
+      })
+      button.appendChild(iconSVG)
+    } catch (error) {
+      console.error('Error creating eraser icon:', error)
+      button.textContent = '✕' // Fallback text
     }
 
     button.addEventListener("click", this.clearFormatting.bind(this))

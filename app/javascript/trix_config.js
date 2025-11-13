@@ -1,17 +1,67 @@
 // Trix Editor Configuration and Enhancements
-import { icons } from 'lucide'
+import {
+  createElement,
+  Bold,
+  Italic,
+  Strikethrough,
+  Link,
+  Heading1,
+  Quote,
+  Code,
+  List,
+  ListOrdered,
+  IndentDecrease,
+  IndentIncrease,
+  Paperclip,
+  Undo,
+  Redo
+} from 'lucide'
+
+// Icon mapping for easy access
+const iconMap = {
+  'bold': Bold,
+  'italic': Italic,
+  'strikethrough': Strikethrough,
+  'link': Link,
+  'heading1': Heading1,
+  'quote': Quote,
+  'code': Code,
+  'list': List,
+  'list-ordered': ListOrdered,
+  'indent-decrease': IndentDecrease,
+  'indent-increase': IndentIncrease,
+  'paperclip': Paperclip,
+  'undo': Undo,
+  'redo': Redo
+}
 
 // Helper function to create icon SVG string from Lucide
 function createIconSVG(iconName) {
-  const icon = icons[iconName]
-  if (!icon) {
+  const IconComponent = iconMap[iconName]
+  if (!IconComponent) {
     console.error(`Icon ${iconName} not found in lucide`)
-    return ''
+    return iconName // Fallback to text if icon not found
   }
 
-  // Create SVG element with proper attributes
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${icon}</svg>`
-  return svg
+  try {
+    // Use Lucide's createElement function to generate the SVG element
+    const svgElement = createElement(IconComponent)
+
+    // Set custom attributes after creation
+    if (svgElement) {
+      svgElement.setAttribute('width', '16')
+      svgElement.setAttribute('height', '16')
+      svgElement.setAttribute('stroke-width', '2.5')
+
+      // Return the SVG outerHTML as a string
+      return svgElement.outerHTML
+    }
+  } catch (error) {
+    console.error(`Error creating icon ${iconName}:`, error)
+    return iconName // Fallback to text if icon creation fails
+  }
+
+  return iconName // Fallback if svgElement is null
 }
 
 // Extend Trix configuration
@@ -125,57 +175,54 @@ function createFormData(key, file) {
   return data
 }
 
-// Add custom toolbar buttons
-document.addEventListener('trix-before-initialize', function() {
-  // Remove attachment button (we'll handle uploads differently)
-  const { lang } = Trix.config
+// Replace toolbar button text with icons after Trix initializes
+document.addEventListener('trix-initialize', function(event) {
+  const editor = event.target
+  const toolbar = editor.toolbarElement
 
-  // Customize toolbar with Lucide icons
-  Trix.config.toolbar = {
-    getDefaultHTML: function() {
-      return `
-        <div class="trix-button-row">
-          <span class="trix-button-group trix-button-group--text-tools" data-trix-button-group="text-tools">
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-bold" data-trix-attribute="bold" data-trix-key="b" title="${lang.bold}" tabindex="-1">${createIconSVG('bold')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-italic" data-trix-attribute="italic" data-trix-key="i" title="${lang.italic}" tabindex="-1">${createIconSVG('italic')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-strike" data-trix-attribute="strike" title="${lang.strike}" tabindex="-1">${createIconSVG('strikethrough')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-link" data-trix-attribute="href" data-trix-action="link" data-trix-key="k" title="${lang.link}" tabindex="-1">${createIconSVG('link')}</button>
-          </span>
+  if (!toolbar) return
 
-          <span class="trix-button-group trix-button-group--block-tools" data-trix-button-group="block-tools">
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-heading-1" data-trix-attribute="heading1" title="${lang.heading1}" tabindex="-1">${createIconSVG('heading1')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-quote" data-trix-attribute="quote" title="${lang.quote}" tabindex="-1">${createIconSVG('quote')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-code" data-trix-attribute="code" title="${lang.code}" tabindex="-1">${createIconSVG('code')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-bullet-list" data-trix-attribute="bullet" title="${lang.bullets}" tabindex="-1">${createIconSVG('list')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-number-list" data-trix-attribute="number" title="${lang.numbers}" tabindex="-1">${createIconSVG('list-ordered')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-decrease-nesting-level" data-trix-action="decreaseNestingLevel" title="${lang.outdent}" tabindex="-1">${createIconSVG('indent-decrease')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-increase-nesting-level" data-trix-action="increaseNestingLevel" title="${lang.indent}" tabindex="-1">${createIconSVG('indent-increase')}</button>
-          </span>
-
-          <span class="trix-button-group trix-button-group--file-tools" data-trix-button-group="file-tools">
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-attach" data-trix-action="attachFiles" title="${lang.attachFiles}" tabindex="-1">${createIconSVG('paperclip')}</button>
-          </span>
-
-          <span class="trix-button-group trix-button-group--history-tools" data-trix-button-group="history-tools">
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-undo" data-trix-action="undo" data-trix-key="z" title="${lang.undo}" tabindex="-1">${createIconSVG('undo')}</button>
-            <button type="button" class="trix-button trix-button--icon trix-button--icon-redo" data-trix-action="redo" data-trix-key="shift+z" title="${lang.redo}" tabindex="-1">${createIconSVG('redo')}</button>
-          </span>
-        </div>
-
-        <div class="trix-dialogs" data-trix-dialogs>
-          <div class="trix-dialog trix-dialog--link" data-trix-dialog="href" data-trix-dialog-attribute="href">
-            <div class="trix-dialog__link-fields">
-              <input type="url" name="href" class="trix-input trix-input--dialog" placeholder="${lang.urlPlaceholder}" aria-label="${lang.url}" required data-trix-input>
-              <div class="trix-button-group">
-                <input type="button" class="trix-button trix-button--dialog" value="${lang.link}" data-trix-method="setAttribute">
-                <input type="button" class="trix-button trix-button--dialog" value="${lang.unlink}" data-trix-method="removeAttribute">
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-    }
+  // Map of button selectors to icon names
+  const buttonIconMap = {
+    '[data-trix-attribute="bold"]': 'bold',
+    '[data-trix-attribute="italic"]': 'italic',
+    '[data-trix-attribute="strike"]': 'strikethrough',
+    '[data-trix-attribute="href"]': 'link',
+    '[data-trix-attribute="heading1"]': 'heading1',
+    '[data-trix-attribute="quote"]': 'quote',
+    '[data-trix-attribute="code"]': 'code',
+    '[data-trix-attribute="bullet"]': 'list',
+    '[data-trix-attribute="number"]': 'list-ordered',
+    '[data-trix-action="decreaseNestingLevel"]': 'indent-decrease',
+    '[data-trix-action="increaseNestingLevel"]': 'indent-increase',
+    '[data-trix-action="attachFiles"]': 'paperclip',
+    '[data-trix-action="undo"]': 'undo',
+    '[data-trix-action="redo"]': 'redo'
   }
+
+  // Replace each button's content with the corresponding icon
+  Object.entries(buttonIconMap).forEach(([selector, iconName]) => {
+    const button = toolbar.querySelector(selector)
+    if (button) {
+      const IconComponent = iconMap[iconName]
+      if (IconComponent) {
+        try {
+          // Clear the button text
+          button.textContent = ''
+
+          // Create and append the icon
+          const iconSVG = createElement(IconComponent)
+          iconSVG.setAttribute('width', '16')
+          iconSVG.setAttribute('height', '16')
+          iconSVG.setAttribute('stroke-width', '2.5')
+
+          button.appendChild(iconSVG)
+        } catch (error) {
+          console.error(`Error creating icon ${iconName}:`, error)
+        }
+      }
+    }
+  })
 })
 
 export default {}
