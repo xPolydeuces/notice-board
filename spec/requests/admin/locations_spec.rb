@@ -117,7 +117,7 @@ RSpec.describe "Admin::Locations", type: :request do
 
       it "renders the new form again" do
         post admin_locations_path, params: invalid_params
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -141,7 +141,7 @@ RSpec.describe "Admin::Locations", type: :request do
 
       it "renders the new form with errors" do
         post admin_locations_path, params: duplicate_params
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -219,7 +219,7 @@ RSpec.describe "Admin::Locations", type: :request do
 
       it "renders the edit form again" do
         patch admin_location_path(location), params: invalid_params
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -242,7 +242,7 @@ RSpec.describe "Admin::Locations", type: :request do
 
       it "renders the edit form with errors" do
         patch admin_location_path(location), params: duplicate_params
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

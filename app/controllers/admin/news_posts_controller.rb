@@ -40,7 +40,7 @@ module Admin
         redirect_to admin_news_posts_path, notice: t('admin.news_posts.created')
       else
         @locations = available_locations
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -57,7 +57,7 @@ module Admin
         redirect_to admin_news_posts_path, notice: t('admin.news_posts.updated')
       else
         @locations = available_locations
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

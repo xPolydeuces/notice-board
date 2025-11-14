@@ -194,7 +194,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
 
         it "renders the new form again" do
           post admin_news_posts_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
 
@@ -379,7 +379,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
 
         it "renders the edit form again" do
           patch admin_news_post_path(news_post), params: invalid_params
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
     end

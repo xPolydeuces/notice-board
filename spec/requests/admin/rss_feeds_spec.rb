@@ -98,7 +98,7 @@ RSpec.describe "Admin::RssFeeds", type: :request do
 
         it "renders new template" do
           post admin_rss_feeds_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_entity).or have_http_status(:success)
+          expect(response).to have_http_status(:unprocessable_content).or have_http_status(:success)
         end
       end
     end

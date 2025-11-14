@@ -19,7 +19,7 @@ module Admin
       if @rss_feed.save
         redirect_to admin_rss_feeds_path, notice: t('admin.rss_feeds.created')
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -30,7 +30,7 @@ module Admin
       if @rss_feed.update(rss_feed_params)
         redirect_to admin_rss_feeds_path, notice: t('admin.rss_feeds.updated')
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

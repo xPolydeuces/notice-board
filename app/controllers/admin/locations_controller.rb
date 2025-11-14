@@ -19,7 +19,7 @@ module Admin
       if @location.save
         redirect_to admin_locations_path, notice: t('admin.locations.created')
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -30,7 +30,7 @@ module Admin
       if @location.update(location_params)
         redirect_to admin_locations_path, notice: t('admin.locations.updated')
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 
