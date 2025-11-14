@@ -17,7 +17,8 @@ class FlashComponent < ApplicationViewComponent
 
   def flash_messages
     # Convert FlashHash to regular hash for iteration
-    flash.to_hash.select { |type, _| FLASH_TYPES.key?(type.to_sym) }
+    # Transform keys to strings for consistency
+    flash.to_hash.select { |type, _| FLASH_TYPES.key?(type.to_sym) }.transform_keys(&:to_s)
   end
 
   def flash_config(type)

@@ -54,6 +54,7 @@ module Noticeboard
     config.generators.helper = false
 
     # Use Rack::Attack for rate limiting and blocking abusive requests
-    config.middleware.use Rack::Attack
+    # Disable in test environment to avoid conflicts with ActionPolicy
+    config.middleware.use Rack::Attack unless Rails.env.test?
   end
 end

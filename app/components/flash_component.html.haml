@@ -1,14 +1,12 @@
 - if render?
   - flash_messages.each do |type, message|
-    - if type.to_s == 'notice'
-      .mb-5.p-4.rounded-md.font-bold{class: "bg-green-100 text-green-800 border-2 border-green-300"}
-        = message
-    - elsif type.to_s == 'alert'
-      .mb-5.p-4.rounded-md.font-bold{class: "bg-red-100 text-red-800 border-2 border-red-300"}
-        = message
-    - elsif type.to_s == 'success'
-      .mb-5.p-4.rounded-md.font-bold{class: "bg-green-100 text-green-800 border-2 border-green-300"}
-        = message
-    - elsif type.to_s == 'error'
-      .mb-5.p-4.rounded-md.font-bold{class: "bg-red-100 text-red-800 border-2 border-red-300"}
-        = message
+    - config = flash_config(type)
+    .flash-message.mb-5.p-4.rounded-md.font-bold.border-2.relative{class: "#{config[:bg]} #{config[:text]} #{config[:border]}", data: { controller: dismissible ? "flash" : nil }}
+      .flex.items-start
+        .flex-1
+          = message
+        - if dismissible
+          %button.ml-4.text-current.opacity-50.hover:opacity-100.transition-opacity{type: "button", data: { action: "click->flash#dismiss" }}
+            %span.sr-only Dismiss
+            %svg.w-5.h-5{xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor"}
+              %path{stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: "M6 18L18 6M6 6l12 12"}
