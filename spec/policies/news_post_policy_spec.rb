@@ -16,7 +16,7 @@ RSpec.describe NewsPostPolicy, type: :policy do
       it "returns all posts" do
         policy = NewsPostPolicy.new(user: user)
         scope = policy.apply_scope(NewsPost.all, type: :active_record_relation)
-        expect(scope).to include(general_post, location1_post, location2_post)
+        expect(scope.to_a).to include(general_post, location1_post, location2_post)
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe NewsPostPolicy, type: :policy do
       it "returns all posts" do
         policy = NewsPostPolicy.new(user: user)
         scope = policy.apply_scope(NewsPost.all, type: :active_record_relation)
-        expect(scope).to include(general_post, location1_post, location2_post)
+        expect(scope.to_a).to include(general_post, location1_post, location2_post)
       end
     end
   end
