@@ -90,8 +90,9 @@ RSpec.describe "News Posts Management", type: :system do
 
       expect(page).to have_content("Post to Delete")
 
-      accept_confirm do
-        click_link "Delete", match: :first
+      # Find and click the delete button (rack_test doesn't support accept_confirm)
+      within("tr", text: "Post to Delete") do
+        find("button[title='Delete']").click
       end
 
       expect(page).not_to have_content("Post to Delete")
@@ -108,7 +109,7 @@ RSpec.describe "News Posts Management", type: :system do
       visit admin_news_posts_path
 
       within("tr", text: news_post.title) do
-        click_link "Publish"
+        find("button[title='Publish']").click
       end
 
       expect(page).to have_content("News post was successfully published")
@@ -125,7 +126,7 @@ RSpec.describe "News Posts Management", type: :system do
       visit admin_news_posts_path
 
       within("tr", text: news_post.title) do
-        click_link "Archive"
+        find("button[title='Archive']").click
       end
 
       expect(page).to have_content("News post was successfully archived")
