@@ -16,6 +16,9 @@ class RssFeed < ApplicationRecord
 
   # Check if feed needs refresh (older than 1 hour)
   def needs_refresh?
-    last_fetched_at.nil? || last_fetched_at < 1.hour.ago
+    return true if last_fetched_at.nil?
+
+    # Use addition to avoid timing precision issues with comparing two 1.hour.ago evaluations
+    last_fetched_at.to_i + 1.hour.to_i < Time.current.to_i
   end
 end

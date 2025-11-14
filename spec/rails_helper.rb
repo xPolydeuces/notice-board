@@ -45,9 +45,10 @@ RSpec.configure do |config|
   config.include ViewComponent::SystemSpecHelpers, type: :system
   config.include Capybara::RSpecMatchers, type: :component
   config.include FactoryBot::Syntax::Methods
+  config.include ActiveSupport::Testing::TimeHelpers
 
-    # Ensure locale is set to English for all tests
-    config.before(:each) do
+  # Ensure locale is set to English for all tests
+  config.before(:each) do
     I18n.locale = :en
   end
 end
