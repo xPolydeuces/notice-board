@@ -10,13 +10,15 @@ RSpec.describe "Authentication", type: :system do
   end
 
   describe "Sign in" do
+    before { user } # Ensure user is created
+
     it "allows user to sign in with valid credentials" do
       visit new_user_session_path
 
-      fill_in "Username", with: "testuser"
-      fill_in "Password", with: "password123"
+      fill_in "user_username", with: "testuser"
+      fill_in "user_password", with: "password123"
 
-      click_button "Log in"
+      click_button I18n.t("devise.sessions.new.sign_in", default: "Zaloguj się")
 
       expect(page).to have_content("Signed in successfully").or have_current_path(admin_root_path)
     end
@@ -24,10 +26,10 @@ RSpec.describe "Authentication", type: :system do
     it "rejects sign in with invalid credentials" do
       visit new_user_session_path
 
-      fill_in "Username", with: "testuser"
-      fill_in "Password", with: "wrongpassword"
+      fill_in "user_username", with: "testuser"
+      fill_in "user_password", with: "wrongpassword"
 
-      click_button "Log in"
+      click_button I18n.t("devise.sessions.new.sign_in", default: "Zaloguj się")
 
       expect(page).to have_content("Invalid").or have_content("incorrect")
     end
@@ -35,10 +37,10 @@ RSpec.describe "Authentication", type: :system do
     it "rejects sign in with non-existent user" do
       visit new_user_session_path
 
-      fill_in "Username", with: "nonexistent"
-      fill_in "Password", with: "password123"
+      fill_in "user_username", with: "nonexistent"
+      fill_in "user_password", with: "password123"
 
-      click_button "Log in"
+      click_button I18n.t("devise.sessions.new.sign_in", default: "Zaloguj się")
 
       expect(page).to have_content("Invalid").or have_content("incorrect")
     end

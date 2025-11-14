@@ -64,8 +64,12 @@ RSpec.describe "Admin::NewsPosts", type: :request do
 
         get admin_news_posts_path, params: { archived: "true" }
 
-        expect(response.body).to include("Archived")
-        expect(response.body).not_to include("Active")
+        # Parse the response to check only within tbody (avoid filter dropdown text)
+        parsed_body = Nokogiri::HTML(response.body)
+        tbody_content = parsed_body.css('tbody').text
+
+        expect(tbody_content).to include("Archived")
+        expect(tbody_content).not_to include("Active")
       end
     end
 
