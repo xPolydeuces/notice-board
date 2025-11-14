@@ -63,6 +63,7 @@ RSpec.describe NewsPost, type: :model do
   describe "enums" do
     it {
       is_expected.to define_enum_for(:post_type)
+        .backed_by_column_of_type(:string)
         .with_values(plain_text: "plain_text", rich_text: "rich_text", image_only: "image_only")
     }
   end
@@ -77,8 +78,9 @@ RSpec.describe NewsPost, type: :model do
 
     describe ".published" do
       it "returns only published posts" do
-        expect(NewsPost.published).to include(published_post, general_post, location_post)
-        expect(NewsPost.published).not_to include(unpublished_post, archived_post)
+        result = NewsPost.published.to_a
+        expect(result).to include(published_post, general_post, location_post)
+        expect(result).not_to include(unpublished_post, archived_post)
       end
     end
 
@@ -98,8 +100,9 @@ RSpec.describe NewsPost, type: :model do
 
     describe ".active" do
       it "returns only non-archived posts" do
-        expect(NewsPost.active).to include(published_post, unpublished_post, general_post, location_post)
-        expect(NewsPost.active).not_to include(archived_post)
+        result = NewsPost.active.to_a
+        expect(result).to include(published_post, unpublished_post, general_post, location_post)
+        expect(result).not_to include(archived_post)
       end
     end
 
@@ -122,8 +125,9 @@ RSpec.describe NewsPost, type: :model do
         old_post = create(:news_post, created_at: 2.days.ago)
         new_post = create(:news_post, created_at: 1.hour.ago)
 
-        expect(NewsPost.recent.first).to eq(new_post)
-        expect(NewsPost.recent.last).to eq(old_post)
+        posts = NewsPost.where(id: [old_post.id, new_post.id]).recent
+        expect(posts.first).to eq(new_post)
+        expect(posts.last).to eq(old_post)
       end
     end
 
@@ -132,13 +136,14 @@ RSpec.describe NewsPost, type: :model do
         older_published = create(:news_post, published: true, published_at: 2.days.ago)
         newer_published = create(:news_post, published: true, published_at: 1.day.ago)
 
-        expect(NewsPost.by_published_date.first).to eq(newer_published)
+        posts = NewsPost.where(id: [older_published.id, newer_published.id]).by_published_date
+        expect(posts.first).to eq(newer_published)
       end
     end
 
     describe ".for_display" do
       it "returns published, non-archived posts with associations" do
-        result = NewsPost.for_display
+        result = NewsPost.for_display.to_a
 
         expect(result).to include(published_post, general_post, location_post)
         expect(result).not_to include(unpublished_post, archived_post)
