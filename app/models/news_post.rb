@@ -35,13 +35,13 @@ class NewsPost < ApplicationRecord
 
   # Scopes
   scope :published, -> { where(published: true) }
-  scope :unpublished, -> { where(published: false) }
+  scope :unpublished, -> { where(published: false, archived: false) }
   scope :archived, -> { where(archived: true) }
   scope :active, -> { where(archived: false) }
   scope :general, -> { where(location_id: nil) }  # Posts for all locations
   scope :for_location, ->(location_id) { where(location_id: location_id) }  # Location-specific
   scope :recent, -> { order(created_at: :desc) }
-  scope :by_published_date, -> { order(published_at: :desc, created_at: :desc) }
+  scope :by_published_date, -> { order(Arel.sql("published_at DESC NULLS LAST, created_at DESC")) }
 
   # Eager loading associations to avoid N+1 queries
   scope :with_associations, -> { includes(:user, :location, :rich_text_rich_content, image_attachment: :blob) }
