@@ -28,8 +28,11 @@ RSpec.describe "News Posts Management", type: :system do
     it "shows published status" do
       visit admin_news_posts_path
 
-      expect(page).to have_content("Published", count: 3)
-      expect(page).to have_content("Draft", count: 1)
+      # Check within tbody to avoid counting filter dropdown options
+      within("tbody") do
+        expect(page).to have_content("Published", count: 3)
+        expect(page).to have_content("Draft", count: 1)
+      end
     end
   end
 
@@ -101,7 +104,7 @@ RSpec.describe "News Posts Management", type: :system do
   end
 
   describe "Publishing a news post" do
-    let(:news_post) { create(:news_post, published: false) }
+    let!(:news_post) { create(:news_post, published: false) }
 
     before { sign_in admin }
 
@@ -118,7 +121,7 @@ RSpec.describe "News Posts Management", type: :system do
   end
 
   describe "Archiving a news post" do
-    let(:news_post) { create(:news_post, :published) }
+    let!(:news_post) { create(:news_post, :published) }
 
     before { sign_in admin }
 
