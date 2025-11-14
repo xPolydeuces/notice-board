@@ -107,10 +107,9 @@ RSpec.describe "User Management", type: :system do
 
       expect(page).to have_content("deleteme")
 
-      accept_confirm do
-        within("tr", text: "deleteme") do
-          click_link "Delete"
-        end
+      # Find and click the delete button (rack_test doesn't support accept_confirm)
+      within("tr", text: "deleteme") do
+        find("button[title='Delete']").click
       end
 
       expect(page).not_to have_content("deleteme")
@@ -119,7 +118,7 @@ RSpec.describe "User Management", type: :system do
   end
 
   describe "Admin deletion restrictions" do
-    let(:admin_to_delete) { create(:user, :admin, username: "adminuser") }
+    let!(:admin_to_delete) { create(:user, :admin, username: "adminuser") }
 
     context "when logged in as admin" do
       before { sign_in admin }
@@ -128,7 +127,7 @@ RSpec.describe "User Management", type: :system do
         visit admin_users_path
 
         within("tr", text: "adminuser") do
-          expect(page).not_to have_link("Delete")
+          expect(page).not_to have_css("button[title='Delete']")
         end
       end
     end
@@ -139,10 +138,9 @@ RSpec.describe "User Management", type: :system do
       it "can delete an admin" do
         visit admin_users_path
 
-        accept_confirm do
-          within("tr", text: "adminuser") do
-            click_link "Delete"
-          end
+        # Find and click the delete button (rack_test doesn't support accept_confirm)
+        within("tr", text: "adminuser") do
+          find("button[title='Delete']").click
         end
 
         expect(User.exists?(admin_to_delete.id)).to be false
@@ -151,7 +149,7 @@ RSpec.describe "User Management", type: :system do
   end
 
   describe "Location user creation" do
-    let(:location) { create(:location) }
+    let!(:location) { create(:location) }
 
     before { sign_in admin }
 
