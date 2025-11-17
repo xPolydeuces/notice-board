@@ -18,8 +18,7 @@
         .mt-3.flex.items-center.gap-3
           %code.px-3.py-2.bg-white.border.border-amber-300.rounded.text-lg.font-mono.text-gray-900.select-all
             = flash[:temp_password]
-          %button.px-3.py-1.text-sm.bg-amber-600.hover_bg-amber-700.text-white.rounded{onclick: "navigator.clipboard.writeText('#{flash[:temp_password]}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000)"}
-            Copy
+          = button_tag "Copy", type: "button", class: "px-3 py-1 text-sm bg-amber-600 hover:bg-amber-700 text-white rounded", onclick: "navigator.clipboard.writeText('#{flash[:temp_password]}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000)"
 
 .bg-white.shadow.rounded-lg.overflow-hidden
   %table.min-w-full.divide-y.divide-gray-200

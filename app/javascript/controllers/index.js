@@ -4,11 +4,17 @@
 
 import { application } from "./application"
 
+import FlashController from "./flash_controller"
+application.register("flash", FlashController)
+
 import LocaleDropdownController from "./locale_dropdown_controller"
 application.register("locale-dropdown", LocaleDropdownController)
 
 import MobileMenuController from "./mobile_menu_controller"
 application.register("mobile-menu", MobileMenuController)
+
+import PasswordVisibilityController from "./password_visibility_controller"
+application.register("password-visibility", PasswordVisibilityController)
 
 import PostTypeController from "./post_type_controller"
 application.register("post-type", PostTypeController)

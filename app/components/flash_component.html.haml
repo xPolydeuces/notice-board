@@ -6,7 +6,7 @@
         .flex-1
           = message
         - if dismissible
-          %button.ml-4.text-current.opacity-50.hover:opacity-100.transition-opacity{type: "button", data: { action: "click->flash#dismiss" }}
+          = button_tag type: "button", class: "ml-4 text-current opacity-50 hover:opacity-100 transition-opacity", data: { action: "click->flash#dismiss" } do
             %span.sr-only Dismiss
             %svg.w-5.h-5{xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor"}
               %path{stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: "M6 18L18 6M6 6l12 12"}
