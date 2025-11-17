@@ -21,9 +21,15 @@
         = f.text_field :username, autofocus: true, autocomplete: "username", class: "w-full px-4 py-3 border-2 border-[#FEF3E2] rounded-md focus:outline-none focus:border-[#FA812F] transition-colors", placeholder: t('devise.sessions.new.username_placeholder', default: 'Wprowadź nazwę użytkownika')
       
       / Password Field
-      .form-group
+      .form-group{data: { controller: "password-visibility" }}
         = f.label :password, t('activerecord.attributes.user.password', default: 'Hasło'), class: "block text-sm font-bold text-gray-700 mb-2"
-        = f.password_field :password, autocomplete: "current-password", class: "w-full px-4 py-3 border-2 border-[#FEF3E2] rounded-md focus:outline-none focus:border-[#FA812F] transition-colors", placeholder: t('devise.sessions.new.password_placeholder', default: 'Wprowadź hasło')
+        .relative
+          = f.password_field :password, autocomplete: "current-password", class: "w-full px-4 py-3 pr-12 border-2 border-[#FEF3E2] rounded-md focus:outline-none focus:border-[#FA812F] transition-colors", placeholder: t('devise.sessions.new.password_placeholder', default: 'Wprowadź hasło'), data: { password_visibility_target: "input" }
+          %button.absolute.right-3.top-1/2.transform.-translate-y-1/2.text-gray-500.hover_text-gray-700.focus_outline-none{type: "button", data: { action: "password-visibility#toggle" }}
+            %span{data: { password_visibility_target: "eyeOpen" }}
+              = lucide_icon('eye', class: 'w-5 h-5')
+            %span.hidden{data: { password_visibility_target: "eyeClosed" }}
+              = lucide_icon('eye-off', class: 'w-5 h-5')
       
       / Remember Me
       - if devise_mapping.rememberable?
@@ -34,7 +40,13 @@
       / Submit Button
       .form-group.pt-2
         = f.submit t('devise.sessions.new.sign_in', default: 'Zaloguj się'), class: "w-full py-3 px-4 bg-[#FA812F] hover:bg-[#E87020] text-white font-bold rounded-md transition-colors cursor-pointer shadow-md hover:shadow-lg"
-  
+
+      / Forgot Password Link
+      .text-center.mt-4
+        = link_to "mailto:#{ENV.fetch('ADMIN_EMAIL', 'admin@example.com')}?subject=#{URI.encode_www_form_component(t('devise.sessions.new.forgot_password_subject', default: 'Zapomniałem hasła'))}", class: "text-sm text-[#FA812F] hover:text-[#E87020] hover:underline transition-colors" do
+          = lucide_icon('mail', class: 'w-4 h-4 inline-block mr-1')
+          = t('devise.sessions.new.forgot_password', default: 'Zapomniałem hasła')
+
   / Footer
   .px-8.pb-8.text-center.text-sm.text-gray-500
     .border-t.border-gray-200.pt-6

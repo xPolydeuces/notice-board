@@ -123,6 +123,37 @@ pl:
           few: "Formularz zawiera %{count} błędy"
           many: "Formularz zawiera %{count} błędów"
           other: "Formularz zawiera %{count} błędów"
+      reset_password: "Resetuj hasło"
+      reset_password_confirm: "Resetować hasło dla %{username}? Zostanie wygenerowane hasło tymczasowe."
+      cannot_reset_own_password: "Nie możesz zresetować własnego hasła. Użyj opcji 'Zmień hasło'."
+      password_reset_success: "Hasło zostało zresetowane dla %{username}"
+      password_reset_failed: "Nie udało się zresetować hasła"
+      temp_password_title: "Wygenerowano hasło tymczasowe"
+      temp_password_message: "Skopiuj to hasło i przekaż użytkownikowi. Będzie musiał je zmienić przy następnym logowaniu."
+
+    passwords:
+      edit: "Zmień hasło"
+      edit_subtitle: "Zaktualizuj swoje hasło"
+      updated: "Hasło zostało pomyślnie zaktualizowane"
+      must_change: "Musisz zmienić hasło aby kontynuować."
+      force_change_notice: "Wymagana zmiana hasła"
+      force_change_message: "Twoje hasło zostało zresetowane. Wybierz nowe hasło aby kontynuować."
+      form:
+        current_password: "Obecne hasło"
+        current_password_placeholder: "Wprowadź obecne hasło"
+        current_password_help: "Wprowadź obecne hasło aby potwierdzić swoją tożsamość"
+        new_password: "Nowe hasło"
+        new_password_placeholder: "Wprowadź nowe hasło"
+        password_confirmation: "Potwierdź nowe hasło"
+        password_confirmation_placeholder: "Wprowadź hasło ponownie"
+        password_help: "Minimum 6 znaków"
+        cancel: "Anuluj"
+        submit: "Zaktualizuj hasło"
+        errors:
+          one: "Formularz zawiera 1 błąd"
+          few: "Formularz zawiera %{count} błędy"
+          many: "Formularz zawiera %{count} błędów"
+          other: "Formularz zawiera %{count} błędów"
 
     rss_feeds:
       title: "Kanały RSS"
