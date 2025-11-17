@@ -88,4 +88,17 @@ class NewsPost < ApplicationRecord
   def scope_badge
     general? ? "General" : "Location: #{location.code}"
   end
+
+  # Serialization helpers for JSON/API
+  def image_url
+    return nil unless image_only? && image.attached?
+
+    Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true)
+  end
+
+  def rich_content_html
+    return nil unless rich_text?
+
+    rich_content.to_s
+  end
 end

@@ -1,8 +1,26 @@
-.min-h-screen.flex.items-center.justify-center{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
-  .text-center.p-8
-    - if AppConfig::LOGO_URL.present?
-      %img.mx-auto.mb-8{src: AppConfig::LOGO_URL, alt: "#{AppConfig::COMPANY_NAME} Logo", class: "h-32"}
-    %h1.text-4xl.font-bold.mb-4{class: "text-[#FA812F]"} Tablica Ogłoszeń
-    %p.text-xl.text-gray-700.mb-8 Publiczny widok będzie dostępny wkrótce
-    
-    = link_to "Panel Administracyjny", admin_root_path, class: "inline-block px-8 py-3 bg-[#FA812F] hover:bg-[#E87020] text-white font-bold rounded-md transition-colors"
+.h-screen.overflow-hidden.notice-board-gradient{ data: { controller: 'notice-board' } }
+  .flex.flex-col.gap-5.p-5.h-full
+
+    / Top row - Two announcement boxes
+    .flex.gap-8.flex-[9]
+      / General announcements (left - 65%)
+      = render 'dashboard/carousel_box', title: 'Ogłoszenia RN', posts: @general_posts, empty_message: 'Brak ogłoszeń', box_classes: 'flex-[65]'
+
+      / Location announcements (right - 35%)
+      - location_title = @location ? "Ogłoszenia - #{@location.name}" : 'Ogłoszenia Oddziałowe'
+      - location_empty = @location ? 'Brak ogłoszeń dla tego oddziału' : 'Wybierz oddział aby zobaczyć ogłoszenia'
+      = render 'dashboard/carousel_box', title: location_title, posts: @location_posts, empty_message: location_empty, box_classes: 'flex-[35]'
+
+    / Bottom row - RSS marquee
+    .flex.flex-1.overflow-hidden{ class: 'bg-[#FEF3E2]' }
+      - if AppConfig::LOGO_URL.present?
+        .flex-shrink-0.flex.items-center.justify-center.p-5{ class: 'border-[1rem] border-[#DD0303]' }
+          = image_tag AppConfig::LOGO_URL, alt: 'Logo', class: 'h-20 w-auto'
+
+      .marquee-container
+        .marquee{ data: { notice_board_target: 'marquee' } }
+          .px-24.text-8xl.font-bold{ data: { notice_board_target: 'marqueeContent' } }
+            - if @rss_feeds.any?
+              = "RSS: #{@rss_feeds.map(&:name).join(' • ')}"
+            - else
+              Bardzo ważne informacje z Warszawy, pobierane z RSS

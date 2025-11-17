@@ -1,0 +1,16 @@
+.box.rounded-xl.p-10.flex.flex-col.relative{ class: "bg-[#FEF3E2] #{box_classes}" }
+  .text-5xl.font-semibold.text-center.mb-8.pb-5{ class: 'border-b-4 border-[#FA812F]' }
+    = title
+
+  .flex-1.relative.overflow-hidden{ data: { notice_board_target: 'carousel' } }
+    - if posts.any?
+      - posts.each_with_index do |post, index|
+        = render 'dashboard/post_slide', post: post, index: index
+
+      - if posts.count > 1
+        .absolute.bottom-5.left-1/2.transform.-translate-x-1/2.flex.gap-3{ data: { dots: true } }
+          - posts.count.times do |i|
+            .w-3.h-3.rounded-full.transition-colors.duration-300{ class: i == 0 ? 'bg-orange-600' : 'bg-orange-300', data: { dot: true } }
+    - else
+      .flex-1.flex.items-center.justify-center.text-4xl.text-gray-400.text-center.p-10
+        = empty_message
