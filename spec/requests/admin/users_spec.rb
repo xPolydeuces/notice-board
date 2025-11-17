@@ -214,4 +214,76 @@ RSpec.describe "Admin::Users", type: :request do
       end
     end
   end
+
+  describe "POST /admin/users/:id/reset_password" do
+    let(:user_to_reset) { create(:user, :general) }
+
+    context "when user is admin" do
+      before { sign_in admin }
+
+      it "generates a temporary password" do
+        expect {
+          post reset_password_admin_user_path(user_to_reset)
+        }.to change { user_to_reset.reload.encrypted_password }
+      end
+
+      it "sets force_password_change flag" do
+        post reset_password_admin_user_path(user_to_reset)
+        expect(user_to_reset.reload.force_password_change).to be true
+      end
+
+      it "redirects to users index" do
+        post reset_password_admin_user_path(user_to_reset)
+        expect(response).to redirect_to(admin_users_path)
+      end
+
+      it "displays temporary password in flash" do
+        post reset_password_admin_user_path(user_to_reset)
+        expect(flash[:temp_password]).to be_present
+        expect(flash[:temp_password].length).to eq(12)
+      end
+
+      it "displays success message" do
+        post reset_password_admin_user_path(user_to_reset)
+        follow_redirect!
+        expect(flash[:notice]).to be_present
+      end
+
+      context "when trying to reset own password" do
+        it "does not reset password" do
+          old_password = admin.encrypted_password
+          post reset_password_admin_user_path(admin)
+          expect(admin.reload.encrypted_password).to eq(old_password)
+        end
+
+        it "redirects with error message" do
+          post reset_password_admin_user_path(admin)
+          expect(response).to redirect_to(admin_users_path)
+          expect(flash[:alert]).to be_present
+        end
+      end
+    end
+
+    context "when user is not admin" do
+      before { sign_in general_user }
+
+      it "does not reset password" do
+        old_password = user_to_reset.encrypted_password
+        post reset_password_admin_user_path(user_to_reset)
+        expect(user_to_reset.reload.encrypted_password).to eq(old_password)
+      end
+
+      it "redirects or denies access" do
+        post reset_password_admin_user_path(user_to_reset)
+        expect(response).to have_http_status(:redirect).or have_http_status(:forbidden)
+      end
+    end
+
+    context "when user is not signed in" do
+      it "redirects to sign in" do
+        post reset_password_admin_user_path(user_to_reset)
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
 end

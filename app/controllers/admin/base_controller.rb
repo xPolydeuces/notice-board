@@ -6,6 +6,7 @@ module Admin
     include ActionPolicy::Controller
     before_action :authenticate_user!
     before_action :require_admin_access!
+    before_action :check_force_password_change!
 
     layout 'admin'
 
@@ -19,6 +20,14 @@ module Admin
       return if current_user.present?
 
       redirect_to new_user_session_path, alert: t('admin.access_denied', default: 'Musisz się zalogować')
+    end
+
+    # Check if user needs to change password
+    def check_force_password_change!
+      return unless current_user&.force_password_change?
+      return if controller_name == 'passwords' && action_name.in?(['edit', 'update'])
+
+      redirect_to edit_admin_password_path, alert: t('admin.passwords.must_change', default: 'You must change your password before continuing.')
     end
 
     # Use this in controllers that require admin-only access

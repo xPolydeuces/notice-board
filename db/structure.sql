@@ -296,7 +296,8 @@ CREATE TABLE public.users (
     role integer DEFAULT 0 NOT NULL,
     news_posts_count integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    force_password_change boolean DEFAULT false NOT NULL
 );
 
 
@@ -589,6 +590,13 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
+-- Name: index_users_on_force_password_change; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_force_password_change ON public.users USING btree (force_password_change);
+
+
+--
 -- Name: index_users_on_location_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -663,6 +671,7 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251117120000'),
 ('20251107101500'),
 ('20251106120100'),
 ('20251106120000'),

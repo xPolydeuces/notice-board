@@ -3,7 +3,7 @@
 module Admin
   class UsersController < BaseController
     before_action :require_admin!
-    before_action :set_user, only: [:edit, :update, :destroy]
+    before_action :set_user, only: [:edit, :update, :destroy, :reset_password]
     before_action :prevent_superadmin_modification, only: [:edit, :update, :destroy]
 
     def index
@@ -62,6 +62,27 @@ module Admin
 
       @user.destroy
       redirect_to admin_users_path, notice: t('admin.users.deleted')
+    end
+
+    def reset_password
+      if @user == current_user
+        redirect_to admin_users_path, alert: t('admin.users.cannot_reset_own_password', 
+        default: 'You cannot reset your own password here. Please use "Change Password" option instead.')
+        return
+      end
+
+      # Generate temporary password
+      temp_password = @user.generate_temporary_password
+
+      if @user.save
+        flash[:notice] = t('admin.users.password_reset_success', username: @user.username,
+        default: "Password reset for %{username}.")
+        flash[:temp_password] = temp_password
+        redirect_to admin_users_path
+      else
+        redirect_to admin_users_path, alert: t('admin.users.password_reset_failure',
+        default: "Failed to reset password.")
+      end
     end
 
     private

@@ -20,6 +20,7 @@ class User < ApplicationRecord
   validates :location, presence: true, if: :location?
   validates :password, presence: true, on: :create
   validates :password, length: { minimum: 6 }, allow_blank: true
+  validates :password, confirmation: true, if: -> { password.present? }
 
   # Callbacks
   before_validation :downcase_username
@@ -77,6 +78,19 @@ class User < ApplicationRecord
 
   def will_save_change_to_email?
     false
+  end
+
+  def generate_temporary_password
+    # Generate a secure temporary password
+    temp_password = SecureRandom.alphanumeric(12)
+    self.password = temp_password
+    self.password_confirmation = temp_password
+    self.force_password_change = true
+    temp_password
+  end
+
+  def force_password_change?
+    force_password_change == true
   end
 
   private

@@ -5,6 +5,22 @@
     = lucide_icon('plus', class: 'w-4 h-4 mr-2')
     = t('admin.users.new')
 
+/ Display temporary password if just generated
+- if flash[:temp_password].present?
+  .bg-amber-50.border-l-4.border-amber-400.p-4.mb-4
+    .flex
+      = lucide_icon('key', class: 'w-6 h-6 text-amber-600 mr-3 flex-shrink-0')
+      .div
+        %h3.text-sm.font-medium.text-amber-800
+          = t('admin.users.temp_password_title', default: 'Temporary Password Generated')
+        %p.mt-2.text-sm.text-amber-700
+          = t('admin.users.temp_password_message', default: 'Copy this password and provide it to the user. They will be required to change it on next login.')
+        .mt-3.flex.items-center.gap-3
+          %code.px-3.py-2.bg-white.border.border-amber-300.rounded.text-lg.font-mono.text-gray-900.select-all
+            = flash[:temp_password]
+          %button.px-3.py-1.text-sm.bg-amber-600.hover_bg-amber-700.text-white.rounded{onclick: "navigator.clipboard.writeText('#{flash[:temp_password]}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000)"}
+            Copy
+
 .bg-white.shadow.rounded-lg.overflow-hidden
   %table.min-w-full.divide-y.divide-gray-200
     %thead.bg-gray-50
@@ -55,6 +71,9 @@
                 - unless user.superadmin? && !current_user.superadmin?
                   = link_to edit_admin_user_path(user), class: "text-[#FA812F] hover:text-[#E87020]", title: t('admin.users.edit') do
                     = lucide_icon('pencil', class: 'w-4 h-4')
+                - unless user == current_user
+                  = button_to reset_password_admin_user_path(user), method: :post, class: "text-blue-600 hover:text-blue-900", title: t('admin.users.reset_password', default: 'Reset Password'), data: { turbo_confirm: t('admin.users.reset_password_confirm', username: user.username, default: 'Reset password for %{username}? A temporary password will be generated.') } do
+                    = lucide_icon('key', class: 'w-4 h-4')
                 - unless user == current_user || (user.admin_or_superadmin? && !current_user.superadmin?)
                   = button_to admin_user_path(user), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.users.delete'), data: { turbo_confirm: t('admin.users.delete_confirm', username: user.username) } do
                     = lucide_icon('trash-2', class: 'w-4 h-4')

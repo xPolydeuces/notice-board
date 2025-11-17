@@ -277,4 +277,62 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "Password management" do
+    let(:user) { create(:user, :general) }
+
+    describe "#generate_temporary_password" do
+      it "generates a 12 character password" do
+        temp_password = user.generate_temporary_password
+        expect(temp_password.length).to eq(12)
+      end
+
+      it "sets the password on the user" do
+        temp_password = user.generate_temporary_password
+        expect(user.password).to eq(temp_password)
+        expect(user.password_confirmation).to eq(temp_password)
+      end
+
+      it "sets force_password_change flag" do
+        user.generate_temporary_password
+        expect(user.force_password_change).to be true
+      end
+
+      it "returns the temporary password" do
+        temp_password = user.generate_temporary_password
+        expect(temp_password).to be_present
+        expect(temp_password).to be_a(String)
+      end
+
+      it "generates alphanumeric password" do
+        temp_password = user.generate_temporary_password
+        expect(temp_password).to match(/\A[a-zA-Z0-9]+\z/)
+      end
+
+      it "changes encrypted_password after save" do
+        old_encrypted_password = user.encrypted_password
+        user.generate_temporary_password
+        user.save
+        expect(user.encrypted_password).not_to eq(old_encrypted_password)
+      end
+    end
+
+    describe "#force_password_change?" do
+      context "when force_password_change is true" do
+        let(:user) { create(:user, force_password_change: true) }
+
+        it "returns true" do
+          expect(user.force_password_change?).to be true
+        end
+      end
+
+      context "when force_password_change is false" do
+        let(:user) { create(:user, force_password_change: false) }
+
+        it "returns false" do
+          expect(user.force_password_change?).to be false
+        end
+      end
+    end
+  end
 end

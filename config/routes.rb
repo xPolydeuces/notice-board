@@ -15,8 +15,12 @@ Rails.application.routes.draw do
   # Admin namespace
   namespace :admin do
     root "dashboard#index"
-    
-    resources :users
+
+    resources :users do
+      member do
+        post :reset_password
+      end
+    end
     resources :locations
     resources :news_posts do
       member do
