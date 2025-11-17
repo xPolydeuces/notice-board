@@ -4,23 +4,12 @@
     / Top row - Two announcement boxes
     .flex.gap-8.flex-[9]
       / General announcements (left - 65%)
-      = render 'dashboard/carousel_box', title: 'Ogłoszenia RN', posts: @general_posts, empty_message: 'Brak ogłoszeń', box_classes: 'flex-[65]'
+      = render Display::CarouselBoxComponent.new(title: 'Ogłoszenia Ogólne', posts: @general_posts, empty_message: 'Brak ogłoszeń', box_classes: 'flex-[65]')
 
       / Location announcements (right - 35%)
       - location_title = @location ? "Ogłoszenia - #{@location.name}" : 'Ogłoszenia Oddziałowe'
       - location_empty = @location ? 'Brak ogłoszeń dla tego oddziału' : 'Wybierz oddział aby zobaczyć ogłoszenia'
-      = render 'dashboard/carousel_box', title: location_title, posts: @location_posts, empty_message: location_empty, box_classes: 'flex-[35]'
+      = render Display::CarouselBoxComponent.new(title: location_title, posts: @location_posts, empty_message: location_empty, box_classes: 'flex-[35]')
 
     / Bottom row - RSS marquee
-    .flex.flex-1.overflow-hidden{ class: 'bg-[#FEF3E2]' }
-      - if AppConfig::LOGO_URL.present?
-        .flex-shrink-0.flex.items-center.justify-center.p-5{ class: 'border-[1rem] border-[#DD0303]' }
-          = image_tag AppConfig::LOGO_URL, alt: 'Logo', class: 'h-20 w-auto'
-
-      .marquee-container
-        .marquee{ data: { notice_board_target: 'marquee' } }
-          .px-24.text-8xl.font-bold{ data: { notice_board_target: 'marqueeContent' } }
-            - if @rss_feeds.any?
-              = "RSS: #{@rss_feeds.map(&:name).join(' • ')}"
-            - else
-              Bardzo ważne informacje z Warszawy, pobierane z RSS
+    = render Display::MarqueeComponent.new(rss_feeds: @rss_feeds, logo_url: AppConfig::LOGO_URL)

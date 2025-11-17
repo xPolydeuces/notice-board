@@ -1,11 +1,28 @@
-/* Notice Board Display Styles */
+/**
+ * Notice Board Display Styles
+ * Styles for the public-facing notice board display page
+ */
 
-/* Gradient background */
+/* ============================================
+   Layout & Background
+   ============================================ */
+
+/* Main gradient background for notice board */
 .notice-board-gradient {
   background: linear-gradient(to top, #DD0303, #FA812F, #FAB12F);
 }
 
-/* Custom scrollbar for post content */
+
+/* ============================================
+   Carousel Components
+   ============================================ */
+
+/* Post slide transitions */
+.post-slide {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Custom scrollbar for post content overflow */
 .notice-board-scroll::-webkit-scrollbar {
   width: 10px;
 }
@@ -24,12 +41,12 @@
   background: #DD0303;
 }
 
-/* Slide transitions */
-.post-slide {
-  transition: opacity 0.5s ease-in-out;
-}
 
-/* Marquee container - hide overflow */
+/* ============================================
+   RSS Marquee Components
+   ============================================ */
+
+/* Marquee container - hide overflow for seamless scrolling */
 .marquee-container {
   overflow: hidden;
   flex: 1;

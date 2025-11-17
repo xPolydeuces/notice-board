@@ -1,0 +1,9 @@
+.flex.flex-1.overflow-hidden{ class: 'bg-[#FEF3E2]' }
+  - if has_logo?
+    .flex-shrink-0.flex.items-center.justify-center.p-5{ class: 'border-[1rem] border-[#DD0303]' }
+      = image_tag logo_url, alt: 'Logo', class: 'h-20 w-auto'
+
+  .marquee-container
+    .marquee{ data: { notice_board_target: 'marquee' } }
+      .px-24.text-8xl.font-bold{ data: { notice_board_target: 'marqueeContent' } }
+        = marquee_text
