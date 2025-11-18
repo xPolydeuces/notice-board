@@ -42,46 +42,28 @@ module Admin
     end
 
     def destroy
-      # Prevent self-deletion
-      if @user == current_user
-        redirect_to admin_users_path, alert: t('admin.users.cannot_delete_self')
-        return
-      end
+      result = Users::DeleteUser.new(user: @user, current_user: current_user).call
 
-      # Only superadmins can delete other admins/superadmins
-      if @user.admin_or_superadmin? && !current_user.superadmin?
-        redirect_to admin_users_path, alert: t('admin.users.cannot_delete_admin')
-        return
+      if result.success?
+        redirect_to admin_users_path, notice: t('admin.users.deleted')
+      else
+        error_key = result.errors.first
+        redirect_to admin_users_path, alert: t("admin.users.#{error_key}")
       end
-
-      # Prevent deletion of the last superadmin
-      if @user.superadmin? && User.where(role: :superadmin).count == 1
-        redirect_to admin_users_path, alert: t('admin.users.cannot_delete_last_superadmin')
-        return
-      end
-
-      @user.destroy
-      redirect_to admin_users_path, notice: t('admin.users.deleted')
     end
 
     def reset_password
-      if @user == current_user
-        redirect_to admin_users_path, alert: t('admin.users.cannot_reset_own_password', 
-        default: 'You cannot reset your own password here. Please use "Change Password" option instead.')
-        return
-      end
+      result = Users::ResetPassword.new(user: @user, current_user: current_user).call
 
-      # Generate temporary password
-      temp_password = @user.generate_temporary_password
-
-      if @user.save
+      if result.success?
         flash[:notice] = t('admin.users.password_reset_success', username: @user.username,
-        default: "Password reset for %{username}.")
-        flash[:temp_password] = temp_password
+                           default: "Password reset for %{username}.")
+        flash[:temp_password] = result.temporary_password
         redirect_to admin_users_path
       else
-        redirect_to admin_users_path, alert: t('admin.users.password_reset_failure',
-        default: "Failed to reset password.")
+        error_key = result.errors.first
+        redirect_to admin_users_path, alert: t("admin.users.#{error_key}",
+                                                default: 'Failed to reset password.')
       end
     end
 

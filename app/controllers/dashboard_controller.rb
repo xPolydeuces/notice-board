@@ -12,6 +12,7 @@ class DashboardController < ApplicationController
                              .with_associations
                              .by_published_date
                              .limit(10)
+                             .to_a
 
     # Fetch location-specific announcements
     if @location
@@ -21,11 +22,12 @@ class DashboardController < ApplicationController
                                 .with_associations
                                 .by_published_date
                                 .limit(10)
+                                .to_a
     else
       @location_posts = []
     end
 
     # Fetch active RSS feeds
-    @rss_feeds = RssFeed.active.order(:name)
+    @rss_feeds = RssFeed.active.order(:name).to_a
   end
 end

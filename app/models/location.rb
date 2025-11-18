@@ -40,4 +40,24 @@ class Location < ApplicationRecord
   def has_active_posts?
     news_posts.where(published: true, archived: false).exists?
   end
+
+  # Check if location can be safely destroyed
+  # A location cannot be deleted if it has associated users or news posts
+  def destroyable?
+    !users.exists? && !news_posts.exists?
+  end
+
+  # Return locations available for a given user based on their role
+  # Admins/superadmins can see all active locations
+  # Location users can only see their own location
+  # General users cannot see any locations (create general posts only)
+  def self.available_for(user)
+    if user.admin_or_superadmin?
+      active.ordered
+    elsif user.location?
+      where(id: user.location_id)
+    else
+      none
+    end
+  end
 end

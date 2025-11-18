@@ -109,24 +109,6 @@ module Admin
       @news_post = NewsPost.find(params[:id])
     end
 
-    def authorize_news_post
-      # Admins can edit everything
-      return if current_user.admin_or_superadmin?
-
-      # Location users can only edit their location's posts
-      if current_user.location?
-        unless @news_post.location_id == current_user.location_id
-          redirect_to admin_news_posts_path, alert: t('admin.unauthorized', default: 'Brak uprawnień')
-        end
-        return
-      end
-
-      # General users can only edit general posts (no location)
-      unless @news_post.general?
-        redirect_to admin_news_posts_path, alert: t('admin.unauthorized', default: 'Brak uprawnień')
-      end
-    end
-
     def news_post_params
       permitted = [:title, :content, :post_type, :rich_content, :image]
 
@@ -153,13 +135,7 @@ module Admin
     end
 
     def available_locations
-      if current_user.admin_or_superadmin?
-        Location.active.ordered
-      elsif current_user.location?
-        Location.where(id: current_user.location_id)
-      else
-        Location.none
-      end
+      Location.available_for(current_user)
     end
   end
 end

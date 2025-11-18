@@ -35,11 +35,11 @@ module Admin
     end
 
     def destroy
-      if @location.users.exists? || @location.news_posts.exists?
-        redirect_to admin_locations_path, alert: t('admin.locations.cannot_delete')
-      else
+      if @location.destroyable?
         @location.destroy
         redirect_to admin_locations_path, notice: t('admin.locations.deleted')
+      else
+        redirect_to admin_locations_path, alert: t('admin.locations.cannot_delete')
       end
     end
 
