@@ -13,6 +13,11 @@ FactoryBot.define do
       published_at { Time.current }
     end
 
+    trait :unpublished do
+      published { false }
+      published_at { nil }
+    end
+
     trait :archived do
       archived { true }
       published { false }
@@ -22,12 +27,30 @@ FactoryBot.define do
       location { nil }
     end
 
+    trait :plain_text do
+      post_type { :plain_text }
+      content { "This is plain text content." }
+    end
+
     trait :rich_text do
       post_type { :rich_text }
+      content { nil }
+      after(:build) do |post|
+        post.rich_content = ActionText::RichText.new(body: "<p>Rich text content</p>")
+      end
     end
 
     trait :image_only do
       post_type { :image_only }
+      content { nil }
+      title { "Image Post" }
+      after(:build) do |post|
+        post.image.attach(
+          io: File.open(Rails.root.join("spec", "fixtures", "files", "test_image.png")),
+          filename: "test_image.png",
+          content_type: "image/png"
+        )
+      end
     end
   end
 end
