@@ -233,6 +233,42 @@ ALTER SEQUENCE public.news_posts_id_seq OWNED BY public.news_posts.id;
 
 
 --
+-- Name: rss_feed_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rss_feed_items (
+    id bigint NOT NULL,
+    rss_feed_id bigint NOT NULL,
+    title character varying NOT NULL,
+    description text,
+    link character varying,
+    published_at timestamp(6) without time zone,
+    guid character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: rss_feed_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rss_feed_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rss_feed_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rss_feed_items_id_seq OWNED BY public.rss_feed_items.id;
+
+
+--
 -- Name: rss_feeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -363,6 +399,13 @@ ALTER TABLE ONLY public.news_posts ALTER COLUMN id SET DEFAULT nextval('public.n
 
 
 --
+-- Name: rss_feed_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rss_feed_items ALTER COLUMN id SET DEFAULT nextval('public.rss_feed_items_id_seq'::regclass);
+
+
+--
 -- Name: rss_feeds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -430,6 +473,14 @@ ALTER TABLE ONLY public.locations
 
 ALTER TABLE ONLY public.news_posts
     ADD CONSTRAINT news_posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rss_feed_items rss_feed_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rss_feed_items
+    ADD CONSTRAINT rss_feed_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -569,6 +620,27 @@ CREATE INDEX index_news_posts_on_user_id ON public.news_posts USING btree (user_
 
 
 --
+-- Name: index_rss_feed_items_on_rss_feed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rss_feed_items_on_rss_feed_id ON public.rss_feed_items USING btree (rss_feed_id);
+
+
+--
+-- Name: index_rss_feed_items_on_rss_feed_id_and_guid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rss_feed_items_on_rss_feed_id_and_guid ON public.rss_feed_items USING btree (rss_feed_id, guid);
+
+
+--
+-- Name: index_rss_feed_items_on_rss_feed_id_and_published_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rss_feed_items_on_rss_feed_id_and_published_at ON public.rss_feed_items USING btree (rss_feed_id, published_at);
+
+
+--
 -- Name: index_rss_feeds_on_active; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -649,6 +721,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: rss_feed_items fk_rails_7412bf58f2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rss_feed_items
+    ADD CONSTRAINT fk_rails_7412bf58f2 FOREIGN KEY (rss_feed_id) REFERENCES public.rss_feeds(id);
+
+
+--
 -- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -671,6 +751,7 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251118113828'),
 ('20251117120000'),
 ('20251107101500'),
 ('20251106120100'),

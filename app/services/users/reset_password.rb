@@ -26,6 +26,11 @@ module Users
       @success == true
     end
 
+    # Expose the temporary password for flash message
+    def temporary_password
+      @temp_password
+    end
+
     private
 
     def success(temp_password)
@@ -38,15 +43,6 @@ module Users
       @success = false
       @errors << reason
       self
-    end
-
-    def temp_password
-      @temp_password
-    end
-
-    # Expose the temporary password for flash message
-    def temporary_password
-      @temp_password
     end
   end
 end

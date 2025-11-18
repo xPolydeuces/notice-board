@@ -35,6 +35,9 @@ gem "thruster", "~> 0.1", require: false
 # Background job processing
 gem "sidekiq", "~> 8.0"
 
+# RSS feed parsing
+gem "rss"
+
 # Authentication framework
 gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.15"

@@ -27,7 +27,11 @@ class DashboardController < ApplicationController
       @location_posts = []
     end
 
-    # Fetch active RSS feeds
-    @rss_feeds = RssFeed.active.order(:name).to_a
+    # Fetch recent RSS feed items from active feeds
+    active_feed_ids = RssFeed.active.pluck(:id)
+    @rss_feed_items = RssFeedItem.where(rss_feed_id: active_feed_ids)
+                                  .includes(:rss_feed)
+                                  .recent(50)
+                                  .to_a
   end
 end

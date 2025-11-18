@@ -12,4 +12,4 @@
       = render Display::CarouselBoxComponent.new(title: location_title, posts: @location_posts, empty_message: location_empty, box_classes: 'flex-[35]')
 
     / Bottom row - RSS marquee
-    = render Display::MarqueeComponent.new(rss_feeds: @rss_feeds, logo_url: AppConfig::LOGO_URL)
+    = render Display::MarqueeComponent.new(rss_feed_items: @rss_feed_items, logo_url: AppConfig::LOGO_URL)

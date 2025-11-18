@@ -2,13 +2,9 @@
 
 module Display
   # Individual post slide component for carousel
-  class PostSlideComponent < ViewComponent::Base
-    attr_reader :post, :index
-
-    def initialize(post:, index:)
-      @post = post
-      @index = index
-    end
+  class PostSlideComponent < ApplicationViewComponent
+    option :post
+    option :index
 
     def render?
       post.present?
