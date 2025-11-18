@@ -50,10 +50,13 @@
 .marquee-container {
   overflow: hidden;
   flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 /* Marquee content - flex layout for seamless scrolling */
 .marquee {
   display: flex;
+  align-items: center;
   white-space: nowrap;
 }

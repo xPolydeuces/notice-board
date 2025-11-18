@@ -2,9 +2,13 @@
 
 module Display
   # RSS marquee component for notice board display
-  class MarqueeComponent < ApplicationViewComponent
-    option :rss_feeds
-    option :logo_url, Types::String.optional, default: -> { nil }
+  class MarqueeComponent < ViewComponent::Base
+    attr_reader :rss_feeds, :logo_url
+
+    def initialize(rss_feeds:, logo_url: nil)
+      @rss_feeds = rss_feeds
+      @logo_url = logo_url
+    end
 
     def render?
       true

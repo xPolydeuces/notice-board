@@ -13,6 +13,9 @@ application.register("locale-dropdown", LocaleDropdownController)
 import MobileMenuController from "./mobile_menu_controller"
 application.register("mobile-menu", MobileMenuController)
 
+import NoticeBoardController from "./notice_board_controller"
+application.register("notice-board", NoticeBoardController)
+
 import PasswordVisibilityController from "./password_visibility_controller"
 application.register("password-visibility", PasswordVisibilityController)
 

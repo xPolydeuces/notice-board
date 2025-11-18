@@ -1,14 +1,14 @@
-.div{ class: slide_classes, data: { slide: true, index: index } }
+%div{ class: slide_classes, data: { slide: true, index: index } }
   - if post.image_only?
     - if post.image.attached?
       = image_tag post.image, loading: 'eager', class: 'max-w-full max-h-full object-contain rounded-xl shadow-lg'
   - else
     .flex.flex-col.items-center.justify-center.w-full
       - if post.title.present?
-        .text-6xl.font-bold.mb-8.leading-tight{ class: 'text-[#DD0303]' }= post.title
+        %div{ class: 'text-6xl font-bold mb-8 leading-tight text-[#DD0303]' }= post.title
       - if post.plain_text?
-        .div{ class: content_classes }= simple_format(post.content)
+        %div{ class: content_classes }= simple_format(post.content)
       - elsif post.rich_text?
-        .div{ class: "#{content_classes} #{prose_classes}" }= post.rich_content
+        %div{ class: "#{content_classes} #{prose_classes}" }= post.rich_content
       .text-2xl.text-gray-600.mt-8.italic
         = l(post.published_at, format: :long)

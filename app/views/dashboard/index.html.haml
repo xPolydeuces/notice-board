@@ -2,7 +2,7 @@
   .flex.flex-col.gap-5.p-5.h-full
 
     / Top row - Two announcement boxes
-    .flex.gap-8.flex-[9]
+    %div{ class: 'flex gap-8 flex-[9]' }
       / General announcements (left - 65%)
       = render Display::CarouselBoxComponent.new(title: 'Ogłoszenia Ogólne', posts: @general_posts, empty_message: 'Brak ogłoszeń', box_classes: 'flex-[65]')
 

@@ -44,7 +44,7 @@ class NewsPost < ApplicationRecord
   scope :by_published_date, -> { order(Arel.sql("published_at DESC NULLS LAST, created_at DESC")) }
 
   # Eager loading associations to avoid N+1 queries
-  scope :with_associations, -> { includes(:user, :location, :rich_text_rich_content, image_attachment: :blob) }
+  scope :with_associations, -> { includes(:user, :location).with_rich_text_rich_content.with_attached_image }
 
   # Combined scope for displaying posts
   scope :for_display, -> { published.active.with_associations.by_published_date }

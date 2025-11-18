@@ -2,11 +2,15 @@
 
 module Display
   # Carousel box component for notice board display
-  class CarouselBoxComponent < ApplicationViewComponent
-    option :title, Types::String
-    option :posts
-    option :empty_message, Types::String
-    option :box_classes, Types::String.optional, default: -> { '' }
+  class CarouselBoxComponent < ViewComponent::Base
+    attr_reader :title, :posts, :empty_message, :box_classes
+
+    def initialize(title:, posts:, empty_message:, box_classes: '')
+      @title = title
+      @posts = posts
+      @empty_message = empty_message
+      @box_classes = box_classes
+    end
 
     def render?
       title.present?
