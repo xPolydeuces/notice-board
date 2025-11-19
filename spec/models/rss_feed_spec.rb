@@ -81,10 +81,11 @@ RSpec.describe RssFeed, type: :model do
     end
 
     context "when fetched exactly 1 hour ago" do
-      let(:feed) { create(:rss_feed, last_fetched_at: 1.hour.ago) }
-
       it "returns false" do
-        expect(feed.needs_refresh?).to be false
+        travel_to Time.current do
+          feed = create(:rss_feed, last_fetched_at: 1.hour.ago)
+          expect(feed.needs_refresh?).to be false
+        end
       end
     end
   end

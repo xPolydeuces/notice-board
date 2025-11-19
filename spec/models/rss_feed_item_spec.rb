@@ -36,11 +36,11 @@ RSpec.describe RssFeedItem, type: :model do
   end
 
   describe "#display_text" do
-    it "returns feed name and item title" do
+    it "returns feed item title" do
       feed = create(:rss_feed, name: "Tech News")
       item = create(:rss_feed_item, rss_feed: feed, title: "Breaking News")
 
-      expect(item.display_text).to eq("Tech News: Breaking News")
+      expect(item.display_text).to eq("Breaking News")
     end
   end
 end

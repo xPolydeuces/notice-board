@@ -15,9 +15,9 @@ RSpec.describe Display::MarqueeComponent, type: :component do
       it "renders RSS feed item display text" do
         render_inline(described_class.new(rss_feed_items: items))
 
-        expect(page).to have_text("Tech News: Breaking Tech")
-        expect(page).to have_text("Sports: Game Results")
-        expect(page).to have_text("Tech News: New Release")
+        expect(page).to have_text("Breaking Tech")
+        expect(page).to have_text("Game Results")
+        expect(page).to have_text("New Release")
       end
 
       it "separates items with bullets" do
@@ -117,12 +117,12 @@ RSpec.describe Display::MarqueeComponent, type: :component do
 
       it "returns RSS prefix with item display text joined by bullets" do
         component = described_class.new(rss_feed_items: items)
-        expect(component.marquee_text).to eq("RSS: News Feed: Article One • Blog Feed: Post Two • News Feed: Article Three")
+        expect(component.marquee_text).to eq("RSS: Article One • Post Two • Article Three")
       end
 
       it "handles single item" do
         component = described_class.new(rss_feed_items: [item1])
-        expect(component.marquee_text).to eq("RSS: News Feed: Article One")
+        expect(component.marquee_text).to eq("RSS: Article One")
       end
     end
 
@@ -153,8 +153,8 @@ RSpec.describe Display::MarqueeComponent, type: :component do
     it "applies text styling to marquee content" do
       render_inline(described_class.new(rss_feed_items: items))
 
-      expect(page).to have_css(".text-8xl")
       expect(page).to have_css(".font-bold")
+      # Uses responsive clamp() sizing instead of fixed text-8xl
     end
   end
 end

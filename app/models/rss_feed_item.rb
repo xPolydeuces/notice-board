@@ -12,6 +12,6 @@ class RssFeedItem < ApplicationRecord
 
   # Returns the display text for this feed item
   def display_text
-    "#{title}"
+    title
   end
 end

@@ -5,7 +5,12 @@ module RssFeeds
   class FetchJob < ApplicationJob
     queue_as :default
 
-    retry_on StandardError, wait: :exponentially_longer, attempts: 3
+    sidekiq_options retry: 3
+
+    # Sidekiq exponential backoff retry
+    sidekiq_retry_in do |count|
+      10 * (2**count) # 10, 20, 40 seconds
+    end
 
     def perform(rss_feed_id)
       feed = RssFeed.find(rss_feed_id)

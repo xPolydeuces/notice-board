@@ -9,7 +9,7 @@ module RssFeeds
       RssFeed.active.find_each do |feed|
         next unless feed.needs_refresh?
 
-        FetchJob.perform_later(feed.id)
+        FetchJob.perform_async(feed.id)
       end
     end
   end

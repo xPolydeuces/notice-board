@@ -1,6 +1,6 @@
 # Base view component for the application
 class ApplicationViewComponent < ViewComponent::Base
-  extend Dry::Initializer[undefined: false]
+  extend Dry::Initializer
 
   # Dry types for the component
   module Types

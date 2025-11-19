@@ -24,7 +24,8 @@ RSpec.describe Display::PostSlideComponent, type: :component do
       it "renders the published date" do
         render_inline(described_class.new(post: post, index: 0))
 
-        expect(page).to have_css(".text-2xl.text-gray-600")
+        expect(page).to have_css(".text-gray-600")
+        # Uses responsive clamp() sizing instead of fixed text-2xl
       end
 
       it "applies correct opacity for first slide" do
@@ -54,7 +55,8 @@ RSpec.describe Display::PostSlideComponent, type: :component do
       it "applies prose classes for rich text" do
         render_inline(described_class.new(post: post, index: 0))
 
-        expect(page).to have_css(".prose-2xl")
+        expect(page).to have_css(".prose-sm")
+        # Uses responsive prose sizing: prose-sm sm:prose-base lg:prose-lg
       end
     end
 
@@ -70,8 +72,8 @@ RSpec.describe Display::PostSlideComponent, type: :component do
       it "applies image-only padding" do
         render_inline(described_class.new(post: post, index: 0))
 
-        # p-5 for image-only posts
-        expect(page).to have_css(".p-5")
+        # Uses responsive padding: p-2 sm:p-3 md:p-5
+        expect(page).to have_css(".md\\:p-5")
       end
 
       it "does not render title or content" do
@@ -118,15 +120,19 @@ RSpec.describe Display::PostSlideComponent, type: :component do
       expect(component.slide_classes).to include("opacity-0")
     end
 
-    it "includes p-5 for image-only posts" do
+    it "includes responsive padding for image-only posts" do
       image_post = create(:news_post, :published, :image_only, user: user)
       component = described_class.new(post: image_post, index: 0)
-      expect(component.slide_classes).to include("p-5")
+      # Uses responsive padding: p-2 sm:p-3 md:p-5
+      expect(component.slide_classes).to include("p-2")
+      expect(component.slide_classes).to include("md:p-5")
     end
 
-    it "includes p-10 for non-image posts" do
+    it "includes responsive padding for non-image posts" do
       component = described_class.new(post: post, index: 0)
-      expect(component.slide_classes).to include("p-10")
+      # Uses responsive padding: p-4 sm:p-6 md:p-8
+      expect(component.slide_classes).to include("p-4")
+      expect(component.slide_classes).to include("md:p-8")
     end
   end
 

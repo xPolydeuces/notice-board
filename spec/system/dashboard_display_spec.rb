@@ -88,8 +88,8 @@ RSpec.describe "Dashboard Display", type: :system do
       it "displays RSS marquee section" do
         visit root_path
 
-        expect(page).to have_text("Tech News: Breaking Tech News")
-        expect(page).to have_text("Weather Updates: Weather Forecast")
+        expect(page).to have_text("Breaking Tech News")
+        expect(page).to have_text("Weather Forecast")
       end
 
       it "shows RSS prefix" do
@@ -192,8 +192,9 @@ RSpec.describe "Dashboard Display", type: :system do
       it "displays formatted published date" do
         visit root_path
 
-        # Should show localized date
-        expect(page).to have_css(".text-2xl.text-gray-600")
+        # Should show localized date with gray text
+        expect(page).to have_css(".text-gray-600")
+        # Uses responsive clamp() sizing instead of fixed text-2xl
       end
     end
 

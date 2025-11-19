@@ -51,14 +51,17 @@ module RssFeeds
     def process_feed_items(parsed_rss)
       items_count = 0
 
+      # Preload existing items to avoid N+1 queries
+      existing_guids = rss_feed.rss_feed_items.pluck(:guid).to_set
+
       parsed_rss.items.each do |item|
-        feed_item = rss_feed.rss_feed_items.find_or_initialize_by(
-          guid: item.guid&.content || item.link
-        )
+        guid = item.guid&.content || item.link
 
-        next unless feed_item.new_record?
+        # Skip if item already exists
+        next if existing_guids.include?(guid)
 
-        feed_item.assign_attributes(
+        feed_item = rss_feed.rss_feed_items.build(
+          guid: guid,
           title: item.title,
           description: item.description,
           link: item.link,
@@ -67,6 +70,7 @@ module RssFeeds
 
         if feed_item.save
           items_count += 1
+          existing_guids.add(guid)
         else
           Rails.logger.warn("Failed to save RSS item: #{feed_item.errors.full_messages.join(', ')}")
         end
