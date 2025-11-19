@@ -1,9 +1,9 @@
 %div{ class: 'flex flex-1 overflow-hidden bg-[#FEF3E2]' }
   - if has_logo?
-    %div{ class: 'flex-shrink-0 flex items-center justify-center p-5 border-[1rem] border-[#DD0303]' }
-      = image_tag logo_url, alt: 'Logo', class: 'h-20 w-auto'
+    %div{ class: 'flex-shrink-0 flex items-center justify-center border-[#DD0303] max-h-full p-[clamp(0.5rem,2vh,1.25rem)] border-[clamp(0.25rem,1vh,0.5rem)]' }
+      = image_tag logo_url, alt: 'Logo', class: 'w-auto h-[clamp(2.5rem,8vh,5rem)]'
 
   .marquee-container
     .marquee{ data: { notice_board_target: 'marquee' } }
-      .px-24.text-8xl.font-bold{ data: { notice_board_target: 'marqueeContent' } }
+      %div{ class: 'px-8 sm:px-12 md:px-16 font-bold text-[clamp(1.875rem,5vw,5rem)]', data: { notice_board_target: 'marqueeContent' } }
         = marquee_text

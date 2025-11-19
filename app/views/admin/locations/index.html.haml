@@ -6,47 +6,48 @@
     = t('admin.locations.new')
 
 .bg-white.shadow.rounded-lg.overflow-hidden
-  %table.min-w-full.divide-y.divide-gray-200
-    %thead.bg-gray-50
-      %tr
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.locations.table.code')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.locations.table.name')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.locations.table.status')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.locations.table.users_count')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.locations.table.news_posts_count')
-        %th.px-6.py-3.text-right.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.locations.table.actions')
-    %tbody.bg-white.divide-y.divide-gray-200
-      - if @locations.empty?
+  .overflow-x-auto
+    %table.min-w-full.divide-y.divide-gray-200
+      %thead.bg-gray-50
         %tr
-          %td.px-6.py-4.text-center.text-gray-500{colspan: 6}
-            = t('admin.locations.no_locations')
-      - else
-        - @locations.each do |location|
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.locations.table.code')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.locations.table.name')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.locations.table.status')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.locations.table.users_count')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.locations.table.news_posts_count')
+          %th.px-3.sm:px-6.py-3.text-right.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.locations.table.actions')
+      %tbody.bg-white.divide-y.divide-gray-200
+        - if @locations.empty?
           %tr
-            %td.px-6.py-4.whitespace-nowrap
-              .text-sm.font-medium.text-gray-900= location.code
-            %td.px-6.py-4.whitespace-nowrap
-              .text-sm.text-gray-900= location.name
-            %td.px-6.py-4.whitespace-nowrap
-              - if location.active?
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
-                  = t('admin.locations.status.active')
-              - else
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
-                  = t('admin.locations.status.inactive')
-            %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
-              = location.users_count
-            %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
-              = location.news_posts_count
-            %td.px-6.py-4.whitespace-nowrap.text-right.text-sm.font-medium
-              .flex.justify-end.gap-2
-                = link_to edit_admin_location_path(location), class: "text-[#FA812F] hover:text-[#E87020]", title: t('admin.locations.edit') do
-                  = lucide_icon('pencil', class: 'w-4 h-4')
-                = button_to admin_location_path(location), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.locations.delete'), data: { turbo_confirm: t('admin.locations.delete_confirm') } do
-                  = lucide_icon('trash-2', class: 'w-4 h-4')
+            %td.px-3.sm:px-6.py-4.text-center.text-gray-500{colspan: 6}
+              = t('admin.locations.no_locations')
+        - else
+          - @locations.each do |location|
+            %tr
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap
+                .text-sm.font-medium.text-gray-900= location.code
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap
+                .text-sm.text-gray-900= location.name
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap
+                - if location.active?
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                    = t('admin.locations.status.active')
+                - else
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
+                    = t('admin.locations.status.inactive')
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
+                = location.users_count
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
+                = location.news_posts_count
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-right.text-sm.font-medium
+                .flex.justify-end.gap-2
+                  = link_to edit_admin_location_path(location), class: "text-[#FA812F] hover:text-[#E87020]", title: t('admin.locations.edit') do
+                    = lucide_icon('pencil', class: 'w-4 h-4')
+                  = button_to admin_location_path(location), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.locations.delete'), data: { turbo_confirm: t('admin.locations.delete_confirm') } do
+                    = lucide_icon('trash-2', class: 'w-4 h-4')

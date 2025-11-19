@@ -6,44 +6,45 @@
     = t('admin.rss_feeds.new')
 
 .bg-white.shadow.rounded-lg.overflow-hidden
-  %table.min-w-full.divide-y.divide-gray-200
-    %thead.bg-gray-50
-      %tr
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.rss_feeds.table.name')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.rss_feeds.table.url')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.rss_feeds.table.status')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.rss_feeds.table.last_fetched')
-        %th.px-6.py-3.text-right.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.rss_feeds.table.actions')
-    %tbody.bg-white.divide-y.divide-gray-200
-      - if @rss_feeds.empty?
+  .overflow-x-auto
+    %table.min-w-full.divide-y.divide-gray-200
+      %thead.bg-gray-50
         %tr
-          %td.px-6.py-4.text-center.text-gray-500{colspan: 5}
-            = t('admin.rss_feeds.no_feeds')
-      - else
-        - @rss_feeds.each do |feed|
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.rss_feeds.table.name')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.rss_feeds.table.url')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.rss_feeds.table.status')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.rss_feeds.table.last_fetched')
+          %th.px-3.sm:px-6.py-3.text-right.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.rss_feeds.table.actions')
+      %tbody.bg-white.divide-y.divide-gray-200
+        - if @rss_feeds.empty?
           %tr
-            %td.px-6.py-4.whitespace-nowrap
-              .text-sm.font-medium.text-gray-900= feed.name
-            %td.px-6.py-4
-              .text-sm.text-gray-500.truncate{style: "max-width: 300px;"}
-                = link_to feed.url, feed.url, target: '_blank', rel: 'noopener noreferrer', class: 'hover:text-[#FA812F]'
-            %td.px-6.py-4.whitespace-nowrap
-              - if feed.active?
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
-                  = t('admin.rss_feeds.status.active')
-              - else
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
-                  = t('admin.rss_feeds.status.inactive')
-            %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
-              = feed.last_fetched_at ? l(feed.last_fetched_at, format: :short) : t('admin.rss_feeds.never_fetched')
-            %td.px-6.py-4.whitespace-nowrap.text-right.text-sm.font-medium
-              .flex.justify-end.gap-2
-                = link_to edit_admin_rss_feed_path(feed), class: "text-[#FA812F] hover:text-[#E87020]", title: t('admin.rss_feeds.edit') do
-                  = lucide_icon('pencil', class: 'w-4 h-4')
-                = button_to admin_rss_feed_path(feed), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.rss_feeds.delete'), data: { turbo_confirm: t('admin.rss_feeds.delete_confirm', name: feed.name) } do
-                  = lucide_icon('trash-2', class: 'w-4 h-4')
+            %td.px-3.sm:px-6.py-4.text-center.text-gray-500{colspan: 5}
+              = t('admin.rss_feeds.no_feeds')
+        - else
+          - @rss_feeds.each do |feed|
+            %tr
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap
+                .text-sm.font-medium.text-gray-900= feed.name
+              %td.px-3.sm:px-6.py-4
+                %div{ class: 'text-sm text-gray-500 truncate max-w-[300px]' }
+                  = link_to feed.url, feed.url, target: '_blank', rel: 'noopener noreferrer', class: 'hover:text-[#FA812F]'
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap
+                - if feed.active?
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                    = t('admin.rss_feeds.status.active')
+                - else
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
+                    = t('admin.rss_feeds.status.inactive')
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
+                = feed.last_fetched_at ? l(feed.last_fetched_at, format: :short) : t('admin.rss_feeds.never_fetched')
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-right.text-sm.font-medium
+                .flex.justify-end.gap-2
+                  = link_to edit_admin_rss_feed_path(feed), class: "text-[#FA812F] hover:text-[#E87020]", title: t('admin.rss_feeds.edit') do
+                    = lucide_icon('pencil', class: 'w-4 h-4')
+                  = button_to admin_rss_feed_path(feed), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.rss_feeds.delete'), data: { turbo_confirm: t('admin.rss_feeds.delete_confirm', name: feed.name) } do
+                    = lucide_icon('trash-2', class: 'w-4 h-4')

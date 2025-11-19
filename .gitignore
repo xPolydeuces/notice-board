@@ -60,3 +60,6 @@ database_consistency*.txt
 # Ignore IDE files
 .vscode/
 .idea/
+
+# To Do
+todo.md

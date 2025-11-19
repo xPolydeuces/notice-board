@@ -21,58 +21,59 @@
           = button_tag "Copy", type: "button", class: "px-3 py-1 text-sm bg-amber-600 hover:bg-amber-700 text-white rounded", onclick: "navigator.clipboard.writeText('#{flash[:temp_password]}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000)"
 
 .bg-white.shadow.rounded-lg.overflow-hidden
-  %table.min-w-full.divide-y.divide-gray-200
-    %thead.bg-gray-50
-      %tr
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.users.table.username')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.users.table.role')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.users.table.location')
-        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.users.table.last_sign_in')
-        %th.px-6.py-3.text-right.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
-          = t('admin.users.table.actions')
-    %tbody.bg-white.divide-y.divide-gray-200
-      - if @users.empty?
+  .overflow-x-auto
+    %table.min-w-full.divide-y.divide-gray-200
+      %thead.bg-gray-50
         %tr
-          %td.px-6.py-4.text-center.text-gray-500{colspan: 5}
-            = t('admin.users.no_users')
-      - else
-        - @users.each do |user|
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.users.table.username')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.users.table.role')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.users.table.location')
+          %th.px-3.sm:px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.users.table.last_sign_in')
+          %th.px-3.sm:px-6.py-3.text-right.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+            = t('admin.users.table.actions')
+      %tbody.bg-white.divide-y.divide-gray-200
+        - if @users.empty?
           %tr
-            %td.px-6.py-4.whitespace-nowrap
-              .text-sm.font-medium.text-gray-900= user.username
-              - if user == current_user
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-blue-100.text-blue-800.ml-2
-                  = t('admin.users.you')
-            %td.px-6.py-4.whitespace-nowrap
-              - case user.role
-              - when 'superadmin'
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800
-                  = t('admin.users.roles.superadmin')
-              - when 'admin'
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-red-100.text-red-800
-                  = t('admin.users.roles.admin')
-              - when 'location'
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-yellow-100.text-yellow-800
-                  = t('admin.users.roles.location')
-              - when 'general'
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
-                  = t('admin.users.roles.general')
-            %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
-              = user.location&.name || '-'
-            %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
-              = user.last_sign_in_at ? l(user.last_sign_in_at, format: :short) : t('admin.users.never')
-            %td.px-6.py-4.whitespace-nowrap.text-right.text-sm.font-medium
-              .flex.justify-end.gap-2
-                - unless user.superadmin? && !current_user.superadmin?
-                  = link_to edit_admin_user_path(user), class: "text-[#FA812F] hover:text-[#E87020]", title: t('admin.users.edit') do
-                    = lucide_icon('pencil', class: 'w-4 h-4')
-                - unless user == current_user
-                  = button_to reset_password_admin_user_path(user), method: :post, class: "text-blue-600 hover:text-blue-900", title: t('admin.users.reset_password', default: 'Reset Password'), data: { turbo_confirm: t('admin.users.reset_password_confirm', username: user.username, default: 'Reset password for %{username}? A temporary password will be generated.') } do
-                    = lucide_icon('key', class: 'w-4 h-4')
-                - unless user == current_user || (user.admin_or_superadmin? && !current_user.superadmin?)
-                  = button_to admin_user_path(user), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.users.delete'), data: { turbo_confirm: t('admin.users.delete_confirm', username: user.username) } do
-                    = lucide_icon('trash-2', class: 'w-4 h-4')
+            %td.px-3.sm:px-6.py-4.text-center.text-gray-500{colspan: 5}
+              = t('admin.users.no_users')
+        - else
+          - @users.each do |user|
+            %tr
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap
+                .text-sm.font-medium.text-gray-900= user.username
+                - if user == current_user
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-blue-100.text-blue-800.ml-2
+                    = t('admin.users.you')
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap
+                - case user.role
+                - when 'superadmin'
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800
+                    = t('admin.users.roles.superadmin')
+                - when 'admin'
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-red-100.text-red-800
+                    = t('admin.users.roles.admin')
+                - when 'location'
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-yellow-100.text-yellow-800
+                    = t('admin.users.roles.location')
+                - when 'general'
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
+                    = t('admin.users.roles.general')
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
+                = user.location&.name || '-'
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
+                = user.last_sign_in_at ? l(user.last_sign_in_at, format: :short) : t('admin.users.never')
+              %td.px-3.sm:px-6.py-4.whitespace-nowrap.text-right.text-sm.font-medium
+                .flex.justify-end.gap-2
+                  - unless user.superadmin? && !current_user.superadmin?
+                    = link_to edit_admin_user_path(user), class: "text-[#FA812F] hover:text-[#E87020]", title: t('admin.users.edit') do
+                      = lucide_icon('pencil', class: 'w-4 h-4')
+                  - unless user == current_user
+                    = button_to reset_password_admin_user_path(user), method: :post, class: "text-blue-600 hover:text-blue-900", title: t('admin.users.reset_password', default: 'Reset Password'), data: { turbo_confirm: t('admin.users.reset_password_confirm', username: user.username, default: 'Reset password for %{username}? A temporary password will be generated.') } do
+                      = lucide_icon('key', class: 'w-4 h-4')
+                  - unless user == current_user || (user.admin_or_superadmin? && !current_user.superadmin?)
+                    = button_to admin_user_path(user), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.users.delete'), data: { turbo_confirm: t('admin.users.delete_confirm', username: user.username) } do
+                      = lucide_icon('trash-2', class: 'w-4 h-4')

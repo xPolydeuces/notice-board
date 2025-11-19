@@ -1,15 +1,15 @@
 .h-screen.overflow-hidden.notice-board-gradient{ data: { controller: 'notice-board' } }
-  .flex.flex-col.gap-5.p-5.h-full
+  .flex.flex-col.gap-3.sm:gap-4.md:gap-5.p-3.sm:p-4.md:p-5.h-full
 
-    / Top row - Two announcement boxes
-    %div{ class: 'flex gap-8 flex-[9]' }
-      / General announcements (left - 65%)
-      = render Display::CarouselBoxComponent.new(title: 'Ogłoszenia Ogólne', posts: @general_posts, empty_message: 'Brak ogłoszeń', box_classes: 'flex-[65]')
+    / Top row - Two announcement boxes (stack on mobile, side-by-side on desktop)
+    %div{ class: 'flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-8 flex-[9]' }
+      / General announcements (left - 65% on desktop, full width on mobile)
+      = render Display::CarouselBoxComponent.new(title: 'Ogłoszenia Ogólne', posts: @general_posts, empty_message: 'Brak ogłoszeń', box_classes: 'lg:flex-[65] flex-1')
 
-      / Location announcements (right - 35%)
+      / Location announcements (right - 35% on desktop, full width on mobile)
       - location_title = @location ? "Ogłoszenia - #{@location.name}" : 'Ogłoszenia Oddziałowe'
       - location_empty = @location ? 'Brak ogłoszeń dla tego oddziału' : 'Wybierz oddział aby zobaczyć ogłoszenia'
-      = render Display::CarouselBoxComponent.new(title: location_title, posts: @location_posts, empty_message: location_empty, box_classes: 'flex-[35]')
+      = render Display::CarouselBoxComponent.new(title: location_title, posts: @location_posts, empty_message: location_empty, box_classes: 'lg:flex-[35] flex-1')
 
     / Bottom row - RSS marquee
     = render Display::MarqueeComponent.new(rss_feed_items: @rss_feed_items, logo_url: AppConfig::LOGO_URL)

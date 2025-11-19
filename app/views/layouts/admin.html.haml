@@ -10,27 +10,37 @@
     = stylesheet_link_tag "trix", "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
     
-  %body.min-h-screen{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]"}
-    .container.max-w-7xl.mx-auto.p-6
-      .flex.gap-6.min-h-screen
-        
-        / Sidebar - modern glass effect, no borders
-        .w-56.rounded-2xl.p-6.backdrop-blur-sm.bg-white.bg-opacity-60.shadow-xl{style: "flex-shrink: 0;"}
+  %body.min-h-screen{class: "bg-gradient-to-b from-[#FAB12F] to-[#FEF3E2]", data: { controller: 'mobile-menu' }}
+    / Mobile menu toggle button
+    .lg:hidden.fixed.top-4.left-4.z-50
+      %button{type: 'button', data: { action: 'mobile-menu#toggle' }, class: 'p-2 rounded-lg bg-white bg-opacity-90 shadow-lg backdrop-blur-sm'}
+        = lucide_icon('menu', class: 'w-6 h-6 text-gray-700')
+
+    .container.mx-auto.p-4.sm:p-6.max-w-full.lg:max-w-7xl
+      .flex.flex-col.lg:flex-row.gap-4.sm:gap-6.min-h-screen
+
+        / Sidebar - modern glass effect, no borders, responsive
+        .fixed.lg:static.inset-0.z-40.lg:z-auto.hidden.lg:block{data: { mobile_menu_target: 'menu' }, class: "lg:w-56 lg:rounded-2xl lg:p-6 p-6 backdrop-blur-sm bg-white bg-opacity-60 lg:bg-opacity-60 bg-opacity-95 shadow-xl lg:flex-shrink-0"}
+          / Mobile close button
+          .lg:hidden.flex.justify-end.mb-4
+            %button{type: 'button', data: { action: 'mobile-menu#toggle' }, class: 'p-2 rounded-lg hover:bg-gray-100'}
+              = lucide_icon('x', class: 'w-6 h-6 text-gray-700')
+
           / Logo Section
-          .mb-10.text-center
+          .mb-6.sm:mb-10.text-center
             - if AppConfig::LOGO_URL.present?
-              %img.mx-auto.mb-5{src: AppConfig::LOGO_URL, alt: "#{AppConfig::COMPANY_NAME} Logo", style: "max-width: 75%; height: auto;"}
-            %h2.text-xl.font-semibold.tracking-tight{class: "text-[#FA812F]"} Panel Administracyjny
-            
+              %img{src: AppConfig::LOGO_URL, alt: "#{AppConfig::COMPANY_NAME} Logo", class: 'mx-auto mb-3 sm:mb-5 max-w-[75%] h-auto'}
+            %h2.text-lg.sm:text-xl.font-semibold.tracking-tight{class: "text-[#FA812F]"} Panel Administracyjny
+
             / User Info - clean, minimal
-            .mt-6.pt-6.border-t.border-gray-200
+            .mt-4.sm:mt-6.pt-4.sm:pt-6.border-t.border-gray-200
               .text-center
                 .text-sm.font-medium.text-gray-900= current_user.username
                 - if Rails.env.development?
                   .text-xs.text-gray-500.mt-1= current_user.role.capitalize
           
           / Navigation - modern spacing and icons
-          %nav.mt-8.space-y-2
+          %nav.mt-6.sm:mt-8.space-y-2
             = link_to admin_news_posts_path, class: "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all #{controller_name == 'news_posts' ? 'bg-[#FA812F] text-white shadow-md' : 'text-gray-700 hover:bg-[#FA812F] hover:bg-opacity-10'}" do
               = lucide_icon('newspaper', class: 'w-5 h-5')
               %span Aktualności
@@ -59,8 +69,8 @@
               %span Wyloguj się
         
         / Main Content - modern card
-        .flex-1
-          .bg-white.rounded-2xl.shadow-lg.p-8.min-h-full
+        .flex-1.w-full.lg:w-auto
+          .bg-white.rounded-xl.lg:rounded-2xl.shadow-lg.p-4.sm:p-6.lg:p-8.min-h-full
             / Flash Messages
             = render FlashComponent.new(flash: flash) if flash.any?
             

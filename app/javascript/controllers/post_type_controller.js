@@ -9,22 +9,22 @@ export default class extends Controller {
 
     toggle() {
         const postType = this.selectTarget.value
-    
-        // Hide all fields initially
-        this.textFieldTarget.style.display = 'none';
-        this.richTextFieldTarget.style.display = 'none';
-        this.imageFieldTarget.style.display = 'none';
 
-        // Show the relevant field
+        // Hide all fields initially using Tailwind's hidden class
+        this.textFieldTarget.classList.add('hidden');
+        this.richTextFieldTarget.classList.add('hidden');
+        this.imageFieldTarget.classList.add('hidden');
+
+        // Show the relevant field by removing the hidden class
         switch(postType) {
             case 'plain_text':
-                this.textFieldTarget.style.display = 'block';
+                this.textFieldTarget.classList.remove('hidden');
                 break;
             case 'rich_text':
-                this.richTextFieldTarget.style.display = 'block';
+                this.richTextFieldTarget.classList.remove('hidden');
                 break;
             case 'image_only':
-                this.imageFieldTarget.style.display = 'block';
+                this.imageFieldTarget.classList.remove('hidden');
                 break;
         }
     }    

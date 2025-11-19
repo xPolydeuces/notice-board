@@ -1,14 +1,14 @@
 %div{ class: slide_classes, data: { slide: true, index: index } }
   - if post.image_only?
     - if post.image.attached?
-      = image_tag post.image, loading: 'eager', class: 'max-w-full max-h-full object-contain rounded-xl shadow-lg'
+      = image_tag post.image, loading: 'eager', class: 'max-w-full max-h-full object-contain rounded-lg md:rounded-xl shadow-lg'
   - else
-    .flex.flex-col.items-center.justify-center.w-full
+    .flex.flex-col.items-center.justify-center.w-full.px-2.sm:px-4
       - if post.title.present?
-        %div{ class: 'text-6xl font-bold mb-8 leading-tight text-[#DD0303]' }= post.title
+        %div{ class: 'font-bold mb-4 sm:mb-6 leading-tight text-[#DD0303] text-[clamp(1.5rem,4vw,3.5rem)]' }= post.title
       - if post.plain_text?
         %div{ class: content_classes }= simple_format(post.content)
       - elsif post.rich_text?
         %div{ class: "#{content_classes} #{prose_classes}" }= post.rich_content
-      .text-2xl.text-gray-600.mt-8.italic
+      %div{ class: 'text-gray-600 mt-4 sm:mt-6 italic text-[clamp(0.875rem,1.5vw,1.5rem)]' }
         = l(post.published_at, format: :long)
