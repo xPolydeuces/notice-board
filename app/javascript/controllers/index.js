@@ -24,3 +24,6 @@ application.register("post-type", PostTypeController)
 
 import TrixEditorController from "./trix_editor_controller"
 application.register("trix-editor", TrixEditorController)
+
+import DisplayModeController from "./display_mode_controller"
+application.register("display-mode", DisplayModeController)

@@ -161,7 +161,8 @@ RSpec.describe "Dashboard Display", type: :system do
       it "has Stimulus controller attached" do
         visit root_path
 
-        expect(page).to have_css("[data-controller='notice-board']")
+        expect(page).to have_css("[data-controller*='notice-board']")
+        expect(page).to have_css("[data-controller*='display-mode']")
       end
 
       it "sets up carousel targets" do

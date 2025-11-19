@@ -5,6 +5,9 @@ class DashboardController < ApplicationController
     # Get location from params (optional - for location-specific displays)
     @location = Location.find_by(id: params[:location_id]) if params[:location_id].present?
 
+    # Fetch all active locations for the selector
+    @locations = Location.active.ordered.to_a
+
     # Fetch general announcements (visible everywhere)
     @general_posts = NewsPost.published
                              .active

@@ -178,7 +178,7 @@ RSpec.describe "Dashboard", type: :request do
       it "includes Stimulus controller" do
         get root_path
 
-        expect(response.body).to include("data-controller=\"notice-board\"")
+        expect(response.body).to include("data-controller=\"notice-board display-mode\"")
       end
 
       it "sets up carousel and marquee targets" do
