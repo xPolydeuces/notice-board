@@ -110,7 +110,7 @@ module Admin
     end
 
     def news_post_params
-      permitted = [:title, :content, :post_type, :rich_content, :image]
+      permitted = [:title, :content, :post_type, :rich_content, :image, :pdf]
 
       # Use policy to check if user can assign location
       # Pass a new instance instead of the class to avoid Rack::Attack issues

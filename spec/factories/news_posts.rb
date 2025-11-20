@@ -52,5 +52,18 @@ FactoryBot.define do
         )
       end
     end
+
+    trait :pdf_only do
+      post_type { :pdf_only }
+      content { nil }
+      title { "PDF Post" }
+      after(:build) do |post|
+        post.pdf.attach(
+          io: StringIO.new("%PDF-1.4 fake pdf content"),
+          filename: "test_document.pdf",
+          content_type: "application/pdf"
+        )
+      end
+    end
   end
 end

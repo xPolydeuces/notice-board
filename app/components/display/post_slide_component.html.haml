@@ -2,6 +2,9 @@
   - if post.image_only?
     - if post.image.attached?
       = image_tag post.image, loading: 'eager', class: 'max-w-full max-h-full object-contain rounded-lg md:rounded-xl shadow-lg'
+  - elsif post.pdf_only?
+    - if post.pdf.attached?
+      %iframe{ src: rails_blob_path(post.pdf), class: 'w-full h-full rounded-lg md:rounded-xl shadow-lg', frameborder: '0' }
   - else
     .flex.flex-col.items-center.justify-center.w-full.px-2.sm:px-4
       - if post.title.present?

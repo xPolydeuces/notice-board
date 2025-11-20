@@ -13,7 +13,7 @@ module Display
     def slide_classes
       classes = ['post-slide', 'absolute', 'inset-0', 'flex', 'flex-col', 'items-center', 'justify-center', 'text-center']
       classes << (index.zero? ? 'opacity-100' : 'opacity-0')
-      classes << (post.image_only? ? 'p-2 sm:p-3 md:p-5' : 'p-4 sm:p-6 md:p-8')
+      classes << (post.image_only? || post.pdf_only? ? 'p-2 sm:p-3 md:p-5' : 'p-4 sm:p-6 md:p-8')
       classes.join(' ')
     end
 

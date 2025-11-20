@@ -9,6 +9,8 @@ RSpec.describe NewsPost, type: :model do
     it { is_expected.to belong_to(:user).inverse_of(:news_posts).counter_cache }
     it { is_expected.to belong_to(:location).optional.inverse_of(:news_posts).counter_cache }
     it { is_expected.to have_rich_text(:rich_content) }
+    it { is_expected.to have_one_attached(:image) }
+    it { is_expected.to have_one_attached(:pdf) }
   end
 
   describe "validations" do
@@ -57,6 +59,89 @@ RSpec.describe NewsPost, type: :model do
         expect(news_post).not_to be_valid
         expect(news_post.errors[:image]).to include("must be attached for image-only posts")
       end
+
+      it "validates image file size limit" do
+        news_post = build(:news_post, post_type: :image_only)
+        # Create a large mock file
+        large_file = double(
+          "file",
+          size: 11.megabytes,
+          content_type: "image/png",
+          original_filename: "large.png",
+          tempfile: Tempfile.new,
+          read: "x" * 11.megabytes
+        )
+        news_post.image.attach(
+          io: StringIO.new("x" * 11.megabytes),
+          filename: "large.png",
+          content_type: "image/png"
+        )
+        expect(news_post).not_to be_valid
+        expect(news_post.errors[:image]).to include(a_string_matching(/must be less than 10MB/))
+      end
+
+      it "validates image content type" do
+        news_post = build(:news_post, post_type: :image_only)
+        news_post.image.attach(
+          io: StringIO.new("fake pdf content"),
+          filename: "test.pdf",
+          content_type: "application/pdf"
+        )
+        expect(news_post).not_to be_valid
+        expect(news_post.errors[:image]).to include("must be a PNG, JPG, GIF, or WebP image")
+      end
+
+      it "accepts valid image with correct size and type" do
+        news_post = build(:news_post, post_type: :image_only)
+        news_post.image.attach(
+          io: StringIO.new("x" * 1.megabyte),
+          filename: "test.png",
+          content_type: "image/png"
+        )
+        expect(news_post).to be_valid
+      end
+    end
+
+    context "when post_type is pdf_only" do
+      subject { build(:news_post, post_type: :pdf_only) }
+
+      it "validates presence of pdf" do
+        news_post = build(:news_post, post_type: :pdf_only)
+        expect(news_post).not_to be_valid
+        expect(news_post.errors[:pdf]).to include("must be attached for PDF posts")
+      end
+
+      it "validates pdf file size limit" do
+        news_post = build(:news_post, post_type: :pdf_only)
+        news_post.pdf.attach(
+          io: StringIO.new("x" * 21.megabytes),
+          filename: "large.pdf",
+          content_type: "application/pdf"
+        )
+        expect(news_post).not_to be_valid
+        expect(news_post.errors[:pdf]).to include(a_string_matching(/must be less than 20MB/))
+      end
+
+      it "validates pdf content type" do
+        news_post = build(:news_post, post_type: :pdf_only)
+        news_post.pdf.attach(
+          io: StringIO.new("fake image content"),
+          filename: "test.jpg",
+          content_type: "image/jpeg"
+        )
+        expect(news_post).not_to be_valid
+        expect(news_post.errors[:pdf]).to include("must be a PDF file")
+      end
+
+      it "accepts valid pdf with correct size and type" do
+        news_post = build(:news_post, post_type: :pdf_only)
+        news_post.pdf.attach(
+          io: StringIO.new("x" * 5.megabytes),
+          filename: "test.pdf",
+          content_type: "application/pdf"
+        )
+        expect(news_post).to be_valid
+      end
     end
   end
 
@@ -64,7 +149,7 @@ RSpec.describe NewsPost, type: :model do
     it {
       is_expected.to define_enum_for(:post_type)
         .backed_by_column_of_type(:string)
-        .with_values(plain_text: "plain_text", rich_text: "rich_text", image_only: "image_only")
+        .with_values(plain_text: "plain_text", rich_text: "rich_text", image_only: "image_only", pdf_only: "pdf_only")
     }
   end
 
