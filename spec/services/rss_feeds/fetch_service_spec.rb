@@ -97,9 +97,14 @@ RSpec.describe RssFeeds::FetchService do
         expect(result.errors).to include(:http_error)
       end
 
-      it "does not mark feed as fetched" do
+      it "marks feed as failed" do
         service.call
-        expect(rss_feed.reload.last_fetched_at).to be_nil
+        rss_feed.reload
+
+        expect(rss_feed.last_fetched_at).not_to be_nil
+        expect(rss_feed.last_successful_fetch_at).to be_nil
+        expect(rss_feed.error_count).to eq(1)
+        expect(rss_feed.last_error).to be_present
       end
     end
 

@@ -18,8 +18,10 @@ module RssFeeds
 
       fetch_and_parse_feed
     rescue StandardError => e
-      Rails.logger.error("RSS Feed fetch failed for #{rss_feed.name}: #{e.message}")
-      failure(:fetch_error, e.message)
+      error_message = "#{e.class}: #{e.message}"
+      Rails.logger.error("RSS Feed fetch failed for #{rss_feed.name}: #{error_message}")
+      rss_feed.mark_as_failed!(error_message)
+      failure(:fetch_error, error_message)
     end
 
     def success?
@@ -36,16 +38,16 @@ module RssFeeds
       content = URI.open(rss_feed.url, 'User-Agent' => 'NoticeBoard RSS Reader').read
       parsed_rss = RSS::Parser.parse(content, false)
 
-      return failure(:parse_error) unless parsed_rss
+      return handle_failure(:parse_error, 'Failed to parse RSS feed') unless parsed_rss
 
       items_created = process_feed_items(parsed_rss)
       rss_feed.mark_as_fetched!
 
       success(items_created)
     rescue OpenURI::HTTPError => e
-      failure(:http_error, e.message)
+      handle_failure(:http_error, "HTTP Error: #{e.message}")
     rescue RSS::Error => e
-      failure(:rss_parse_error, e.message)
+      handle_failure(:rss_parse_error, "RSS Parse Error: #{e.message}")
     end
 
     def process_feed_items(parsed_rss)
@@ -90,6 +92,11 @@ module RssFeeds
       @errors << reason
       @errors << message if message
       self
+    end
+
+    def handle_failure(reason, message)
+      rss_feed.mark_as_failed!(message)
+      failure(reason, message)
     end
   end
 end

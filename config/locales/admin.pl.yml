@@ -169,13 +169,40 @@ pl:
       never_fetched: "Nigdy"
       new_subtitle: "Dodaj nowy kanał RSS"
       edit_subtitle: "Edytuj kanał %{name}"
+      refresh: "Odśwież teraz"
+      preview: "Podgląd"
+      back: "Powrót"
+      refreshed:
+        one: "Kanał odświeżony. Pobrano %{count} nowy element"
+        few: "Kanał odświeżony. Pobrano %{count} nowe elementy"
+        many: "Kanał odświeżony. Pobrano %{count} nowych elementów"
+        other: "Kanał odświeżony. Pobrano %{count} nowych elementów"
+      refresh_failed: "Nie udało się odświeżyć kanału: %{errors}"
+      preview_title: "Podgląd: %{name}"
+      preview_subtitle: "Najnowsze elementy z kanału RSS"
+      preview_failed: "Nie udało się załadować podglądu: %{errors}"
+      no_items: "Brak elementów w kanale"
+      view_original: "Zobacz oryginał"
       status:
         active: "Aktywny"
         inactive: "Nieaktywny"
+      health:
+        healthy: "Zdrowy"
+        warning:
+          one: "Ostrzeżenie (%{count} błąd)"
+          few: "Ostrzeżenie (%{count} błędy)"
+          many: "Ostrzeżenie (%{count} błędów)"
+          other: "Ostrzeżenie (%{count} błędów)"
+        critical:
+          one: "Krytyczny (%{count} błąd)"
+          few: "Krytyczny (%{count} błędy)"
+          many: "Krytyczny (%{count} błędów)"
+          other: "Krytyczny (%{count} błędów)"
       table:
         name: "Nazwa"
         url: "Adres URL"
         status: "Status"
+        health: "Zdrowie"
         last_fetched: "Ostatnie pobranie"
         actions: "Akcje"
       form:

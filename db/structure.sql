@@ -10,6 +10,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track planning and execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -279,7 +293,10 @@ CREATE TABLE public.rss_feeds (
     active boolean DEFAULT true NOT NULL,
     last_fetched_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    last_error text,
+    error_count integer DEFAULT 0 NOT NULL,
+    last_successful_fetch_at timestamp(6) without time zone
 );
 
 
@@ -564,20 +581,6 @@ CREATE INDEX index_news_posts_on_archived ON public.news_posts USING btree (arch
 
 
 --
--- Name: index_news_posts_on_location_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_news_posts_on_location_id ON public.news_posts USING btree (location_id);
-
-
---
--- Name: index_news_posts_on_location_id_and_published; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_news_posts_on_location_id_and_published ON public.news_posts USING btree (location_id, published);
-
-
---
 -- Name: index_news_posts_on_location_published_archived; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -589,13 +592,6 @@ CREATE INDEX index_news_posts_on_location_published_archived ON public.news_post
 --
 
 CREATE INDEX index_news_posts_on_post_type ON public.news_posts USING btree (post_type);
-
-
---
--- Name: index_news_posts_on_published; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_news_posts_on_published ON public.news_posts USING btree (published);
 
 
 --
@@ -620,13 +616,6 @@ CREATE INDEX index_news_posts_on_user_id ON public.news_posts USING btree (user_
 
 
 --
--- Name: index_rss_feed_items_on_rss_feed_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rss_feed_items_on_rss_feed_id ON public.rss_feed_items USING btree (rss_feed_id);
-
-
---
 -- Name: index_rss_feed_items_on_rss_feed_id_and_guid; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -645,6 +634,13 @@ CREATE INDEX index_rss_feed_items_on_rss_feed_id_and_published_at ON public.rss_
 --
 
 CREATE INDEX index_rss_feeds_on_active ON public.rss_feeds USING btree (active);
+
+
+--
+-- Name: index_rss_feeds_on_error_count; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rss_feeds_on_error_count ON public.rss_feeds USING btree (error_count);
 
 
 --
@@ -751,6 +747,9 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251120130000'),
+('20251120093055'),
+('20251120092913'),
 ('20251118113828'),
 ('20251117120000'),
 ('20251107101500'),

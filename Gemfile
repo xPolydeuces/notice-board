@@ -34,6 +34,7 @@ gem "thruster", "~> 0.1", require: false
 
 # Background job processing
 gem "sidekiq", "~> 8.0"
+gem "sidekiq-cron", "~> 2.0"
 
 # RSS feed parsing
 gem "rss"

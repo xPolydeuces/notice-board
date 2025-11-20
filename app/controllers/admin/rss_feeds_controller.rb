@@ -3,7 +3,7 @@
 module Admin
   class RssFeedsController < BaseController
     before_action :require_admin!
-    before_action :set_rss_feed, only: [:edit, :update, :destroy]
+    before_action :set_rss_feed, only: [:edit, :update, :destroy, :refresh, :preview]
 
     def index
       @rss_feeds = RssFeed.ordered.all
@@ -37,6 +37,36 @@ module Admin
     def destroy
       @rss_feed.destroy
       redirect_to admin_rss_feeds_path, notice: t('admin.rss_feeds.deleted')
+    end
+
+    def refresh
+      result = RssFeeds::FetchService.new(rss_feed: @rss_feed).call
+
+      if result.success?
+        flash[:notice] = t('admin.rss_feeds.refreshed', count: result.items_count)
+      else
+        flash[:alert] = t('admin.rss_feeds.refresh_failed', errors: result.errors.join(', '))
+      end
+
+      redirect_to admin_rss_feeds_path
+    end
+
+    def preview
+      begin
+        result = RssFeeds::FetchService.new(rss_feed: @rss_feed).call
+
+        if result.success?
+          # Fetch the latest items for preview
+          @preview_items = @rss_feed.rss_feed_items.order(published_at: :desc).limit(10)
+          render :preview
+        else
+          flash[:alert] = t('admin.rss_feeds.preview_failed', errors: result.errors.join(', '))
+          redirect_to admin_rss_feeds_path
+        end
+      rescue StandardError => e
+        flash[:alert] = t('admin.rss_feeds.preview_failed', errors: e.message)
+        redirect_to admin_rss_feeds_path
+      end
     end
 
     private

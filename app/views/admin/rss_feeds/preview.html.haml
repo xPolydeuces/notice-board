@@ -1,0 +1,29 @@
+- content_for :title, t('admin.rss_feeds.preview_title', name: @rss_feed.name)
+
+= render Admin::PageHeaderComponent.new(title: t('admin.rss_feeds.preview_title', name: @rss_feed.name), subtitle: t('admin.rss_feeds.preview_subtitle'), icon: 'eye') do
+  = link_to admin_rss_feeds_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FA812F]" do
+    = lucide_icon('arrow-left', class: 'w-4 h-4 mr-2')
+    = t('admin.rss_feeds.back')
+
+.bg-white.shadow.rounded-lg.overflow-hidden
+  - if @preview_items.any?
+    .divide-y.divide-gray-200
+      - @preview_items.each do |item|
+        .p-4.sm:p-6
+          .flex.items-start
+            .flex-1
+              %h3.text-lg.font-medium.text-gray-900.mb-2
+                = item.title
+              %p.text-sm.text-gray-500.mb-2
+                = item.description&.truncate(200)
+              .flex.items-center.gap-4.text-xs.text-gray-400
+                %span
+                  = lucide_icon('calendar', class: 'w-3 h-3 inline mr-1')
+                  = l(item.published_at, format: :short)
+                - if item.link.present?
+                  = link_to item.link, target: '_blank', rel: 'noopener noreferrer', class: 'text-[#FA812F] hover:text-[#E87020] inline-flex items-center' do
+                    = lucide_icon('external-link', class: 'w-3 h-3 mr-1')
+                    = t('admin.rss_feeds.view_original')
+  - else
+    .p-6.text-center.text-gray-500
+      = t('admin.rss_feeds.no_items')

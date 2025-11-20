@@ -1,0 +1,8 @@
+# Sidekiq Cron Schedule
+# Cron syntax: minute hour day month day_of_week
+
+rss_feeds_fetch_all:
+  class: RssFeeds::FetchAllJob
+  cron: "*/15 * * * *" 
+  description: "Fetch all active RSS feeds that need updating"
+  queue: default

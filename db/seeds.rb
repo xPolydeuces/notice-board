@@ -196,6 +196,7 @@ puts "  - Admin: Can manage locations, RSS, all posts, but not other admins"
 puts "  - General: Can create/edit general posts visible on all screens"
 puts "  - Location: Can only create/edit posts for their assigned location"
 puts "\n📡 RSS Feeds:"
-puts "  - Active feeds will be fetched automatically (feature to be implemented)"
+puts "  - Active feeds are fetched automatically every 15 minutes via Sidekiq"
+puts "  - Unhealthy feeds (3+ consecutive errors) are skipped until manually refreshed"
 puts "  - Inactive feeds are stored but not processed"
 puts "="*60

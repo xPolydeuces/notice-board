@@ -68,11 +68,15 @@ class CreateInitialSchema < ActiveRecord::Migration[8.1]
       t.string :url, null: false
       t.boolean :active, null: false, default: true
       t.datetime :last_fetched_at
+      t.text :last_error
+      t.integer :error_count, null: false, default: 0
+      t.datetime :last_successful_fetch_at
 
       t.timestamps
     end
 
     add_index :rss_feeds, :url, unique: true
     add_index :rss_feeds, :active
+    add_index :rss_feeds, :error_count
   end
 end

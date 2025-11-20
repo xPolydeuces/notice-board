@@ -1,6 +1,12 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  # Authenticated admin tools - must come before other routes
+  authenticate :user, ->(user) { user.admin? } do
+    mount Sidekiq::Web, at: "/sidekiq"
+    mount PgHero::Engine, at: "/pghero"
+  end
+
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
@@ -30,13 +36,12 @@ Rails.application.routes.draw do
         patch :unpublish
       end
     end
-    resources :rss_feeds
+    resources :rss_feeds do
+      member do
+        post :refresh
+        get :preview
+      end
+    end
     resource :password, only: [:edit, :update]
-  end
-
-  # Authenticated admin tools
-  authenticate :user, ->(user) { user.admin? } do
-    mount Sidekiq::Web, at: "sidekiq"
-    mount PgHero::Engine, at: "pghero"
   end
 end

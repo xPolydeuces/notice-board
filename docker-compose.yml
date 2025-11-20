@@ -17,8 +17,10 @@ services:
       - node_modules:/rails/node_modules
   postgresql:
     image: postgres:17
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf:ro
     environment:
       POSTGRES_PASSWORD: postgres
     healthcheck:
