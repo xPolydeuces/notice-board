@@ -93,6 +93,7 @@ export default class extends Controller {
 
     let startTime = null
     const pauseAtStart = 2000 // 2 second pause at start
+    const pauseAtEnd = 2000   // 2 second pause at end
 
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp
@@ -107,8 +108,16 @@ export default class extends Controller {
       const scrollTime = elapsed - pauseAtStart
 
       if (scrollTime >= scrollDuration) {
-        // Reached the end, stay there
+        // Reached the end, pause then loop
         container.scrollTop = scrollHeight
+
+        const totalDuration = pauseAtStart + scrollDuration + pauseAtEnd
+        if (elapsed >= totalDuration) {
+          // Reset and restart the loop
+          container.scrollTop = 0
+          startTime = null
+        }
+        this.animationFrame = requestAnimationFrame(animate)
         return
       }
 
