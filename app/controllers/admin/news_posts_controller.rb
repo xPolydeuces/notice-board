@@ -106,7 +106,7 @@ module Admin
     private
 
     def set_news_post
-      @news_post = NewsPost.find(params[:id])
+      @news_post = NewsPost.with_attached_image.with_attached_pdf.find(params[:id])
     end
 
     def news_post_params

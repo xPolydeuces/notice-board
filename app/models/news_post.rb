@@ -35,14 +35,15 @@ class NewsPost < ApplicationRecord
   validate :validate_pdf_format_and_size
 
   # Callbacks
-  before_validation :set_default_display_duration, on: :create
+  before_validation :set_default_display_duration
 
   private
 
   def set_default_display_duration
+    return unless new_record?
     return if display_duration.present?
 
-    self.display_duration = DEFAULT_DURATIONS[post_type] || 15
+    self.display_duration = DEFAULT_DURATIONS[post_type.to_s] || 15
   end
 
   def validate_post_type_content

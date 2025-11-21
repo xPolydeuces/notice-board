@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateInitialSchema < ActiveRecord::Migration[8.1]
   def change
     # Locations table
@@ -15,7 +17,6 @@ class CreateInitialSchema < ActiveRecord::Migration[8.1]
     add_index :locations, :active
 
     # Users table with Devise
-    # Note: Using username-based authentication instead of email-based
     create_table :users do |t|
       # Devise: database authenticatable
       t.string :encrypted_password, null: false, default: ""
@@ -32,35 +33,35 @@ class CreateInitialSchema < ActiveRecord::Migration[8.1]
       t.references :location, foreign_key: true
       t.integer :role, null: false, default: 0
       t.integer :news_posts_count, null: false, default: 0
+      t.boolean :force_password_change, null: false, default: false
 
       t.timestamps
     end
 
     add_index :users, :username, unique: true
     add_index :users, :role
+    add_index :users, :force_password_change
 
     # News posts table
     create_table :news_posts do |t|
       t.string :title, null: false
-      t.text :content  # Nullable: rich_text uses ActionText, image_only uses ActiveStorage
+      t.text :content
       t.string :post_type, null: false
       t.references :location, foreign_key: true
       t.references :user, null: false, foreign_key: true
       t.boolean :published, null: false, default: false
       t.datetime :published_at
       t.boolean :archived, null: false, default: false
+      t.integer :display_duration, null: false, comment: "Display duration in seconds"
 
       t.timestamps
     end
 
-    # Add indexes for news_posts
     add_index :news_posts, :post_type
-    add_index :news_posts, :published
     add_index :news_posts, :archived
-    add_index :news_posts, [:location_id, :published]
-    add_index :news_posts, [:location_id, :published, :archived], name: 'index_news_posts_on_location_published_archived'
-    add_index :news_posts, [:published, :archived, :created_at], name: 'index_news_posts_on_published_archived_created'
-    add_index :news_posts, [:published_at, :archived], name: 'index_news_posts_on_published_at_archived'
+    add_index :news_posts, [:location_id, :published, :archived], name: "index_news_posts_on_location_published_archived"
+    add_index :news_posts, [:published, :archived, :created_at], name: "index_news_posts_on_published_archived_created"
+    add_index :news_posts, [:published_at, :archived], name: "index_news_posts_on_published_at_archived"
 
     # RSS feeds table
     create_table :rss_feeds do |t|
@@ -78,5 +79,20 @@ class CreateInitialSchema < ActiveRecord::Migration[8.1]
     add_index :rss_feeds, :url, unique: true
     add_index :rss_feeds, :active
     add_index :rss_feeds, :error_count
+
+    # RSS feed items table
+    create_table :rss_feed_items do |t|
+      t.references :rss_feed, null: false, foreign_key: true
+      t.string :title, null: false
+      t.text :description
+      t.string :link
+      t.datetime :published_at
+      t.string :guid
+
+      t.timestamps
+    end
+
+    add_index :rss_feed_items, [:rss_feed_id, :guid], unique: true
+    add_index :rss_feed_items, [:rss_feed_id, :published_at]
   end
 end

@@ -224,7 +224,7 @@ CREATE TABLE public.news_posts (
     archived boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    display_duration integer DEFAULT 15 NOT NULL
+    display_duration integer NOT NULL
 );
 
 
@@ -755,13 +755,7 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20251120132605'),
-('20251120130000'),
 ('20251120093055'),
-('20251120092913'),
-('20251118113828'),
-('20251117120000'),
-('20251107101500'),
 ('20251106120100'),
 ('20251106120000'),
 ('20251106084800');

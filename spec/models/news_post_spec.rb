@@ -19,8 +19,14 @@ RSpec.describe NewsPost, type: :model do
     it { is_expected.to validate_presence_of(:title) }
     it { is_expected.to validate_length_of(:title).is_at_most(255) }
     it { is_expected.to validate_presence_of(:post_type) }
-    it { is_expected.to validate_presence_of(:display_duration) }
     it { is_expected.to validate_numericality_of(:display_duration).only_integer.is_greater_than(0).is_less_than_or_equal_to(300) }
+
+    it "validates presence of display_duration on update" do
+      post = create(:news_post)
+      post.display_duration = nil
+      expect(post).not_to be_valid
+      expect(post.errors[:display_duration]).to include("can't be blank")
+    end
 
     context "when post_type is plain_text" do
       subject { build(:news_post, post_type: :plain_text) }
