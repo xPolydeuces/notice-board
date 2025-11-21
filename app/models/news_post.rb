@@ -5,6 +5,14 @@ class NewsPost < ApplicationRecord
   MAX_IMAGE_SIZE = 10.megabytes
   MAX_PDF_SIZE = 20.megabytes
 
+  # Default display durations (in seconds) per post type
+  DEFAULT_DURATIONS = {
+    "plain_text" => 15,
+    "rich_text" => 20,
+    "image_only" => 10,
+    "pdf_only" => 30
+  }.freeze
+
   # Enums for content type
   enum :post_type, { plain_text: "plain_text", rich_text: "rich_text", image_only: "image_only", pdf_only: "pdf_only" }
 
@@ -21,11 +29,21 @@ class NewsPost < ApplicationRecord
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true, if: :plain_text?
   validates :post_type, presence: true
+  validates :display_duration, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 300 }
   validate :validate_post_type_content
   validate :validate_image_format_and_size
   validate :validate_pdf_format_and_size
 
+  # Callbacks
+  before_validation :set_default_display_duration, on: :create
+
   private
+
+  def set_default_display_duration
+    return if display_duration.present?
+
+    self.display_duration = DEFAULT_DURATIONS[post_type] || 15
+  end
 
   def validate_post_type_content
     case post_type

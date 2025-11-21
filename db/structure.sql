@@ -223,8 +223,16 @@ CREATE TABLE public.news_posts (
     published_at timestamp(6) without time zone,
     archived boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    display_duration integer DEFAULT 15 NOT NULL
 );
+
+
+--
+-- Name: COLUMN news_posts.display_duration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.news_posts.display_duration IS 'Display duration in seconds';
 
 
 --
@@ -747,6 +755,7 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251120132605'),
 ('20251120130000'),
 ('20251120093055'),
 ('20251120092913'),

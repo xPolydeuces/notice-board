@@ -19,6 +19,8 @@ RSpec.describe NewsPost, type: :model do
     it { is_expected.to validate_presence_of(:title) }
     it { is_expected.to validate_length_of(:title).is_at_most(255) }
     it { is_expected.to validate_presence_of(:post_type) }
+    it { is_expected.to validate_presence_of(:display_duration) }
+    it { is_expected.to validate_numericality_of(:display_duration).only_integer.is_greater_than(0).is_less_than_or_equal_to(300) }
 
     context "when post_type is plain_text" do
       subject { build(:news_post, post_type: :plain_text) }
@@ -233,6 +235,44 @@ RSpec.describe NewsPost, type: :model do
         expect(result).to include(published_post, general_post, location_post)
         expect(result).not_to include(unpublished_post, archived_post)
       end
+    end
+  end
+
+  describe "display_duration defaults" do
+    it "sets default duration for plain_text posts" do
+      post = build(:news_post, post_type: :plain_text)
+      post.validate
+      expect(post.display_duration).to eq(15)
+    end
+
+    it "sets default duration for rich_text posts" do
+      post = build(:news_post, post_type: :rich_text)
+      post.rich_content = ActionText::RichText.new(body: "Some content")
+      post.validate
+      expect(post.display_duration).to eq(20)
+    end
+
+    it "sets default duration for image_only posts" do
+      post = build(:news_post, :image_only)
+      post.validate
+      expect(post.display_duration).to eq(10)
+    end
+
+    it "sets default duration for pdf_only posts" do
+      post = build(:news_post, :pdf_only)
+      post.validate
+      expect(post.display_duration).to eq(30)
+    end
+
+    it "does not override explicit duration" do
+      post = build(:news_post, post_type: :plain_text, display_duration: 25)
+      post.validate
+      expect(post.display_duration).to eq(25)
+    end
+
+    it "respects custom duration within valid range" do
+      post = create(:news_post, display_duration: 60)
+      expect(post.display_duration).to eq(60)
     end
   end
 

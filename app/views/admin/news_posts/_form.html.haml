@@ -23,6 +23,14 @@
       = f.select :post_type, options_for_select(NewsPost.post_types.map { |k, _v| [t("admin.news_posts.types.#{k}"), k] }, news_post.post_type), {}, class: 'mt-1 block w-full py-2 rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm', required: true, data: { post_type_target: 'select', action: 'change->post-type#toggle' }
       %p.mt-1.text-sm.text-gray-500= t('admin.news_posts.form.post_type_help')
 
+    / Display duration
+    .div
+      = f.label :display_duration, t('admin.news_posts.form.display_duration'), class: 'block text-sm font-medium text-gray-700 mb-2'
+      .flex.items-center.gap-2
+        = f.number_field :display_duration, min: 1, max: 300, class: 'mt-1 w-24 rounded-md border-gray-300 shadow-sm focus:border-[#FA812F] focus:ring-[#FA812F] sm:text-sm', required: true
+        %span.text-sm.text-gray-600= t('admin.news_posts.form.seconds')
+      %p.mt-1.text-sm.text-gray-500= t('admin.news_posts.form.display_duration_help')
+
     / Location selection - only for admins and location users
     - if current_user.admin_or_superadmin? || current_user.location?
       .div

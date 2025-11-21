@@ -1,4 +1,4 @@
-%div{ class: slide_classes, data: { slide: true, index: index } }
+%div{ class: slide_classes, data: { slide: true, index: index, duration: post.display_duration * 1000 } }
   - if post.image_only?
     - if post.image.attached?
       = image_tag post.image, loading: 'eager', class: 'max-w-full max-h-full object-contain rounded-lg md:rounded-xl shadow-lg'

@@ -47,19 +47,25 @@ export default class extends Controller {
         }
       }
 
-      const nextSlide = () => {
-        currentIndex = (currentIndex + 1) % slides.length
-        showSlide(currentIndex)
+      const scheduleNextSlide = () => {
+        const currentSlide = slides[currentIndex]
+        const duration = parseInt(currentSlide.dataset.duration) || this.intervalValue
+
+        carousel.carouselTimeout = setTimeout(() => {
+          currentIndex = (currentIndex + 1) % slides.length
+          showSlide(currentIndex)
+          scheduleNextSlide()
+        }, duration)
       }
 
-      carousel.carouselInterval = setInterval(nextSlide, this.intervalValue)
+      scheduleNextSlide()
     })
   }
 
   stopCarousels() {
     this.carouselTargets.forEach(carousel => {
-      if (carousel.carouselInterval) {
-        clearInterval(carousel.carouselInterval)
+      if (carousel.carouselTimeout) {
+        clearTimeout(carousel.carouselTimeout)
       }
     })
   }
