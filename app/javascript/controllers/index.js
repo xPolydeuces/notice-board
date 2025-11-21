@@ -27,3 +27,6 @@ application.register("trix-editor", TrixEditorController)
 
 import DisplayModeController from "./display_mode_controller"
 application.register("display-mode", DisplayModeController)
+
+import PdfViewerController from "./pdf_viewer_controller"
+application.register("pdf-viewer", PdfViewerController)
