@@ -13,6 +13,7 @@ Rails.application.configure do
     policy.script_src  :self, :https
     policy.style_src   :self, :https
     policy.connect_src :self, :https
+    policy.worker_src  :self, :blob
   end
 
   # Generate session nonces for permitted importmap, inline scripts, and inline styles.

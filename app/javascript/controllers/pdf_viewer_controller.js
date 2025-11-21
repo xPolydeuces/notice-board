@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 import * as pdfjsLib from "pdfjs-dist"
 
-// Use CDN for worker (simpler than bundling)
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.worker.min.mjs"
+// Use CDN for worker (must match pdfjs-dist version in package.json)
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs"
 
 export default class extends Controller {
   static values = {
@@ -11,11 +11,21 @@ export default class extends Controller {
   }
 
   connect() {
+    this.handleSlideActive = this.resetAndPlay.bind(this)
+    this.element.addEventListener('slide:active', this.handleSlideActive)
     this.loadPdf()
   }
 
   disconnect() {
     this.stopAutoScroll()
+    this.element.removeEventListener('slide:active', this.handleSlideActive)
+  }
+
+  resetAndPlay() {
+    if (!this.rendered) return
+    this.stopAutoScroll()
+    this.element.scrollTop = 0
+    this.startAutoScroll()
   }
 
   async loadPdf() {
@@ -33,6 +43,7 @@ export default class extends Controller {
       this.element.innerHTML = ''
 
       await this.renderAllPages()
+      this.rendered = true
       this.startAutoScroll()
     } catch (error) {
       console.error("Error loading PDF:", error)

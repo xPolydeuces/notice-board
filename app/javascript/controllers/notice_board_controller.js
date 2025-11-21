@@ -29,8 +29,15 @@ export default class extends Controller {
 
       const showSlide = (index) => {
         slides.forEach((slide, i) => {
-          slide.classList.toggle('opacity-0', i !== index)
-          slide.classList.toggle('opacity-100', i === index)
+          const wasActive = slide.classList.contains('opacity-100')
+          const isActive = i === index
+          slide.classList.toggle('opacity-0', !isActive)
+          slide.classList.toggle('opacity-100', isActive)
+
+          // Dispatch event when slide becomes active
+          if (isActive && !wasActive) {
+            slide.dispatchEvent(new CustomEvent('slide:active', { bubbles: true }))
+          }
         })
 
         if (dots) {
