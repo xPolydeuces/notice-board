@@ -86,6 +86,19 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_06_120100) do
     t.index ["user_id"], name: "index_news_posts_on_user_id"
   end
 
+  create_table "rss_feed_items", force: :cascade do |t|
+    t.bigint "rss_feed_id", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.string "link"
+    t.datetime "published_at"
+    t.string "guid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rss_feed_id", "guid"], name: "index_rss_feed_items_on_rss_feed_id_and_guid", unique: true
+    t.index ["rss_feed_id", "published_at"], name: "index_rss_feed_items_on_rss_feed_id_and_published_at"
+  end
+
   create_table "rss_feeds", force: :cascade do |t|
     t.string "name", null: false
     t.string "url", null: false
@@ -93,7 +106,11 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_06_120100) do
     t.datetime "last_fetched_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "last_error"
+    t.integer "error_count", default: 0, null: false
+    t.datetime "last_successful_fetch_at"
     t.index ["active"], name: "index_rss_feeds_on_active"
+    t.index ["error_count"], name: "index_rss_feeds_on_error_count"
     t.index ["url"], name: "index_rss_feeds_on_url", unique: true
   end
 
@@ -111,6 +128,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_06_120100) do
     t.integer "news_posts_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "force_password_change", default: false, null: false
+    t.index ["force_password_change"], name: "index_users_on_force_password_change"
     t.index ["location_id"], name: "index_users_on_location_id"
     t.index ["role"], name: "index_users_on_role"
     t.index ["username"], name: "index_users_on_username", unique: true
@@ -120,5 +139,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_06_120100) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "news_posts", "locations"
   add_foreign_key "news_posts", "users"
+  add_foreign_key "rss_feed_items", "rss_feeds"
   add_foreign_key "users", "locations"
 end

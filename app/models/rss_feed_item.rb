@@ -6,6 +6,7 @@ class RssFeedItem < ApplicationRecord
 
   validates :title, presence: true
   validates :rss_feed, presence: true
+  validates :guid, presence: true, uniqueness: { scope: :rss_feed_id }
 
   scope :ordered, -> { order(published_at: :desc, created_at: :desc) }
   scope :recent, ->(limit = 50) { ordered.limit(limit) }
