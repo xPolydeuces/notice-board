@@ -3,8 +3,6 @@
 module Admin
   # Controller for managing user passwords in the admin panel
   class PasswordsController < BaseController
-    skip_before_action :require_admin_access!, only: [:edit, :update]
-
     def edit
       # User can change their own password
     end

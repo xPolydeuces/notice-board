@@ -5,7 +5,6 @@ module Admin
   class BaseController < ApplicationController
     include ActionPolicy::Controller
     before_action :authenticate_user!
-    before_action :require_admin_access!
     before_action :check_force_password_change!
 
     layout 'admin'
@@ -13,14 +12,6 @@ module Admin
     authorize :user, through: :current_user
 
     private
-
-    # All authenticated users can access admin panel
-    # Specific permissions are handled by ActionPolicy in individual controllers
-    def require_admin_access!
-      return if current_user.present?
-
-      redirect_to new_user_session_path, alert: t('admin.access_denied', default: 'Musisz się zalogować')
-    end
 
     # Check if user needs to change password
     def check_force_password_change!
