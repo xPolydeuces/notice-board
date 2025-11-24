@@ -52,5 +52,5 @@
                   = button_to admin_location_path(location), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.locations.delete'), data: { turbo_confirm: t('admin.locations.delete_confirm') } do
                     = lucide_icon('trash-2', class: 'w-4 h-4')
 
-.px-3.sm:px-6.py-4.bg-white.border-t.border-gray-200
-  = paginate @locations, theme: 'twitter-bootstrap-4'
+.px-3.sm:px-6.py-4.bg-white.border-t.border-gray-200.flex.justify-center
+  = paginate @locations
