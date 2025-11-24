@@ -12,7 +12,7 @@ module Admin
         current_user.update_column(:force_password_change, false) if current_user.force_password_change?
 
         bypass_sign_in(current_user)
-        redirect_to admin_root_path, notice: t('admin.passwords.updated', default: 'Password successfully updated.')
+        redirect_to admin_root_path, notice: t("admin.passwords.updated", default: "Password successfully updated.")
       else
         render :edit, status: :unprocessable_content
       end
@@ -21,7 +21,7 @@ module Admin
     private
 
     def password_params
-      params.require(:user).permit(:current_password, :password, :password_confirmation)
+      params.expect(user: %i[current_password password password_confirmation])
     end
   end
 end

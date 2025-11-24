@@ -2,7 +2,7 @@
 
 module Admin
   class StatisticsQuery
-    CACHE_KEY = 'admin_dashboard_stats'
+    CACHE_KEY = "admin_dashboard_stats"
     CACHE_EXPIRY = 10.minutes
 
     def self.call

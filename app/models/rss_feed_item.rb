@@ -5,7 +5,6 @@ class RssFeedItem < ApplicationRecord
   belongs_to :rss_feed
 
   validates :title, presence: true
-  validates :rss_feed, presence: true
   validates :guid, presence: true, uniqueness: { scope: :rss_feed_id }
 
   scope :ordered, -> { order(published_at: :desc, created_at: :desc) }

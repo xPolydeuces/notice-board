@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Mark existing migrations as safe
 StrongMigrations.start_after = 20_251_015_072_033
 

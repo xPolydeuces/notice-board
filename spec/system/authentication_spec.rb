@@ -52,7 +52,7 @@ RSpec.describe "Authentication", type: :system do
     it "allows user to sign out" do
       visit admin_root_path
 
-      click_button "Wyloguj się"  # Polish for "Sign out"
+      click_button "Wyloguj się" # Polish for "Sign out"
 
       expect(page).to have_content("Signed out successfully").or have_current_path(new_user_session_path)
     end

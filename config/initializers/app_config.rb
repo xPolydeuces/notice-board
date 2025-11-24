@@ -4,17 +4,17 @@
 module AppConfig
   # Brand colors
   BRAND_COLORS = {
-    primary: '#FAB12F',
-    secondary: '#FA812F',
-    accent: '#DD0303',
-    background: '#FEF3E2'
+    primary: "#FAB12F",
+    secondary: "#FA812F",
+    accent: "#DD0303",
+    background: "#FEF3E2"
   }.freeze
 
   # Application name and branding
-  APP_NAME = ENV.fetch('APP_NAME', 'Tablica Ogłoszeń')
-  APP_SUBTITLE = ENV.fetch('APP_SUBTITLE', 'Panel Administracyjny')
-  COMPANY_NAME = ENV.fetch('COMPANY_NAME', 'Your Company')
-  LOGO_URL = ENV.fetch('LOGO_URL', '')
+  APP_NAME = ENV.fetch("APP_NAME", "Tablica Ogłoszeń")
+  APP_SUBTITLE = ENV.fetch("APP_SUBTITLE", "Panel Administracyjny")
+  COMPANY_NAME = ENV.fetch("COMPANY_NAME", "Your Company")
+  LOGO_URL = ENV.fetch("LOGO_URL", "")
 
   # Default pagination
   DEFAULT_PER_PAGE = 25
@@ -28,5 +28,5 @@ module AppConfig
   RSS_FEED_MAX_ITEMS = 10
 
   # Location settings
-  DEFAULT_LOCATION_PREFIX = 'R-'
+  DEFAULT_LOCATION_PREFIX = "R-"
 end

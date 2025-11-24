@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnablePgStatStatements < ActiveRecord::Migration[8.1]
   def up
     # Enable pg_stat_statements extension for query performance monitoring

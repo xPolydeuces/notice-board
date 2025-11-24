@@ -7,7 +7,9 @@ RSpec.describe Display::PostSlideComponent, type: :component do
 
   describe "rendering" do
     context "with plain text post" do
-      let(:post) { create(:news_post, :published, :plain_text, user: user, title: "Test Title", content: "Test Content") }
+      let(:post) do
+        create(:news_post, :published, :plain_text, user: user, title: "Test Title", content: "Test Content")
+      end
 
       it "renders the post title" do
         render_inline(described_class.new(post: post, index: 0))
@@ -32,14 +34,14 @@ RSpec.describe Display::PostSlideComponent, type: :component do
         render_inline(described_class.new(post: post, index: 0))
 
         expect(page).to have_css(".opacity-100")
-        expect(page).not_to have_css(".opacity-0")
+        expect(page).to have_no_css(".opacity-0")
       end
 
       it "applies correct opacity for non-first slide" do
         render_inline(described_class.new(post: post, index: 1))
 
         expect(page).to have_css(".opacity-0")
-        expect(page).not_to have_css(".opacity-100")
+        expect(page).to have_no_css(".opacity-100")
       end
     end
 
@@ -79,7 +81,7 @@ RSpec.describe Display::PostSlideComponent, type: :component do
       it "does not render title or content" do
         render_inline(described_class.new(post: post, index: 0))
 
-        expect(page).not_to have_css(".text-6xl")
+        expect(page).to have_no_css(".text-6xl")
       end
     end
   end

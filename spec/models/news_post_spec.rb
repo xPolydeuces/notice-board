@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe NewsPost, type: :model do
   it_behaves_like "a valid factory"
-  
+
   describe "associations" do
     it { is_expected.to belong_to(:user).inverse_of(:news_posts).counter_cache }
     it { is_expected.to belong_to(:location).optional.inverse_of(:news_posts).counter_cache }
@@ -19,7 +19,10 @@ RSpec.describe NewsPost, type: :model do
     it { is_expected.to validate_presence_of(:title) }
     it { is_expected.to validate_length_of(:title).is_at_most(255) }
     it { is_expected.to validate_presence_of(:post_type) }
-    it { is_expected.to validate_numericality_of(:display_duration).only_integer.is_greater_than(0).is_less_than_or_equal_to(300) }
+
+    it {
+      expect(subject).to validate_numericality_of(:display_duration).only_integer.is_greater_than(0).is_less_than_or_equal_to(300)
+    }
 
     it "validates presence of display_duration on update" do
       post = create(:news_post)
@@ -71,7 +74,7 @@ RSpec.describe NewsPost, type: :model do
       it "validates image file size limit" do
         news_post = build(:news_post, post_type: :image_only)
         # Create a large mock file
-        large_file = double(
+        double(
           "file",
           size: 11.megabytes,
           content_type: "image/png",
@@ -155,7 +158,7 @@ RSpec.describe NewsPost, type: :model do
 
   describe "enums" do
     it {
-      is_expected.to define_enum_for(:post_type)
+      expect(subject).to define_enum_for(:post_type)
         .backed_by_column_of_type(:string)
         .with_values(plain_text: "plain_text", rich_text: "rich_text", image_only: "image_only", pdf_only: "pdf_only")
     }
@@ -171,7 +174,7 @@ RSpec.describe NewsPost, type: :model do
 
     describe ".published" do
       it "returns only published posts" do
-        result = NewsPost.published.to_a
+        result = described_class.published.to_a
         expect(result).to include(published_post, general_post, location_post)
         expect(result).not_to include(unpublished_post, archived_post)
       end
@@ -179,21 +182,21 @@ RSpec.describe NewsPost, type: :model do
 
     describe ".unpublished" do
       it "returns only unpublished posts" do
-        expect(NewsPost.unpublished).to include(unpublished_post)
-        expect(NewsPost.unpublished).not_to include(published_post, archived_post)
+        expect(described_class.unpublished).to include(unpublished_post)
+        expect(described_class.unpublished).not_to include(published_post, archived_post)
       end
     end
 
     describe ".archived" do
       it "returns only archived posts" do
-        expect(NewsPost.archived).to include(archived_post)
-        expect(NewsPost.archived).not_to include(published_post, unpublished_post)
+        expect(described_class.archived).to include(archived_post)
+        expect(described_class.archived).not_to include(published_post, unpublished_post)
       end
     end
 
     describe ".active" do
       it "returns only non-archived posts" do
-        result = NewsPost.active.to_a
+        result = described_class.active.to_a
         expect(result).to include(published_post, unpublished_post, general_post, location_post)
         expect(result).not_to include(archived_post)
       end
@@ -201,15 +204,15 @@ RSpec.describe NewsPost, type: :model do
 
     describe ".general" do
       it "returns only posts without location" do
-        expect(NewsPost.general).to include(general_post)
-        expect(NewsPost.general).not_to include(location_post)
+        expect(described_class.general).to include(general_post)
+        expect(described_class.general).not_to include(location_post)
       end
     end
 
     describe ".for_location" do
       it "returns posts for specific location" do
-        expect(NewsPost.for_location(location.id)).to include(location_post)
-        expect(NewsPost.for_location(location.id)).not_to include(general_post)
+        expect(described_class.for_location(location.id)).to include(location_post)
+        expect(described_class.for_location(location.id)).not_to include(general_post)
       end
     end
 
@@ -218,7 +221,7 @@ RSpec.describe NewsPost, type: :model do
         old_post = create(:news_post, created_at: 2.days.ago)
         new_post = create(:news_post, created_at: 1.hour.ago)
 
-        posts = NewsPost.where(id: [old_post.id, new_post.id]).recent
+        posts = described_class.where(id: [old_post.id, new_post.id]).recent
         expect(posts.first).to eq(new_post)
         expect(posts.last).to eq(old_post)
       end
@@ -229,14 +232,14 @@ RSpec.describe NewsPost, type: :model do
         older_published = create(:news_post, published: true, published_at: 2.days.ago)
         newer_published = create(:news_post, published: true, published_at: 1.day.ago)
 
-        posts = NewsPost.where(id: [older_published.id, newer_published.id]).by_published_date
+        posts = described_class.where(id: [older_published.id, newer_published.id]).by_published_date
         expect(posts.first).to eq(newer_published)
       end
     end
 
     describe ".for_display" do
       it "returns published, non-archived posts with associations" do
-        result = NewsPost.for_display.to_a
+        result = described_class.for_display.to_a
 
         expect(result).to include(published_post, general_post, location_post)
         expect(result).not_to include(unpublished_post, archived_post)

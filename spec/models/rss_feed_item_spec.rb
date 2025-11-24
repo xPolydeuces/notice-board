@@ -20,17 +20,17 @@ RSpec.describe RssFeedItem, type: :model do
 
     describe ".ordered" do
       it "returns items ordered by published_at descending" do
-        expect(RssFeedItem.ordered).to eq([newest_item, recent_item, old_item])
+        expect(described_class.ordered).to eq([newest_item, recent_item, old_item])
       end
     end
 
     describe ".recent" do
       it "limits results to specified number" do
-        expect(RssFeedItem.recent(2)).to eq([newest_item, recent_item])
+        expect(described_class.recent(2)).to eq([newest_item, recent_item])
       end
 
       it "defaults to 50 items" do
-        expect(RssFeedItem.recent.limit_value).to eq(50)
+        expect(described_class.recent.limit_value).to eq(50)
       end
     end
   end

@@ -71,9 +71,9 @@ RSpec.describe "Admin::Users", type: :request do
         end
 
         it "creates a new user" do
-          expect {
+          expect do
             post admin_users_path, params: valid_params
-          }.to change(User, :count).by(1)
+          end.to change(User, :count).by(1)
         end
 
         it "redirects to users index" do
@@ -93,9 +93,9 @@ RSpec.describe "Admin::Users", type: :request do
         end
 
         it "does not create a user" do
-          expect {
+          expect do
             post admin_users_path, params: invalid_params
-          }.not_to change(User, :count)
+          end.not_to change(User, :count)
         end
 
         it "renders new template" do
@@ -169,9 +169,9 @@ RSpec.describe "Admin::Users", type: :request do
       before { sign_in admin }
 
       it "destroys the user" do
-        expect {
+        expect do
           delete admin_user_path(user_to_delete)
-        }.to change(User, :count).by(-1)
+        end.to change(User, :count).by(-1)
       end
 
       it "redirects to users index" do
@@ -184,9 +184,9 @@ RSpec.describe "Admin::Users", type: :request do
       before { sign_in general_user }
 
       it "does not destroy the user" do
-        expect {
+        expect do
           delete admin_user_path(user_to_delete)
-        }.not_to change(User, :count)
+        end.not_to change(User, :count)
       end
     end
 
@@ -196,9 +196,9 @@ RSpec.describe "Admin::Users", type: :request do
       before { sign_in admin }
 
       it "does not destroy the admin user" do
-        expect {
+        expect do
           delete admin_user_path(admin_to_delete)
-        }.not_to change(User, :count)
+        end.not_to change(User, :count)
       end
     end
 
@@ -208,9 +208,9 @@ RSpec.describe "Admin::Users", type: :request do
       before { sign_in superadmin }
 
       it "destroys the admin user" do
-        expect {
+        expect do
           delete admin_user_path(admin_to_delete)
-        }.to change(User, :count).by(-1)
+        end.to change(User, :count).by(-1)
       end
     end
   end
@@ -222,9 +222,9 @@ RSpec.describe "Admin::Users", type: :request do
       before { sign_in admin }
 
       it "generates a temporary password" do
-        expect {
+        expect do
           post reset_password_admin_user_path(user_to_reset)
-        }.to change { user_to_reset.reload.encrypted_password }
+        end.to(change { user_to_reset.reload.encrypted_password })
       end
 
       it "sets force_password_change flag" do

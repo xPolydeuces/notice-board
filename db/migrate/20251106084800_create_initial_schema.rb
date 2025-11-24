@@ -59,9 +59,10 @@ class CreateInitialSchema < ActiveRecord::Migration[8.1]
 
     add_index :news_posts, :post_type
     add_index :news_posts, :archived
-    add_index :news_posts, [:location_id, :published, :archived], name: "index_news_posts_on_location_published_archived"
-    add_index :news_posts, [:published, :archived, :created_at], name: "index_news_posts_on_published_archived_created"
-    add_index :news_posts, [:published_at, :archived], name: "index_news_posts_on_published_at_archived"
+    add_index :news_posts, %i[location_id published archived],
+              name: "index_news_posts_on_location_published_archived"
+    add_index :news_posts, %i[published archived created_at], name: "index_news_posts_on_published_archived_created"
+    add_index :news_posts, %i[published_at archived], name: "index_news_posts_on_published_at_archived"
 
     # RSS feeds table
     create_table :rss_feeds do |t|
@@ -92,7 +93,7 @@ class CreateInitialSchema < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :rss_feed_items, [:rss_feed_id, :guid], unique: true
-    add_index :rss_feed_items, [:rss_feed_id, :published_at]
+    add_index :rss_feed_items, %i[rss_feed_id guid], unique: true
+    add_index :rss_feed_items, %i[rss_feed_id published_at]
   end
 end

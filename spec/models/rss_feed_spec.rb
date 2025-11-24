@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe RssFeed, type: :model do
   it_behaves_like "a valid factory"
-  
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:url) }
@@ -23,8 +23,8 @@ RSpec.describe RssFeed, type: :model do
       let!(:inactive_feed) { create(:rss_feed, :inactive) }
 
       it "returns only active feeds" do
-        expect(RssFeed.active).to include(active_feed)
-        expect(RssFeed.active).not_to include(inactive_feed)
+        expect(described_class.active).to include(active_feed)
+        expect(described_class.active).not_to include(inactive_feed)
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe RssFeed, type: :model do
       let!(:feed_b) { create(:rss_feed, name: "Middle Feed") }
 
       it "returns feeds ordered by name" do
-        expect(RssFeed.ordered).to eq([feed_a, feed_b, feed_c])
+        expect(described_class.ordered).to eq([feed_a, feed_b, feed_c])
       end
     end
   end
@@ -82,7 +82,7 @@ RSpec.describe RssFeed, type: :model do
 
     context "when fetched exactly 1 hour ago" do
       it "returns false" do
-        travel_to Time.current do
+        freeze_time do
           feed = create(:rss_feed, last_fetched_at: 1.hour.ago)
           expect(feed.needs_refresh?).to be false
         end

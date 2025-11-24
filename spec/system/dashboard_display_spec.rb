@@ -72,7 +72,7 @@ RSpec.describe "Dashboard Display", type: :system do
       it "does not show navigation dots" do
         visit root_path
 
-        expect(page).not_to have_css("[data-dots]")
+        expect(page).to have_no_css("[data-dots]")
       end
     end
 

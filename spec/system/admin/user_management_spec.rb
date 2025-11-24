@@ -19,7 +19,7 @@ RSpec.describe "User Management", type: :system do
     it "displays all users" do
       visit admin_users_path
 
-      expect(page).to have_selector("tbody tr", minimum: 5)
+      expect(page).to have_css("tbody tr", minimum: 5)
     end
 
     it "shows user roles" do
@@ -53,7 +53,7 @@ RSpec.describe "User Management", type: :system do
         visit new_admin_user_path
 
         fill_in "Username", with: ""
-        fill_in "Password", with: "123"  # Too short
+        fill_in "Password", with: "123" # Too short
 
         click_button "Create User"
 
@@ -67,7 +67,7 @@ RSpec.describe "User Management", type: :system do
       it "shows uniqueness error" do
         visit new_admin_user_path
 
-        fill_in "Username", with: "DUPLICATE"  # Case insensitive
+        fill_in "Username", with: "DUPLICATE" # Case insensitive
         fill_in "Password", with: "password123"
         fill_in "Password confirmation", with: "password123"
 
@@ -112,7 +112,7 @@ RSpec.describe "User Management", type: :system do
         find("button[title='Delete']").click
       end
 
-      expect(page).not_to have_content("deleteme")
+      expect(page).to have_no_content("deleteme")
       expect(User.exists?(user_to_delete.id)).to be false
     end
   end
@@ -127,7 +127,7 @@ RSpec.describe "User Management", type: :system do
         visit admin_users_path
 
         within("tr", text: "adminuser") do
-          expect(page).not_to have_css("button[title='Delete']")
+          expect(page).to have_no_css("button[title='Delete']")
         end
       end
     end

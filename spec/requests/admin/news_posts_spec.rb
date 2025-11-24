@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe "Admin::NewsPosts", type: :request do
@@ -29,9 +31,9 @@ RSpec.describe "Admin::NewsPosts", type: :request do
       end
 
       it "lists all news posts ordered by created_at desc" do
-        post1 = create(:news_post, title: "First Post", created_at: 3.days.ago)
-        post2 = create(:news_post, title: "Second Post", created_at: 2.days.ago)
-        post3 = create(:news_post, title: "Third Post", created_at: 1.day.ago)
+        create(:news_post, title: "First Post", created_at: 3.days.ago)
+        create(:news_post, title: "Second Post", created_at: 2.days.ago)
+        create(:news_post, title: "Third Post", created_at: 1.day.ago)
 
         get admin_news_posts_path
 
@@ -39,8 +41,8 @@ RSpec.describe "Admin::NewsPosts", type: :request do
       end
 
       it "can filter by location" do
-        general_post = create(:news_post, :general, title: "General Post")
-        location_post = create(:news_post, location: location, title: "Location Post")
+        create(:news_post, :general, title: "General Post")
+        create(:news_post, location: location, title: "Location Post")
 
         get admin_news_posts_path, params: { location_id: location.id }
 
@@ -49,8 +51,8 @@ RSpec.describe "Admin::NewsPosts", type: :request do
       end
 
       it "can filter by published status" do
-        draft = create(:news_post, title: "Draft", published: false)
-        published = create(:news_post, :published, title: "Published")
+        create(:news_post, title: "Draft", published: false)
+        create(:news_post, :published, title: "Published")
 
         get admin_news_posts_path, params: { published: "true" }
 
@@ -59,14 +61,14 @@ RSpec.describe "Admin::NewsPosts", type: :request do
       end
 
       it "can filter by archived status" do
-        active = create(:news_post, title: "Active", archived: false)
-        archived = create(:news_post, :archived, title: "Archived")
+        create(:news_post, title: "Active", archived: false)
+        create(:news_post, :archived, title: "Archived")
 
         get admin_news_posts_path, params: { archived: "true" }
 
         # Parse the response to check only within tbody (avoid filter dropdown text)
         parsed_body = Nokogiri::HTML(response.body)
-        tbody_content = parsed_body.css('tbody').text
+        tbody_content = parsed_body.css("tbody").text
 
         expect(tbody_content).to include("Archived")
         expect(tbody_content).not_to include("Active")
@@ -77,9 +79,9 @@ RSpec.describe "Admin::NewsPosts", type: :request do
       before { sign_in location_user }
 
       it "only shows posts for their location" do
-        own_post = create(:news_post, location: location, title: "Own Location Post", user: location_user)
-        other_post = create(:news_post, location: other_location, title: "Other Location Post")
-        general_post = create(:news_post, :general, title: "General Post")
+        create(:news_post, location: location, title: "Own Location Post", user: location_user)
+        create(:news_post, location: other_location, title: "Other Location Post")
+        create(:news_post, :general, title: "General Post")
 
         get admin_news_posts_path
 
@@ -147,9 +149,9 @@ RSpec.describe "Admin::NewsPosts", type: :request do
         end
 
         it "creates a new news post" do
-          expect {
+          expect do
             post admin_news_posts_path, params: valid_params
-          }.to change(NewsPost, :count).by(1)
+          end.to change(NewsPost, :count).by(1)
         end
 
         it "sets the current user as the author" do
@@ -166,7 +168,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
         it "displays success notice" do
           post admin_news_posts_path, params: valid_params
           follow_redirect!
-          expect(response.body).to include(I18n.t('admin.news_posts.created'))
+          expect(response.body).to include(I18n.t("admin.news_posts.created"))
         end
 
         it "creates news post with correct attributes" do
@@ -191,9 +193,9 @@ RSpec.describe "Admin::NewsPosts", type: :request do
         end
 
         it "does not create a new news post" do
-          expect {
+          expect do
             post admin_news_posts_path, params: invalid_params
-          }.not_to change(NewsPost, :count)
+          end.not_to change(NewsPost, :count)
         end
 
         it "renders the new form again" do
@@ -360,7 +362,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
         it "displays success notice" do
           patch admin_news_post_path(news_post), params: valid_params
           follow_redirect!
-          expect(response.body).to include(I18n.t('admin.news_posts.updated'))
+          expect(response.body).to include(I18n.t("admin.news_posts.updated"))
         end
       end
 
@@ -397,9 +399,9 @@ RSpec.describe "Admin::NewsPosts", type: :request do
 
       it "deletes the news post" do
         news_post # Create the news post
-        expect {
+        expect do
           delete admin_news_post_path(news_post)
-        }.to change(NewsPost, :count).by(-1)
+        end.to change(NewsPost, :count).by(-1)
       end
 
       it "redirects to news posts index" do
@@ -410,7 +412,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
       it "displays success notice" do
         delete admin_news_post_path(news_post)
         follow_redirect!
-        expect(response.body).to include(I18n.t('admin.news_posts.deleted'))
+        expect(response.body).to include(I18n.t("admin.news_posts.deleted"))
       end
     end
   end
@@ -435,7 +437,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
     it "displays success notice" do
       patch publish_admin_news_post_path(news_post)
       follow_redirect!
-      expect(response.body).to include(I18n.t('admin.news_posts.published'))
+      expect(response.body).to include(I18n.t("admin.news_posts.published"))
     end
   end
 
@@ -458,7 +460,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
     it "displays success notice" do
       patch unpublish_admin_news_post_path(news_post)
       follow_redirect!
-      expect(response.body).to include(I18n.t('admin.news_posts.unpublished'))
+      expect(response.body).to include(I18n.t("admin.news_posts.unpublished"))
     end
   end
 
@@ -482,7 +484,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
     it "displays success notice" do
       patch archive_admin_news_post_path(news_post)
       follow_redirect!
-      expect(response.body).to include(I18n.t('admin.news_posts.archived'))
+      expect(response.body).to include(I18n.t("admin.news_posts.archived"))
     end
   end
 
@@ -505,7 +507,7 @@ RSpec.describe "Admin::NewsPosts", type: :request do
     it "displays success notice" do
       patch restore_admin_news_post_path(news_post)
       follow_redirect!
-      expect(response.body).to include(I18n.t('admin.news_posts.restored'))
+      expect(response.body).to include(I18n.t("admin.news_posts.restored"))
     end
   end
 
@@ -529,9 +531,9 @@ RSpec.describe "Admin::NewsPosts", type: :request do
 
       it "cannot delete" do
         other_post # Create it
-        expect {
+        expect do
           delete admin_news_post_path(other_post)
-        }.not_to change(NewsPost, :count)
+        end.not_to change(NewsPost, :count)
         expect(response).to redirect_to(admin_news_posts_path)
       end
 
@@ -565,9 +567,9 @@ RSpec.describe "Admin::NewsPosts", type: :request do
 
       it "cannot delete" do
         location_post # Create it
-        expect {
+        expect do
           delete admin_news_post_path(location_post)
-        }.not_to change(NewsPost, :count)
+        end.not_to change(NewsPost, :count)
         expect(response).to redirect_to(admin_news_posts_path)
       end
     end

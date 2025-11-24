@@ -22,7 +22,7 @@ RSpec.describe "News Posts Management", type: :system do
       visit admin_news_posts_path
 
       expect(page).to have_content("News Post Title")
-      expect(page).to have_selector("tbody tr", count: 4)
+      expect(page).to have_css("tbody tr", count: 4)
     end
 
     it "shows published status" do
@@ -98,7 +98,7 @@ RSpec.describe "News Posts Management", type: :system do
         find("button[title='Delete']").click
       end
 
-      expect(page).not_to have_content("Post to Delete")
+      expect(page).to have_no_content("Post to Delete")
       expect(NewsPost.exists?(news_post.id)).to be false
     end
   end

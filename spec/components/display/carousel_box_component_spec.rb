@@ -10,33 +10,33 @@ RSpec.describe Display::CarouselBoxComponent, type: :component do
     context "with posts" do
       it "renders the component with title" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: posts,
-          empty_message: "No posts",
-          box_classes: "flex-[65]"
-        ))
+                        title: "Test Announcements",
+                        posts: posts,
+                        empty_message: "No posts",
+                        box_classes: "flex-[65]"
+                      ))
 
         expect(page).to have_text("Test Announcements")
       end
 
       it "renders all post slides" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: posts,
-          empty_message: "No posts"
-        ))
+                        title: "Test Announcements",
+                        posts: posts,
+                        empty_message: "No posts"
+                      ))
 
-        posts.each do |post|
+        posts.each do |_post|
           expect(page).to have_css("[data-slide]", count: posts.length)
         end
       end
 
       it "renders navigation dots when there are multiple posts" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: posts,
-          empty_message: "No posts"
-        ))
+                        title: "Test Announcements",
+                        posts: posts,
+                        empty_message: "No posts"
+                      ))
 
         expect(page).to have_css("[data-dots]")
         expect(page).to have_css("[data-dot]", count: posts.length)
@@ -44,21 +44,21 @@ RSpec.describe Display::CarouselBoxComponent, type: :component do
 
       it "applies custom box classes" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: posts,
-          empty_message: "No posts",
-          box_classes: "custom-class"
-        ))
+                        title: "Test Announcements",
+                        posts: posts,
+                        empty_message: "No posts",
+                        box_classes: "custom-class"
+                      ))
 
         expect(page).to have_css(".custom-class")
       end
 
       it "sets up carousel target for Stimulus" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: posts,
-          empty_message: "No posts"
-        ))
+                        title: "Test Announcements",
+                        posts: posts,
+                        empty_message: "No posts"
+                      ))
 
         expect(page).to have_css("[data-notice-board-target='carousel']")
       end
@@ -69,35 +69,35 @@ RSpec.describe Display::CarouselBoxComponent, type: :component do
 
       it "does not render navigation dots for single post" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: single_post,
-          empty_message: "No posts"
-        ))
+                        title: "Test Announcements",
+                        posts: single_post,
+                        empty_message: "No posts"
+                      ))
 
-        expect(page).not_to have_css("[data-dots]")
+        expect(page).to have_no_css("[data-dots]")
       end
     end
 
     context "with no posts" do
       it "renders empty message" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: [],
-          empty_message: "No announcements available"
-        ))
+                        title: "Test Announcements",
+                        posts: [],
+                        empty_message: "No announcements available"
+                      ))
 
         expect(page).to have_text("No announcements available")
       end
 
       it "does not render slides or dots" do
         render_inline(described_class.new(
-          title: "Test Announcements",
-          posts: [],
-          empty_message: "No posts"
-        ))
+                        title: "Test Announcements",
+                        posts: [],
+                        empty_message: "No posts"
+                      ))
 
-        expect(page).not_to have_css("[data-slide]")
-        expect(page).not_to have_css("[data-dots]")
+        expect(page).to have_no_css("[data-slide]")
+        expect(page).to have_no_css("[data-dots]")
       end
     end
   end

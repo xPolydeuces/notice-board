@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe NewsPostPolicy, type: :policy do
@@ -14,7 +16,7 @@ RSpec.describe NewsPostPolicy, type: :policy do
       let(:user) { create(:user, :admin) }
 
       it "returns all posts" do
-        policy = NewsPostPolicy.new(user: user)
+        policy = described_class.new(user: user)
         scope = policy.apply_scope(NewsPost.all, type: :active_record_relation)
         expect(scope.to_a).to include(general_post, location1_post, location2_post)
       end
@@ -24,7 +26,7 @@ RSpec.describe NewsPostPolicy, type: :policy do
       let(:user) { create(:user, :location, location: location1) }
 
       it "returns only posts from their location" do
-        policy = NewsPostPolicy.new(user: user)
+        policy = described_class.new(user: user)
         scope = policy.apply_scope(NewsPost.all, type: :active_record_relation)
         expect(scope).to include(location1_post)
         expect(scope).not_to include(location2_post, general_post)
@@ -35,7 +37,7 @@ RSpec.describe NewsPostPolicy, type: :policy do
       let(:user) { create(:user, :general) }
 
       it "returns all posts" do
-        policy = NewsPostPolicy.new(user: user)
+        policy = described_class.new(user: user)
         scope = policy.apply_scope(NewsPost.all, type: :active_record_relation)
         expect(scope.to_a).to include(general_post, location1_post, location2_post)
       end

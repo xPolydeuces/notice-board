@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "sidekiq/cron/job"
 
 Sidekiq.configure_server do |config|
@@ -10,7 +12,7 @@ Sidekiq.configure_server do |config|
   end
 
   # Configure recurring jobs
-  schedule_file = Rails.root.join("config", "sidekiq_schedule.yml")
+  schedule_file = Rails.root.join("config/sidekiq_schedule.yml")
 
   if File.exist?(schedule_file)
     Sidekiq::Cron::Job.load_from_hash! YAML.load_file(schedule_file)

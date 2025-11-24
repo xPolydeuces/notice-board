@@ -3,7 +3,7 @@
 module Users
   # Custom Devise Sessions Controller
   class SessionsController < Devise::SessionsController
-    layout 'devise'
+    layout "devise"
 
     # GET /users/sign_in
     # def new
@@ -23,12 +23,12 @@ module Users
     protected
 
     # Redirect to admin panel after sign in
-    def after_sign_in_path_for(resource)
+    def after_sign_in_path_for(_resource)
       admin_root_path
     end
 
     # Redirect to sign in page after sign out
-    def after_sign_out_path_for(resource_or_scope)
+    def after_sign_out_path_for(_resource_or_scope)
       new_user_session_path
     end
 

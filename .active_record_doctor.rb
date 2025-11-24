@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActiveRecordDoctor.configure do
   global :ignore_tables, [
     # Ignore internal Rails or gems related tables.

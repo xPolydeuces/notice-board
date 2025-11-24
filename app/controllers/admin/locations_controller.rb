@@ -3,7 +3,7 @@
 module Admin
   class LocationsController < BaseController
     before_action :require_admin!
-    before_action :set_location, only: [:edit, :update, :destroy]
+    before_action :set_location, only: %i[edit update destroy]
 
     def index
       @locations = Location.ordered.all
@@ -13,22 +13,21 @@ module Admin
       @location = Location.new
     end
 
+    def edit; end
+
     def create
       @location = Location.new(location_params)
 
       if @location.save
-        redirect_to admin_locations_path, notice: t('admin.locations.created')
+        redirect_to admin_locations_path, notice: t("admin.locations.created")
       else
         render :new, status: :unprocessable_content
       end
     end
 
-    def edit
-    end
-
     def update
       if @location.update(location_params)
-        redirect_to admin_locations_path, notice: t('admin.locations.updated')
+        redirect_to admin_locations_path, notice: t("admin.locations.updated")
       else
         render :edit, status: :unprocessable_content
       end
@@ -37,9 +36,9 @@ module Admin
     def destroy
       if @location.destroyable?
         @location.destroy
-        redirect_to admin_locations_path, notice: t('admin.locations.deleted')
+        redirect_to admin_locations_path, notice: t("admin.locations.deleted")
       else
-        redirect_to admin_locations_path, alert: t('admin.locations.cannot_delete')
+        redirect_to admin_locations_path, alert: t("admin.locations.cannot_delete")
       end
     end
 
@@ -50,7 +49,7 @@ module Admin
     end
 
     def location_params
-      params.require(:location).permit(:code, :name, :active)
+      params.expect(location: %i[code name active])
     end
   end
 end

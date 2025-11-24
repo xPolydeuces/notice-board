@@ -18,23 +18,23 @@ class DashboardController < ApplicationController
                              .to_a
 
     # Fetch location-specific announcements
-    if @location
-      @location_posts = NewsPost.published
+    @location_posts = if @location
+                        NewsPost.published
                                 .active
                                 .for_location(@location.id)
                                 .with_associations
                                 .by_published_date
                                 .limit(10)
                                 .to_a
-    else
-      @location_posts = []
-    end
+                      else
+                        []
+                      end
 
     # Fetch recent RSS feed items from active feeds
     active_feed_ids = RssFeed.active.pluck(:id)
     @rss_feed_items = RssFeedItem.where(rss_feed_id: active_feed_ids)
-                                  .includes(:rss_feed)
-                                  .recent(50)
-                                  .to_a
+                                 .includes(:rss_feed)
+                                 .recent(50)
+                                 .to_a
   end
 end

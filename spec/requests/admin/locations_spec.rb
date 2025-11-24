@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe "Admin::Locations", type: :request do
@@ -34,9 +36,9 @@ RSpec.describe "Admin::Locations", type: :request do
     end
 
     it "lists all locations ordered by code" do
-      location_b = create(:location, code: "B-001", name: "Second")
-      location_a = create(:location, code: "A-001", name: "First")
-      location_c = create(:location, code: "C-001", name: "Third")
+      create(:location, code: "B-001", name: "Second")
+      create(:location, code: "A-001", name: "First")
+      create(:location, code: "C-001", name: "Third")
 
       get admin_locations_path
 
@@ -73,9 +75,9 @@ RSpec.describe "Admin::Locations", type: :request do
       end
 
       it "creates a new location" do
-        expect {
+        expect do
           post admin_locations_path, params: valid_params
-        }.to change(Location, :count).by(1)
+        end.to change(Location, :count).by(1)
       end
 
       it "redirects to locations index" do
@@ -86,7 +88,7 @@ RSpec.describe "Admin::Locations", type: :request do
       it "displays success notice" do
         post admin_locations_path, params: valid_params
         follow_redirect!
-        expect(response.body).to include(I18n.t('admin.locations.created'))
+        expect(response.body).to include(I18n.t("admin.locations.created"))
       end
 
       it "creates location with correct attributes" do
@@ -110,9 +112,9 @@ RSpec.describe "Admin::Locations", type: :request do
       end
 
       it "does not create a new location" do
-        expect {
+        expect do
           post admin_locations_path, params: invalid_params
-        }.not_to change(Location, :count)
+        end.not_to change(Location, :count)
       end
 
       it "renders the new form again" do
@@ -134,9 +136,9 @@ RSpec.describe "Admin::Locations", type: :request do
       end
 
       it "does not create a new location" do
-        expect {
+        expect do
           post admin_locations_path, params: duplicate_params
-        }.not_to change(Location, :count)
+        end.not_to change(Location, :count)
       end
 
       it "renders the new form with errors" do
@@ -195,7 +197,7 @@ RSpec.describe "Admin::Locations", type: :request do
       it "displays success notice" do
         patch admin_location_path(location), params: valid_params
         follow_redirect!
-        expect(response.body).to include(I18n.t('admin.locations.updated'))
+        expect(response.body).to include(I18n.t("admin.locations.updated"))
       end
     end
 
@@ -255,9 +257,9 @@ RSpec.describe "Admin::Locations", type: :request do
     context "when location has no associations" do
       it "deletes the location" do
         location # Create the location
-        expect {
+        expect do
           delete admin_location_path(location)
-        }.to change(Location, :count).by(-1)
+        end.to change(Location, :count).by(-1)
       end
 
       it "redirects to locations index" do
@@ -268,7 +270,7 @@ RSpec.describe "Admin::Locations", type: :request do
       it "displays success notice" do
         delete admin_location_path(location)
         follow_redirect!
-        expect(response.body).to include(I18n.t('admin.locations.deleted'))
+        expect(response.body).to include(I18n.t("admin.locations.deleted"))
       end
     end
 
@@ -276,16 +278,16 @@ RSpec.describe "Admin::Locations", type: :request do
       let!(:user) { create(:user, location: location) }
 
       it "does not delete the location" do
-        expect {
+        expect do
           delete admin_location_path(location)
-        }.not_to change(Location, :count)
+        end.not_to change(Location, :count)
       end
 
       it "redirects to locations index with alert" do
         delete admin_location_path(location)
         expect(response).to redirect_to(admin_locations_path)
         follow_redirect!
-        expect(response.body).to include(I18n.t('admin.locations.cannot_delete'))
+        expect(response.body).to include(I18n.t("admin.locations.cannot_delete"))
       end
     end
 
@@ -293,16 +295,16 @@ RSpec.describe "Admin::Locations", type: :request do
       let!(:news_post) { create(:news_post, location: location) }
 
       it "does not delete the location" do
-        expect {
+        expect do
           delete admin_location_path(location)
-        }.not_to change(Location, :count)
+        end.not_to change(Location, :count)
       end
 
       it "redirects to locations index with alert" do
         delete admin_location_path(location)
         expect(response).to redirect_to(admin_locations_path)
         follow_redirect!
-        expect(response.body).to include(I18n.t('admin.locations.cannot_delete'))
+        expect(response.body).to include(I18n.t("admin.locations.cannot_delete"))
       end
     end
 
@@ -311,16 +313,16 @@ RSpec.describe "Admin::Locations", type: :request do
       let!(:news_post) { create(:news_post, location: location) }
 
       it "does not delete the location" do
-        expect {
+        expect do
           delete admin_location_path(location)
-        }.not_to change(Location, :count)
+        end.not_to change(Location, :count)
       end
 
       it "redirects to locations index with alert" do
         delete admin_location_path(location)
         expect(response).to redirect_to(admin_locations_path)
         follow_redirect!
-        expect(response.body).to include(I18n.t('admin.locations.cannot_delete'))
+        expect(response.body).to include(I18n.t("admin.locations.cannot_delete"))
       end
     end
   end

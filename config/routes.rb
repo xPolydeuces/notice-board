@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "sidekiq/web"
 
 Rails.application.routes.draw do
@@ -42,6 +44,6 @@ Rails.application.routes.draw do
         get :preview
       end
     end
-    resource :password, only: [:edit, :update]
+    resource :password, only: %i[edit update]
   end
 end

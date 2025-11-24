@@ -49,9 +49,7 @@ namespace :rss do
       original_url = feed.url
       feed.save # This will trigger the before_validation callback
 
-      if original_url != feed.url
-        puts "✓ Cleaned: #{feed.name} (removed whitespace)"
-      end
+      puts "✓ Cleaned: #{feed.name} (removed whitespace)" if original_url != feed.url
     end
 
     puts "Done!"

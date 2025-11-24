@@ -6,7 +6,7 @@ module Display
     option :title
     option :posts
     option :empty_message
-    option :box_classes, default: -> { '' }
+    option :box_classes, default: -> { "" }
 
     def render?
       title.present?
@@ -17,7 +17,7 @@ module Display
     end
 
     def show_dots?
-      posts.count > 1
+      posts.many?
     end
   end
 end

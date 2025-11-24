@@ -4,7 +4,7 @@ class User < ApplicationRecord
   # Devise modules - using username instead of email for authentication
   devise :database_authenticatable, :rememberable, :trackable, :timeoutable,
          authentication_keys: [:username]
-  
+
   # Associations
   belongs_to :location, optional: true, inverse_of: :users, counter_cache: true
   has_many :news_posts, dependent: :nullify, inverse_of: :user

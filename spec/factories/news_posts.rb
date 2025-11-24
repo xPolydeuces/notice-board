@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :news_post do
-    association :user
+    user
     location { create(:location) } # Default: create with a location
     sequence(:title) { |n| "News Post Title #{n}" }
     content { "This is the content of the news post." }
@@ -46,7 +48,7 @@ FactoryBot.define do
       title { "Image Post" }
       after(:build) do |post|
         post.image.attach(
-          io: File.open(Rails.root.join("spec", "fixtures", "files", "test_image.png")),
+          io: Rails.root.join("spec/fixtures/files/test_image.png").open,
           filename: "test_image.png",
           content_type: "image/png"
         )

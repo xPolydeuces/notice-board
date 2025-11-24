@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
@@ -78,6 +80,9 @@ gem "lucide-rails", "~> 0.7"
 # Rack middleware for rate limiting
 gem "rack-attack", "~> 6.7"
 
+# Pagination
+gem "kaminari", "~> 1.2"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
@@ -126,7 +131,7 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
   # Manage Procfile-based applications
-  gem "foreman" 
+  gem "foreman"
 end
 
 group :test do

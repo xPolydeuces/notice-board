@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Check code coverage for tests
 require "simplecov"
 SimpleCov.start "rails"
@@ -48,7 +50,7 @@ RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
 
   # Ensure locale is set to English for all tests
-  config.before(:each) do
+  config.before do
     I18n.locale = :en
   end
 end

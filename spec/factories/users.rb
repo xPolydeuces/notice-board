@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :user do
     sequence(:username) { |n| "user#{n}" }
@@ -13,7 +15,7 @@ FactoryBot.define do
 
     trait :location do
       role { :location }
-      association :location
+      location
     end
 
     trait :admin do
@@ -27,7 +29,7 @@ FactoryBot.define do
     end
 
     trait :with_location do
-      association :location
+      location
     end
   end
 end

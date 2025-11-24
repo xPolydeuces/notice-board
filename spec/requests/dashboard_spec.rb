@@ -70,7 +70,7 @@ RSpec.describe "Dashboard", type: :request do
 
     context "with invalid location parameter" do
       it "returns success and shows default location message" do
-        get root_path, params: { location_id: 99999 }
+        get root_path, params: { location_id: 99_999 }
 
         expect(response).to have_http_status(:success)
         expect(response.body).to include("Wybierz oddział")
@@ -114,7 +114,7 @@ RSpec.describe "Dashboard", type: :request do
         get root_path
 
         # Count carousel slides in the response
-        expect(response.body.scan(/data-slide/).count).to eq(10)
+        expect(response.body.scan("data-slide").count).to eq(10)
       end
     end
 

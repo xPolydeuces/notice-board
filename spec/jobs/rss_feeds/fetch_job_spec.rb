@@ -13,9 +13,7 @@ RSpec.describe RssFeeds::FetchJob, type: :job do
 
     context "when fetch is successful" do
       before do
-        allow(service).to receive(:call).and_return(service)
-        allow(service).to receive(:success?).and_return(true)
-        allow(service).to receive(:items_count).and_return(5)
+        allow(service).to receive_messages(call: service, success?: true, items_count: 5)
       end
 
       it "calls the fetch service" do
@@ -35,9 +33,7 @@ RSpec.describe RssFeeds::FetchJob, type: :job do
 
     context "when fetch fails" do
       before do
-        allow(service).to receive(:call).and_return(service)
-        allow(service).to receive(:success?).and_return(false)
-        allow(service).to receive(:errors).and_return([:http_error, "404 Not Found"])
+        allow(service).to receive_messages(call: service, success?: false, errors: [:http_error, "404 Not Found"])
       end
 
       it "logs error message" do

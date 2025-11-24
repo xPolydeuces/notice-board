@@ -69,9 +69,9 @@ RSpec.describe "Admin::RssFeeds", type: :request do
         end
 
         it "creates a new RSS feed" do
-          expect {
+          expect do
             post admin_rss_feeds_path, params: valid_params
-          }.to change(RssFeed, :count).by(1)
+          end.to change(RssFeed, :count).by(1)
         end
 
         it "redirects to RSS feeds index" do
@@ -91,9 +91,9 @@ RSpec.describe "Admin::RssFeeds", type: :request do
         end
 
         it "does not create an RSS feed" do
-          expect {
+          expect do
             post admin_rss_feeds_path, params: invalid_params
-          }.not_to change(RssFeed, :count)
+          end.not_to change(RssFeed, :count)
         end
 
         it "renders new template" do
@@ -168,9 +168,9 @@ RSpec.describe "Admin::RssFeeds", type: :request do
       before { sign_in admin }
 
       it "destroys the RSS feed" do
-        expect {
+        expect do
           delete admin_rss_feed_path(rss_feed)
-        }.to change(RssFeed, :count).by(-1)
+        end.to change(RssFeed, :count).by(-1)
       end
 
       it "redirects to RSS feeds index" do
@@ -183,9 +183,9 @@ RSpec.describe "Admin::RssFeeds", type: :request do
       before { sign_in general_user }
 
       it "does not destroy the RSS feed" do
-        expect {
+        expect do
           delete admin_rss_feed_path(rss_feed)
-        }.not_to change(RssFeed, :count)
+        end.not_to change(RssFeed, :count)
       end
     end
   end

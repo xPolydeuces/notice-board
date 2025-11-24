@@ -63,7 +63,7 @@ RSpec.describe Display::MarqueeComponent, type: :component do
       it "does not render logo section" do
         render_inline(described_class.new(rss_feed_items: items))
 
-        expect(page).not_to have_css("img[alt='Logo']")
+        expect(page).to have_no_css("img[alt='Logo']")
       end
     end
 
@@ -77,7 +77,7 @@ RSpec.describe Display::MarqueeComponent, type: :component do
       it "does not show RSS prefix" do
         render_inline(described_class.new(rss_feed_items: []))
 
-        expect(page).not_to have_text("RSS:")
+        expect(page).to have_no_text("RSS:")
       end
     end
   end

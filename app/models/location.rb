@@ -38,7 +38,7 @@ class Location < ApplicationRecord
   #   # Good (single query)
   #   Location.with_active_posts
   def has_active_posts?
-    news_posts.where(published: true, archived: false).exists?
+    news_posts.exists?(published: true, archived: false)
   end
 
   # Check if location can be safely destroyed

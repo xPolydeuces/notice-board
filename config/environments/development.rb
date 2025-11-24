@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # Allow web console from Docker network
-  config.web_console.permissions = '172.0.0.0/8'
+  config.web_console.permissions = "172.0.0.0/8"
 
   # Configure 'rails notes' to inspect Cucumber files
   config.annotations.register_directories("features")

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :rss_feed_item do
-    association :rss_feed
+    rss_feed
     sequence(:title) { |n| "RSS Item #{n}" }
     sequence(:description) { |n| "Description for RSS item #{n}" }
     sequence(:link) { |n| "https://example.com/item-#{n}" }

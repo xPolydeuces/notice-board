@@ -7,7 +7,7 @@ RSpec.describe FlashComponent, type: :component do
     context "with no flash messages" do
       it "does not render" do
         render_inline(described_class.new(flash: {}))
-        expect(page).not_to have_css(".flash-message")
+        expect(page).to have_no_css(".flash-message")
       end
     end
 
@@ -54,10 +54,10 @@ RSpec.describe FlashComponent, type: :component do
     context "with multiple flash messages" do
       it "renders all messages" do
         render_inline(described_class.new(flash: {
-          notice: "Success!",
-          alert: "Error!",
-          warning: "Warning!"
-        }))
+                                            notice: "Success!",
+                                            alert: "Error!",
+                                            warning: "Warning!"
+                                          }))
 
         expect(page).to have_text("Success!")
         expect(page).to have_text("Error!")
@@ -75,7 +75,7 @@ RSpec.describe FlashComponent, type: :component do
       it "does not render dismiss button when dismissible is false" do
         render_inline(described_class.new(flash: { notice: "Success!" }, dismissible: false))
 
-        expect(page).not_to have_css("button[data-action*='click']")
+        expect(page).to have_no_css("button[data-action*='click']")
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe FlashComponent, type: :component do
         render_inline(described_class.new(flash: { unknown: "Unknown type" }))
 
         # Should not render unknown types that aren't in FLASH_TYPES
-        expect(page).not_to have_text("Unknown type")
+        expect(page).to have_no_text("Unknown type")
       end
     end
   end
@@ -92,10 +92,10 @@ RSpec.describe FlashComponent, type: :component do
   describe "#flash_messages" do
     it "filters only valid flash types" do
       component = described_class.new(flash: {
-        notice: "Valid",
-        unknown: "Invalid",
-        alert: "Also valid"
-      })
+                                        notice: "Valid",
+                                        unknown: "Invalid",
+                                        alert: "Also valid"
+                                      })
 
       messages = component.flash_messages
       expect(messages.keys).to contain_exactly("notice", "alert")

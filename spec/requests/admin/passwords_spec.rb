@@ -17,9 +17,9 @@ RSpec.describe "Admin::Passwords", type: :request do
 
       it "displays password change form" do
         get edit_admin_password_path
-        expect(response.body).to include('current_password')
-        expect(response.body).to include('password')
-        expect(response.body).to include('password_confirmation')
+        expect(response.body).to include("current_password")
+        expect(response.body).to include("password")
+        expect(response.body).to include("password_confirmation")
       end
     end
 
@@ -30,7 +30,8 @@ RSpec.describe "Admin::Passwords", type: :request do
 
       it "displays force change notice" do
         get edit_admin_password_path
-        expect(response.body).to include(I18n.t('admin.passwords.force_change_notice', default: 'Password change required'))
+        expect(response.body).to include(I18n.t("admin.passwords.force_change_notice",
+                                                default: "Password change required"))
       end
     end
 
@@ -71,7 +72,7 @@ RSpec.describe "Admin::Passwords", type: :request do
         it "displays success message" do
           patch admin_password_path, params: valid_params
           follow_redirect!
-          expect(response.body).to include(I18n.t('admin.passwords.updated', default: 'Password updated successfully'))
+          expect(response.body).to include(I18n.t("admin.passwords.updated", default: "Password updated successfully"))
         end
 
         it "keeps user signed in" do
@@ -82,9 +83,6 @@ RSpec.describe "Admin::Passwords", type: :request do
 
       context "with force_password_change flag set" do
         let(:forced_user) { create(:user, :general, force_password_change: true) }
-
-        before { sign_in forced_user }
-
         let(:valid_params) do
           {
             user: {
@@ -94,6 +92,8 @@ RSpec.describe "Admin::Passwords", type: :request do
             }
           }
         end
+
+        before { sign_in forced_user }
 
         it "clears the force_password_change flag" do
           patch admin_password_path, params: valid_params
