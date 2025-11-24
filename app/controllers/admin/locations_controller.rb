@@ -6,7 +6,7 @@ module Admin
     before_action :set_location, only: %i[edit update destroy]
 
     def index
-      @locations = Location.ordered.all
+      @locations = Location.ordered.page(params[:page]).per(25)
     end
 
     def new

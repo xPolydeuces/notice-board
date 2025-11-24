@@ -77,3 +77,6 @@
                   - unless user == current_user || (user.admin_or_superadmin? && !current_user.superadmin?)
                     = button_to admin_user_path(user), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.users.delete'), data: { turbo_confirm: t('admin.users.delete_confirm', username: user.username) } do
                       = lucide_icon('trash-2', class: 'w-4 h-4')
+
+.px-3.sm:px-6.py-4.bg-white.border-t.border-gray-200
+  = paginate @users, theme: 'twitter-bootstrap-4'

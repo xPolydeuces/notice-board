@@ -120,3 +120,6 @@
 
                   = button_to admin_news_post_path(post), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.news_posts.delete'), data: { turbo_confirm: t('admin.news_posts.delete_confirm') } do
                     = lucide_icon('trash-2', class: 'w-4 h-4')
+
+.px-3.sm:px-6.py-4.bg-white.border-t.border-gray-200
+  = paginate @news_posts, theme: 'twitter-bootstrap-4'

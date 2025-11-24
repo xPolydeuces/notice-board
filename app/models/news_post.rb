@@ -5,6 +5,10 @@ class NewsPost < ApplicationRecord
   MAX_IMAGE_SIZE = 10.megabytes
   MAX_PDF_SIZE = 20.megabytes
 
+  # Display duration limits (in seconds)
+  MIN_DISPLAY_DURATION = 1
+  MAX_DISPLAY_DURATION = 300
+
   # Default display durations (in seconds) per post type
   DEFAULT_DURATIONS = {
     "plain_text" => 15,
@@ -29,8 +33,8 @@ class NewsPost < ApplicationRecord
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true, if: :plain_text?
   validates :post_type, presence: true
-  validates :display_duration, presence: true,
-                               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 300 }
+  validates :display_duration, presence: true, numericality:
+  { only_integer: true, greater_than_or_equal_to: MIN_DISPLAY_DURATION, less_than_or_equal_to: MAX_DISPLAY_DURATION }
   validate :validate_post_type_content
   validate :validate_image_format_and_size
   validate :validate_pdf_format_and_size

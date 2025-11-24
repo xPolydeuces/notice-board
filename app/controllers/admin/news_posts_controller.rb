@@ -17,6 +17,7 @@ module Admin
       @news_posts = @news_posts.where(published: params[:published]) if params[:published].present?
       @news_posts = @news_posts.where(archived: params[:archived]) if params[:archived].present?
 
+      @news_posts = @news_posts.page(params[:page]).per(25)
       @locations = Location.active.ordered if current_user.admin_or_superadmin?
     end
 

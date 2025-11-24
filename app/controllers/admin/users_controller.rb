@@ -7,7 +7,7 @@ module Admin
     before_action :prevent_superadmin_modification, only: %i[edit update destroy]
 
     def index
-      @users = User.includes(:location).alphabetical.all
+      @users = User.includes(:location).alphabetical.page(params[:page]).per(25)
     end
 
     def new

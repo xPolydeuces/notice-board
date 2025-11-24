@@ -71,3 +71,6 @@
                     = lucide_icon('pencil', class: 'w-4 h-4')
                   = button_to admin_rss_feed_path(feed), method: :delete, class: "text-red-600 hover:text-red-900", title: t('admin.rss_feeds.delete'), data: { turbo_confirm: t('admin.rss_feeds.delete_confirm', name: feed.name) } do
                     = lucide_icon('trash-2', class: 'w-4 h-4')
+
+.px-3.sm:px-6.py-4.bg-white.border-t.border-gray-200
+  = paginate @rss_feeds, theme: 'twitter-bootstrap-4'
