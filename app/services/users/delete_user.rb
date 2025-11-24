@@ -33,7 +33,9 @@ module Users
     end
 
     def last_superadmin?
-      user.superadmin? && User.where(role: :superadmin).count == 1
+      return false unless user.superadmin?
+
+      !User.where(role: 'superadmin').where.not(id: user.id).exists?
     end
 
     def success
