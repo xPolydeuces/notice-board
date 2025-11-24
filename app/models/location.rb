@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Represents a physical location/branch in the organization.
+# Locations can have associated users and location-specific news posts.
 class Location < ApplicationRecord
   # Associations
   has_many :users, dependent: :nullify, inverse_of: :location
@@ -14,7 +16,7 @@ class Location < ApplicationRecord
   scope :ordered, -> { order(:code) }
 
   # Efficiently filter locations that have at least one active post
-  # Use this instead of filtering with has_active_posts? in Ruby to avoid N+1 queries
+  # Use this instead of filtering with active_posts? in Ruby to avoid N+1 queries
   scope :with_active_posts, lambda {
     joins(:news_posts)
       .where(news_posts: { published: true, archived: false })
@@ -28,16 +30,16 @@ class Location < ApplicationRecord
 
   # Check if location has any published, non-archived news posts
   #
-  # For single location: location.has_active_posts? (efficient - uses EXISTS query)
+  # For single location: location.active_posts? (efficient - uses EXISTS query)
   # For collections: Location.with_active_posts (efficient - single JOIN query)
   #
   # Example:
   #   # Bad (N+1 queries)
-  #   locations.select { |loc| loc.has_active_posts? }
+  #   locations.select { |loc| loc.active_posts? }
   #
   #   # Good (single query)
   #   Location.with_active_posts
-  def has_active_posts?
+  def active_posts?
     news_posts.exists?(published: true, archived: false)
   end
 

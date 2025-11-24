@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Users
+  # Service to safely delete users with authorization checks
   class DeleteUser
     attr_reader :user, :current_user, :errors
 
@@ -33,9 +34,7 @@ module Users
     end
 
     def last_superadmin?
-      return false unless user.superadmin?
-
-      !User.where(role: "superadmin").where.not(id: user.id).exists?
+      user.superadmin? && User.where(role: :superadmin).count == 1
     end
 
     def success

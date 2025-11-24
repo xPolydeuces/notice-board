@@ -3,7 +3,7 @@
     = title
 
   .flex-1.relative.overflow-hidden{ data: { notice_board_target: 'carousel' } }
-    - if has_posts?
+    - if any_posts?
       - posts.each_with_index do |post, index|
         = render Display::PostSlideComponent.new(post: post, index: index)
 

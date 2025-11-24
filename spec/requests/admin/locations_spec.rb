@@ -7,22 +7,20 @@ RSpec.describe "Admin::Locations", type: :request do
   let(:non_admin_user) { create(:user, role: :general) }
 
   describe "authentication and authorization" do
-    describe "GET /admin/locations" do
-      context "when user is not authenticated" do
-        it "redirects to login page" do
-          get admin_locations_path
-          expect(response).to redirect_to(new_user_session_path)
-        end
+    context "when unauthenticated user accesses locations" do
+      it "redirects to login page" do
+        get admin_locations_path
+        expect(response).to redirect_to(new_user_session_path)
       end
+    end
 
-      context "when user is not an admin" do
-        before { sign_in non_admin_user }
+    context "when non-admin user accesses locations" do
+      before { sign_in non_admin_user }
 
-        it "redirects with unauthorized message" do
-          get admin_locations_path
-          expect(response).to redirect_to(admin_root_path)
-          expect(flash[:alert]).to be_present
-        end
+      it "redirects with unauthorized message" do
+        get admin_locations_path
+        expect(response).to redirect_to(admin_root_path)
+        expect(flash[:alert]).to be_present
       end
     end
   end

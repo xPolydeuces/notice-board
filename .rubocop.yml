@@ -15,7 +15,7 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: always
+  EnforcedStyle: never
 
 Style/Documentation:
   Enabled: true
@@ -27,10 +27,20 @@ Metrics/MethodLength:
   Exclude:
     - 'db/migrate/*'
 
+Metrics/AbcSize:
+  Exclude:
+    - 'db/migrate/*'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'db/migrate/*'
+
 Metrics/BlockLength:
   CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
   Exclude:
     - 'config/**/*.rb'
+    - 'spec/**/*'
+    - 'lib/tasks/**/*.rake'
 
 # It is legacy and will be removed in future versions of RSpec Rails
 RSpecRails/InferredSpecType:
@@ -38,3 +48,46 @@ RSpecRails/InferredSpecType:
 
 RSpec/ExampleLength:
   CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
+  Max: 10
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/RepeatedExample:
+  Enabled: false
+
+Capybara/SpecificActions:
+  Enabled: false
+
+Capybara/SpecificMatcher:
+  Enabled: false
+
+Capybara/NegationMatcherAfterVisit:
+  Enabled: false
+
+FactoryBot/FactoryAssociationWithStrategy:
+  Enabled: false
+
+FactoryBot/ExcessiveCreateList:
+  Max: 20

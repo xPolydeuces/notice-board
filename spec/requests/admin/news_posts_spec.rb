@@ -11,12 +11,10 @@ RSpec.describe "Admin::NewsPosts", type: :request do
   let(:other_location_user) { create(:user, role: :location, location: other_location) }
 
   describe "authentication" do
-    describe "GET /admin/news_posts" do
-      context "when user is not authenticated" do
-        it "redirects to login page" do
-          get admin_news_posts_path
-          expect(response).to redirect_to(new_user_session_path)
-        end
+    context "when unauthenticated user accesses news posts" do
+      it "redirects to login page" do
+        get admin_news_posts_path
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
@@ -133,95 +131,97 @@ RSpec.describe "Admin::NewsPosts", type: :request do
   end
 
   describe "POST /admin/news_posts" do
-    context "as admin user" do
+    context "when admin creates news post with valid parameters" do
+      let(:valid_params) do
+        {
+          news_post: {
+            title: "Test News Post",
+            content: "This is test content",
+            post_type: "plain_text",
+            location_id: location.id
+          }
+        }
+      end
+
       before { sign_in admin_user }
 
-      context "with valid parameters" do
-        let(:valid_params) do
-          {
-            news_post: {
-              title: "Test News Post",
-              content: "This is test content",
-              post_type: "plain_text",
-              location_id: location.id
-            }
-          }
-        end
-
-        it "creates a new news post" do
-          expect do
-            post admin_news_posts_path, params: valid_params
-          end.to change(NewsPost, :count).by(1)
-        end
-
-        it "sets the current user as the author" do
+      it "creates a new news post" do
+        expect do
           post admin_news_posts_path, params: valid_params
-          news_post = NewsPost.last
-          expect(news_post.user).to eq(admin_user)
-        end
-
-        it "redirects to news posts index" do
-          post admin_news_posts_path, params: valid_params
-          expect(response).to redirect_to(admin_news_posts_path)
-        end
-
-        it "displays success notice" do
-          post admin_news_posts_path, params: valid_params
-          follow_redirect!
-          expect(response.body).to include(I18n.t("admin.news_posts.created"))
-        end
-
-        it "creates news post with correct attributes" do
-          post admin_news_posts_path, params: valid_params
-          news_post = NewsPost.last
-          expect(news_post.title).to eq("Test News Post")
-          expect(news_post.content).to eq("This is test content")
-          expect(news_post.post_type).to eq("plain_text")
-          expect(news_post.location_id).to eq(location.id)
-        end
+        end.to change(NewsPost, :count).by(1)
       end
 
-      context "with invalid parameters" do
-        let(:invalid_params) do
-          {
-            news_post: {
-              title: "",
-              content: "",
-              post_type: "plain_text"
-            }
+      it "sets the current user as the author" do
+        post admin_news_posts_path, params: valid_params
+        news_post = NewsPost.last
+        expect(news_post.user).to eq(admin_user)
+      end
+
+      it "redirects to news posts index" do
+        post admin_news_posts_path, params: valid_params
+        expect(response).to redirect_to(admin_news_posts_path)
+      end
+
+      it "displays success notice" do
+        post admin_news_posts_path, params: valid_params
+        follow_redirect!
+        expect(response.body).to include(I18n.t("admin.news_posts.created"))
+      end
+
+      it "creates news post with correct attributes" do
+        post admin_news_posts_path, params: valid_params
+        news_post = NewsPost.last
+        expect(news_post.title).to eq("Test News Post")
+        expect(news_post.content).to eq("This is test content")
+        expect(news_post.post_type).to eq("plain_text")
+        expect(news_post.location_id).to eq(location.id)
+      end
+    end
+
+    context "when admin creates news post with invalid parameters" do
+      let(:invalid_params) do
+        {
+          news_post: {
+            title: "",
+            content: "",
+            post_type: "plain_text"
           }
-        end
+        }
+      end
 
-        it "does not create a new news post" do
-          expect do
-            post admin_news_posts_path, params: invalid_params
-          end.not_to change(NewsPost, :count)
-        end
+      before { sign_in admin_user }
 
-        it "renders the new form again" do
+      it "does not create a new news post" do
+        expect do
           post admin_news_posts_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_content)
-        end
+        end.not_to change(NewsPost, :count)
       end
 
-      context "creating a general post" do
-        let(:general_params) do
-          {
-            news_post: {
-              title: "General Post",
-              content: "Content for everyone",
-              post_type: "plain_text",
-              location_id: nil
-            }
-          }
-        end
+      it "renders the new form again" do
+        post admin_news_posts_path, params: invalid_params
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
 
-        it "creates a general post without location" do
-          post admin_news_posts_path, params: general_params
-          news_post = NewsPost.last
-          expect(news_post.location_id).to be_nil
-          expect(news_post.general?).to be true
-        end
+    context "when admin creates a general post" do
+      let(:general_params) do
+        {
+          news_post: {
+            title: "General Post",
+            content: "Content for everyone",
+            post_type: "plain_text",
+            location_id: nil
+          }
+        }
+      end
+
+      before { sign_in admin_user }
+
+      it "creates a general post without location" do
+        post admin_news_posts_path, params: general_params
+        news_post = NewsPost.last
+        expect(news_post.location_id).to be_nil
+        expect(news_post.general?).to be true
       end
     end
 
@@ -332,61 +332,61 @@ RSpec.describe "Admin::NewsPosts", type: :request do
   end
 
   describe "PATCH /admin/news_posts/:id" do
-    context "as admin user" do
-      before { sign_in admin_user }
-
+    context "when admin updates news post with valid parameters" do
       let(:news_post) { create(:news_post, title: "Old Title", content: "Old content", user: admin_user) }
-
-      context "with valid parameters" do
-        let(:valid_params) do
-          {
-            news_post: {
-              title: "Updated Title",
-              content: "Updated content"
-            }
+      let(:valid_params) do
+        {
+          news_post: {
+            title: "Updated Title",
+            content: "Updated content"
           }
-        end
-
-        it "updates the news post" do
-          patch admin_news_post_path(news_post), params: valid_params
-          news_post.reload
-          expect(news_post.title).to eq("Updated Title")
-          expect(news_post.content).to eq("Updated content")
-        end
-
-        it "redirects to news posts index" do
-          patch admin_news_post_path(news_post), params: valid_params
-          expect(response).to redirect_to(admin_news_posts_path)
-        end
-
-        it "displays success notice" do
-          patch admin_news_post_path(news_post), params: valid_params
-          follow_redirect!
-          expect(response.body).to include(I18n.t("admin.news_posts.updated"))
-        end
+        }
       end
 
-      context "with invalid parameters" do
-        let(:invalid_params) do
-          {
-            news_post: {
-              title: "",
-              content: ""
-            }
+      before { sign_in admin_user }
+
+      it "updates the news post" do
+        patch admin_news_post_path(news_post), params: valid_params
+        news_post.reload
+        expect(news_post.title).to eq("Updated Title")
+        expect(news_post.content).to eq("Updated content")
+      end
+
+      it "redirects to news posts index" do
+        patch admin_news_post_path(news_post), params: valid_params
+        expect(response).to redirect_to(admin_news_posts_path)
+      end
+
+      it "displays success notice" do
+        patch admin_news_post_path(news_post), params: valid_params
+        follow_redirect!
+        expect(response.body).to include(I18n.t("admin.news_posts.updated"))
+      end
+    end
+
+    context "when admin updates news post with invalid parameters" do
+      let(:news_post) { create(:news_post, title: "Old Title", content: "Old content", user: admin_user) }
+      let(:invalid_params) do
+        {
+          news_post: {
+            title: "",
+            content: ""
           }
-        end
+        }
+      end
 
-        it "does not update the news post" do
-          patch admin_news_post_path(news_post), params: invalid_params
-          news_post.reload
-          expect(news_post.title).to eq("Old Title")
-          expect(news_post.content).to eq("Old content")
-        end
+      before { sign_in admin_user }
 
-        it "renders the edit form again" do
-          patch admin_news_post_path(news_post), params: invalid_params
-          expect(response).to have_http_status(:unprocessable_content)
-        end
+      it "does not update the news post" do
+        patch admin_news_post_path(news_post), params: invalid_params
+        news_post.reload
+        expect(news_post.title).to eq("Old Title")
+        expect(news_post.content).to eq("Old content")
+      end
+
+      it "renders the edit form again" do
+        patch admin_news_post_path(news_post), params: invalid_params
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

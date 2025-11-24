@@ -54,54 +54,53 @@ RSpec.describe NewsPostPolicy, type: :policy do
       end
     end
 
-    context "when user is location user" do
+    context "when location user manages post from their location" do
       let(:location) { create(:location) }
       let(:user) { create(:user, :location, location: location) }
+      let(:record) { create(:news_post, location: location) }
 
-      context "with post from their location" do
-        let(:record) { create(:news_post, location: location) }
-
-        it "allows managing" do
-          expect(policy).to be_allowed_to(:manage?)
-        end
-      end
-
-      context "with post from different location" do
-        let(:other_location) { create(:location, code: "OTHER") }
-        let(:record) { create(:news_post, location: other_location) }
-
-        it "denies managing" do
-          expect(policy).not_to be_allowed_to(:manage?)
-        end
-      end
-
-      context "with general post" do
-        let(:record) { create(:news_post, :general) }
-
-        it "denies managing" do
-          expect(policy).not_to be_allowed_to(:manage?)
-        end
+      it "allows managing" do
+        expect(policy).to be_allowed_to(:manage?)
       end
     end
 
-    context "when user is general user" do
-      let(:user) { create(:user, :general) }
+    context "when location user manages post from different location" do
+      let(:location) { create(:location) }
+      let(:other_location) { create(:location, code: "OTHER") }
+      let(:user) { create(:user, :location, location: location) }
+      let(:record) { create(:news_post, location: other_location) }
 
-      context "with general post" do
-        let(:record) { create(:news_post, :general) }
-
-        it "allows managing" do
-          expect(policy).to be_allowed_to(:manage?)
-        end
+      it "denies managing" do
+        expect(policy).not_to be_allowed_to(:manage?)
       end
+    end
 
-      context "with location post" do
-        let(:location) { create(:location) }
-        let(:record) { create(:news_post, location: location) }
+    context "when location user manages general post" do
+      let(:location) { create(:location) }
+      let(:user) { create(:user, :location, location: location) }
+      let(:record) { create(:news_post, :general) }
 
-        it "denies managing" do
-          expect(policy).not_to be_allowed_to(:manage?)
-        end
+      it "denies managing" do
+        expect(policy).not_to be_allowed_to(:manage?)
+      end
+    end
+
+    context "when general user manages general post" do
+      let(:user) { create(:user, :general) }
+      let(:record) { create(:news_post, :general) }
+
+      it "allows managing" do
+        expect(policy).to be_allowed_to(:manage?)
+      end
+    end
+
+    context "when general user manages location post" do
+      let(:location) { create(:location) }
+      let(:user) { create(:user, :general) }
+      let(:record) { create(:news_post, location: location) }
+
+      it "denies managing" do
+        expect(policy).not_to be_allowed_to(:manage?)
       end
     end
   end

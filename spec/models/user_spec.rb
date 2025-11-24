@@ -318,20 +318,14 @@ RSpec.describe User, type: :model do
     end
 
     describe "#force_password_change?" do
-      context "when force_password_change is true" do
-        let(:user) { create(:user, force_password_change: true) }
-
-        it "returns true" do
-          expect(user.force_password_change?).to be true
-        end
+      it "returns true when flag is set" do
+        user = create(:user, force_password_change: true)
+        expect(user.force_password_change?).to be true
       end
 
-      context "when force_password_change is false" do
-        let(:user) { create(:user, force_password_change: false) }
-
-        it "returns false" do
-          expect(user.force_password_change?).to be false
-        end
+      it "returns false when flag is not set" do
+        user = create(:user, force_password_change: false)
+        expect(user.force_password_change?).to be false
       end
     end
   end

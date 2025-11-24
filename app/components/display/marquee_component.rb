@@ -10,7 +10,7 @@ module Display
       true
     end
 
-    def has_logo?
+    def logo?
       logo_url.present?
     end
 

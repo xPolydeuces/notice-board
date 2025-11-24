@@ -89,20 +89,20 @@ RSpec.describe Display::MarqueeComponent, type: :component do
     end
   end
 
-  describe "#has_logo?" do
+  describe "#logo?" do
     it "returns true when logo_url is present" do
       component = described_class.new(rss_feed_items: [], logo_url: "https://example.com/logo.png")
-      expect(component.has_logo?).to be true
+      expect(component.logo?).to be true
     end
 
     it "returns false when logo_url is nil" do
       component = described_class.new(rss_feed_items: [], logo_url: nil)
-      expect(component.has_logo?).to be false
+      expect(component.logo?).to be false
     end
 
     it "returns false when logo_url is blank" do
       component = described_class.new(rss_feed_items: [], logo_url: "")
-      expect(component.has_logo?).to be false
+      expect(component.logo?).to be false
     end
   end
 

@@ -90,12 +90,12 @@ RSpec.describe Location, type: :model do
     end
   end
 
-  describe "#has_active_posts?" do
+  describe "#active_posts?" do
     let(:location) { create(:location) }
 
     context "when location has no news posts" do
       it "returns false" do
-        expect(location.has_active_posts?).to be false
+        expect(location.active_posts?).to be false
       end
     end
 
@@ -105,7 +105,7 @@ RSpec.describe Location, type: :model do
       end
 
       it "returns false" do
-        expect(location.has_active_posts?).to be false
+        expect(location.active_posts?).to be false
       end
     end
 
@@ -115,7 +115,7 @@ RSpec.describe Location, type: :model do
       end
 
       it "returns false" do
-        expect(location.has_active_posts?).to be false
+        expect(location.active_posts?).to be false
       end
     end
 
@@ -125,7 +125,7 @@ RSpec.describe Location, type: :model do
       end
 
       it "returns true" do
-        expect(location.has_active_posts?).to be true
+        expect(location.active_posts?).to be true
       end
     end
 
@@ -137,7 +137,7 @@ RSpec.describe Location, type: :model do
       end
 
       it "returns true when at least one post is published and not archived" do
-        expect(location.has_active_posts?).to be true
+        expect(location.active_posts?).to be true
       end
     end
   end

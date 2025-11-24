@@ -55,53 +55,53 @@ RSpec.describe "Admin::Users", type: :request do
   end
 
   describe "POST /admin/users" do
-    context "when user is admin" do
-      before { sign_in admin }
-
-      context "with valid parameters" do
-        let(:valid_params) do
-          {
-            user: {
-              username: "newuser",
-              password: "password123",
-              password_confirmation: "password123",
-              role: "general"
-            }
+    context "when admin creates user with valid parameters" do
+      let(:valid_params) do
+        {
+          user: {
+            username: "newuser",
+            password: "password123",
+            password_confirmation: "password123",
+            role: "general"
           }
-        end
-
-        it "creates a new user" do
-          expect do
-            post admin_users_path, params: valid_params
-          end.to change(User, :count).by(1)
-        end
-
-        it "redirects to users index" do
-          post admin_users_path, params: valid_params
-          expect(response).to redirect_to(admin_users_path)
-        end
+        }
       end
 
-      context "with invalid parameters" do
-        let(:invalid_params) do
-          {
-            user: {
-              username: "",
-              password: "123"
-            }
+      before { sign_in admin }
+
+      it "creates a new user" do
+        expect do
+          post admin_users_path, params: valid_params
+        end.to change(User, :count).by(1)
+      end
+
+      it "redirects to users index" do
+        post admin_users_path, params: valid_params
+        expect(response).to redirect_to(admin_users_path)
+      end
+    end
+
+    context "when admin creates user with invalid parameters" do
+      let(:invalid_params) do
+        {
+          user: {
+            username: "",
+            password: "123"
           }
-        end
+        }
+      end
 
-        it "does not create a user" do
-          expect do
-            post admin_users_path, params: invalid_params
-          end.not_to change(User, :count)
-        end
+      before { sign_in admin }
 
-        it "renders new template" do
+      it "does not create a user" do
+        expect do
           post admin_users_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_content).or have_http_status(:success)
-        end
+        end.not_to change(User, :count)
+      end
+
+      it "renders new template" do
+        post admin_users_path, params: invalid_params
+        expect(response).to have_http_status(:unprocessable_content).or have_http_status(:success)
       end
     end
   end
@@ -122,42 +122,42 @@ RSpec.describe "Admin::Users", type: :request do
   describe "PATCH /admin/users/:id" do
     let(:user) { create(:user, username: "oldname") }
 
-    context "when user is admin" do
-      before { sign_in admin }
-
-      context "with valid parameters" do
-        let(:valid_params) do
-          {
-            user: {
-              username: "newname"
-            }
+    context "when admin updates user with valid parameters" do
+      let(:valid_params) do
+        {
+          user: {
+            username: "newname"
           }
-        end
-
-        it "updates the user" do
-          patch admin_user_path(user), params: valid_params
-          expect(user.reload.username).to eq("newname")
-        end
-
-        it "redirects to users index" do
-          patch admin_user_path(user), params: valid_params
-          expect(response).to redirect_to(admin_users_path)
-        end
+        }
       end
 
-      context "with invalid parameters" do
-        let(:invalid_params) do
-          {
-            user: {
-              username: ""
-            }
-          }
-        end
+      before { sign_in admin }
 
-        it "does not update the user" do
-          patch admin_user_path(user), params: invalid_params
-          expect(user.reload.username).to eq("oldname")
-        end
+      it "updates the user" do
+        patch admin_user_path(user), params: valid_params
+        expect(user.reload.username).to eq("newname")
+      end
+
+      it "redirects to users index" do
+        patch admin_user_path(user), params: valid_params
+        expect(response).to redirect_to(admin_users_path)
+      end
+    end
+
+    context "when admin updates user with invalid parameters" do
+      let(:invalid_params) do
+        {
+          user: {
+            username: ""
+          }
+        }
+      end
+
+      before { sign_in admin }
+
+      it "does not update the user" do
+        patch admin_user_path(user), params: invalid_params
+        expect(user.reload.username).to eq("oldname")
       end
     end
   end
@@ -248,19 +248,21 @@ RSpec.describe "Admin::Users", type: :request do
         follow_redirect!
         expect(flash[:notice]).to be_present
       end
+    end
 
-      context "when trying to reset own password" do
-        it "does not reset password" do
-          old_password = admin.encrypted_password
-          post reset_password_admin_user_path(admin)
-          expect(admin.reload.encrypted_password).to eq(old_password)
-        end
+    context "when admin tries to reset own password" do
+      before { sign_in admin }
 
-        it "redirects with error message" do
-          post reset_password_admin_user_path(admin)
-          expect(response).to redirect_to(admin_users_path)
-          expect(flash[:alert]).to be_present
-        end
+      it "does not reset password" do
+        old_password = admin.encrypted_password
+        post reset_password_admin_user_path(admin)
+        expect(admin.reload.encrypted_password).to eq(old_password)
+      end
+
+      it "redirects with error message" do
+        post reset_password_admin_user_path(admin)
+        expect(response).to redirect_to(admin_users_path)
+        expect(flash[:alert]).to be_present
       end
     end
 

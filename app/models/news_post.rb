@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
+# Represents a news post/announcement that can be displayed on the dashboard
+# Supports multiple content types: plain text, rich text, images, and PDFs
 class NewsPost < ApplicationRecord
   # File size limits (in bytes)
   MAX_IMAGE_SIZE = 10.megabytes
   MAX_PDF_SIZE = 20.megabytes
-
-  # Display duration limits (in seconds)
-  MIN_DISPLAY_DURATION = 1
-  MAX_DISPLAY_DURATION = 300
 
   # Default display durations (in seconds) per post type
   DEFAULT_DURATIONS = {
@@ -33,8 +31,7 @@ class NewsPost < ApplicationRecord
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true, if: :plain_text?
   validates :post_type, presence: true
-  validates :display_duration, presence: true, numericality:
-  { only_integer: true, greater_than_or_equal_to: MIN_DISPLAY_DURATION, less_than_or_equal_to: MAX_DISPLAY_DURATION }
+  validates :display_duration, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 300 }
   validate :validate_post_type_content
   validate :validate_image_format_and_size
   validate :validate_pdf_format_and_size
@@ -52,44 +49,66 @@ class NewsPost < ApplicationRecord
   end
 
   def validate_post_type_content
-    case post_type
-    when "plain_text"
-      errors.add(:content, "can't be blank for text posts") if content.blank?
-    when "rich_text"
-      errors.add(:rich_content, "can't be blank for rich text posts") if rich_content.body.blank?
-    when "image_only"
-      errors.add(:image, "must be attached for image-only posts") unless image.attached?
-    when "pdf_only"
-      errors.add(:pdf, "must be attached for PDF posts") unless pdf.attached?
-    end
+    return validate_plain_text_content if plain_text?
+    return validate_rich_text_content if rich_text?
+    return validate_image_content if image_only?
+    return validate_pdf_content if pdf_only?
+  end
+
+  def validate_plain_text_content
+    errors.add(:content, "can't be blank for text posts") if content.blank?
+  end
+
+  def validate_rich_text_content
+    errors.add(:rich_content, "can't be blank for rich text posts") if rich_content.body.blank?
+  end
+
+  def validate_image_content
+    errors.add(:image, "must be attached for image-only posts") unless image.attached?
+  end
+
+  def validate_pdf_content
+    errors.add(:pdf, "must be attached for PDF posts") unless pdf.attached?
   end
 
   def validate_image_format_and_size
     return unless image.attached?
 
-    # Validate content type
-    unless image.content_type.in?(%w[image/png image/jpg image/jpeg image/gif image/webp])
-      errors.add(:image, "must be a PNG, JPG, GIF, or WebP image")
-    end
+    validate_image_content_type
+    validate_image_file_size
+  end
 
-    # Validate file size
-    return unless image.byte_size > MAX_IMAGE_SIZE
+  def validate_image_content_type
+    return if image.content_type.in?(%w[image/png image/jpg image/jpeg image/gif image/webp])
 
-    errors.add(:image,
-               "must be less than #{MAX_IMAGE_SIZE / 1.megabyte}MB (current size: #{(image.byte_size / 1.megabyte.to_f).round(2)}MB)")
+    errors.add(:image, "must be a PNG, JPG, GIF, or WebP image")
+  end
+
+  def validate_image_file_size
+    return if image.byte_size <= MAX_IMAGE_SIZE
+
+    size_mb = (image.byte_size / 1.megabyte.to_f).round(2)
+    errors.add(:image, "must be less than #{MAX_IMAGE_SIZE / 1.megabyte}MB (current size: #{size_mb}MB)")
   end
 
   def validate_pdf_format_and_size
     return unless pdf.attached?
 
-    # Validate content type
-    errors.add(:pdf, "must be a PDF file") unless pdf.content_type == "application/pdf"
+    validate_pdf_content_type
+    validate_pdf_file_size
+  end
 
-    # Validate file size
-    return unless pdf.byte_size > MAX_PDF_SIZE
+  def validate_pdf_content_type
+    return if pdf.content_type == "application/pdf"
 
-    errors.add(:pdf,
-               "must be less than #{MAX_PDF_SIZE / 1.megabyte}MB (current size: #{(pdf.byte_size / 1.megabyte.to_f).round(2)}MB)")
+    errors.add(:pdf, "must be a PDF file")
+  end
+
+  def validate_pdf_file_size
+    return if pdf.byte_size <= MAX_PDF_SIZE
+
+    size_mb = (pdf.byte_size / 1.megabyte.to_f).round(2)
+    errors.add(:pdf, "must be less than #{MAX_PDF_SIZE / 1.megabyte}MB (current size: #{size_mb}MB)")
   end
 
   public
@@ -99,18 +118,17 @@ class NewsPost < ApplicationRecord
   scope :unpublished, -> { where(published: false, archived: false) }
   scope :archived, -> { where(archived: true) }
   scope :active, -> { where(archived: false) }
-  scope :general, -> { where(location_id: nil) } # Posts for all locations
-  scope :for_location, ->(location_id) { where(location_id: location_id) } # Location-specific
+  scope :general, -> { where(location_id: nil) }  # Posts for all locations
+  scope :for_location, ->(location_id) { where(location_id: location_id) }  # Location-specific
   scope :recent, -> { order(created_at: :desc) }
   scope :by_published_date, -> { order(Arel.sql("published_at DESC NULLS LAST, created_at DESC")) }
 
   # Eager loading associations to avoid N+1 queries
-  scope :with_associations, lambda {
-    includes(:user, :location).with_rich_text_rich_content.with_attached_image.with_attached_pdf
-  }
+  scope :with_associations, -> { includes(:user, :location).with_rich_text_rich_content.with_attached_image.with_attached_pdf }
 
   # Combined scope for displaying posts
   scope :for_display, -> { published.active.with_associations.by_published_date }
+
 
   # Type helpers - check if post is general (no location) or location-specific
   def general?

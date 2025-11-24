@@ -12,7 +12,7 @@ module Display
       title.present?
     end
 
-    def has_posts?
+    def any_posts?
       posts.any?
     end
 

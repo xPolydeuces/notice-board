@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Authorization policy for NewsPost model
+# Controls access based on user roles and location assignments
 class NewsPostPolicy < ApplicationPolicy
   # Define which actions are authorized for the current user
 
@@ -33,14 +35,11 @@ class NewsPostPolicy < ApplicationPolicy
 
   # Scope to filter news posts visible to the user
   scope_for :active_record_relation do |relation|
-    if user.admin_or_superadmin?
-      # Admins and superadmins see all posts
-      relation
-    elsif user.location?
+    if user.location?
       # Location users see only their location's posts
       relation.where(location_id: user.location_id)
     else
-      # General users see all posts
+      # Admins, superadmins, and general users see all posts
       relation
     end
   end

@@ -2,23 +2,15 @@
 
 module Admin
   class NewsPostsController < BaseController
-    before_action :set_news_post, only: %i[show edit update destroy publish unpublish archive restore]
+    before_action :set_news_post, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :archive, :restore]
 
-    rescue_from ActionPolicy::Unauthorized do |_exception|
-      redirect_to admin_news_posts_path, alert: t("admin.unauthorized", default: "Brak uprawnień")
+    rescue_from ActionPolicy::Unauthorized do |exception|
+      redirect_to admin_news_posts_path, alert: t('admin.unauthorized', default: 'Brak uprawnień')
     end
 
     def index
-      # Use policy scope to filter posts based on user permissions
-      @news_posts = authorized_scope(NewsPost.with_associations.recent)
-
-      # Apply filters from params (admins can filter by any location)
-      @news_posts = @news_posts.where(location_id: params[:location_id]) if params[:location_id].present?
-      @news_posts = @news_posts.where(published: params[:published]) if params[:published].present?
-      @news_posts = @news_posts.where(archived: params[:archived]) if params[:archived].present?
-
-      @news_posts = @news_posts.page(params[:page]).per(25)
-      @locations = Location.active.ordered if current_user.admin_or_superadmin?
+      @news_posts = fetch_filtered_news_posts
+      @locations = fetch_locations_for_filter
     end
 
     def show
@@ -31,11 +23,6 @@ module Admin
       @locations = available_locations
     end
 
-    def edit
-      authorize! @news_post
-      @locations = available_locations
-    end
-
     def create
       @news_post = NewsPost.new(news_post_params)
       @news_post.user = current_user
@@ -43,11 +30,16 @@ module Admin
       authorize! @news_post
 
       if @news_post.save
-        redirect_to admin_news_posts_path, notice: t("admin.news_posts.created")
+        redirect_to admin_news_posts_path, notice: t('admin.news_posts.created')
       else
         @locations = available_locations
         render :new, status: :unprocessable_content
       end
+    end
+
+    def edit
+      authorize! @news_post
+      @locations = available_locations
     end
 
     def update
@@ -55,7 +47,7 @@ module Admin
       @news_post.assign_attributes(news_post_params)
       set_location_for_news_post
       if @news_post.save
-        redirect_to admin_news_posts_path, notice: t("admin.news_posts.updated")
+        redirect_to admin_news_posts_path, notice: t('admin.news_posts.updated')
       else
         @locations = available_locations
         render :edit, status: :unprocessable_content
@@ -65,59 +57,80 @@ module Admin
     def destroy
       authorize! @news_post
       @news_post.destroy
-      redirect_to admin_news_posts_path, notice: t("admin.news_posts.deleted")
+      redirect_to admin_news_posts_path, notice: t('admin.news_posts.deleted')
     end
 
     def publish
       authorize! @news_post
       if @news_post.publish!
-        redirect_to admin_news_posts_path, notice: t("admin.news_posts.published")
+        redirect_to admin_news_posts_path, notice: t('admin.news_posts.published')
       else
-        redirect_to admin_news_posts_path, alert: t("admin.news_posts.publish_failed")
+        redirect_to admin_news_posts_path, alert: t('admin.news_posts.publish_failed')
       end
     end
 
     def unpublish
       authorize! @news_post
       if @news_post.unpublish!
-        redirect_to admin_news_posts_path, notice: t("admin.news_posts.unpublished")
+        redirect_to admin_news_posts_path, notice: t('admin.news_posts.unpublished')
       else
-        redirect_to admin_news_posts_path, alert: t("admin.news_posts.unpublish_failed")
+        redirect_to admin_news_posts_path, alert: t('admin.news_posts.unpublish_failed')
       end
     end
 
     def archive
       authorize! @news_post
       if @news_post.archive!
-        redirect_to admin_news_posts_path, notice: t("admin.news_posts.archived")
+        redirect_to admin_news_posts_path, notice: t('admin.news_posts.archived')
       else
-        redirect_to admin_news_posts_path, alert: t("admin.news_posts.archive_failed")
+        redirect_to admin_news_posts_path, alert: t('admin.news_posts.archive_failed')
       end
     end
 
     def restore
       authorize! @news_post
       if @news_post.restore!
-        redirect_to admin_news_posts_path, notice: t("admin.news_posts.restored")
+        redirect_to admin_news_posts_path, notice: t('admin.news_posts.restored')
       else
-        redirect_to admin_news_posts_path, alert: t("admin.news_posts.restore_failed")
+        redirect_to admin_news_posts_path, alert: t('admin.news_posts.restore_failed')
       end
     end
 
     private
+
+    def fetch_filtered_news_posts
+      posts = authorized_scope(NewsPost.with_associations.recent)
+      posts = apply_filters(posts)
+      posts
+    end
+
+    def apply_filters(posts)
+      posts = posts.where(location_id: params[:location_id]) if params[:location_id].present?
+      posts = posts.where(published: params[:published]) if params[:published].present?
+      posts = posts.where(archived: params[:archived]) if params[:archived].present?
+      posts
+    end
+
+    def fetch_locations_for_filter
+      return nil unless current_user.admin_or_superadmin?
+
+      Location.active.ordered
+    end
 
     def set_news_post
       @news_post = NewsPost.with_attached_image.with_attached_pdf.find(params[:id])
     end
 
     def news_post_params
-      permitted = %i[title content post_type rich_content image pdf display_duration]
+      permitted = [:title, :content, :post_type, :rich_content, :image, :pdf, :display_duration]
 
       # Use policy to check if user can assign location
       # Pass a new instance instead of the class to avoid Rack::Attack issues
-      permitted << :location_id if allowed_to?(:assign_location?, @news_post || NewsPost.new)
+      if allowed_to?(:assign_location?, @news_post || NewsPost.new)
+        permitted << :location_id
+      end
 
-      params.expect(news_post: [*permitted])
+      params.require(:news_post).permit(*permitted)
     end
 
     def set_location_for_news_post
@@ -125,12 +138,12 @@ module Admin
       return if allowed_to?(:assign_location?, @news_post)
 
       # Location users can only create posts for their location
-      @news_post.location_id = if current_user.location?
-                                 current_user.location_id
-                               else
-                                 # General users can only create general posts (no location)
-                                 nil
-                               end
+      if current_user.location?
+        @news_post.location_id = current_user.location_id
+      else
+        # General users can only create general posts (no location)
+        @news_post.location_id = nil
+      end
     end
 
     def available_locations

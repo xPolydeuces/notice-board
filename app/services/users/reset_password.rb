@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Users
+  # Service to reset user passwords and generate temporary credentials
   class ResetPassword
     attr_reader :user, :current_user, :errors
 

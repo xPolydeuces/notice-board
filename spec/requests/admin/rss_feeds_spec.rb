@@ -54,52 +54,52 @@ RSpec.describe "Admin::RssFeeds", type: :request do
   end
 
   describe "POST /admin/rss_feeds" do
-    context "when user is admin" do
-      before { sign_in admin }
-
-      context "with valid parameters" do
-        let(:valid_params) do
-          {
-            rss_feed: {
-              name: "Tech News",
-              url: "https://example.com/feed.rss",
-              active: true
-            }
+    context "when admin creates RSS feed with valid parameters" do
+      let(:valid_params) do
+        {
+          rss_feed: {
+            name: "Tech News",
+            url: "https://example.com/feed.rss",
+            active: true
           }
-        end
-
-        it "creates a new RSS feed" do
-          expect do
-            post admin_rss_feeds_path, params: valid_params
-          end.to change(RssFeed, :count).by(1)
-        end
-
-        it "redirects to RSS feeds index" do
-          post admin_rss_feeds_path, params: valid_params
-          expect(response).to redirect_to(admin_rss_feeds_path)
-        end
+        }
       end
 
-      context "with invalid parameters" do
-        let(:invalid_params) do
-          {
-            rss_feed: {
-              name: "",
-              url: "invalid-url"
-            }
+      before { sign_in admin }
+
+      it "creates a new RSS feed" do
+        expect do
+          post admin_rss_feeds_path, params: valid_params
+        end.to change(RssFeed, :count).by(1)
+      end
+
+      it "redirects to RSS feeds index" do
+        post admin_rss_feeds_path, params: valid_params
+        expect(response).to redirect_to(admin_rss_feeds_path)
+      end
+    end
+
+    context "when admin creates RSS feed with invalid parameters" do
+      let(:invalid_params) do
+        {
+          rss_feed: {
+            name: "",
+            url: "invalid-url"
           }
-        end
+        }
+      end
 
-        it "does not create an RSS feed" do
-          expect do
-            post admin_rss_feeds_path, params: invalid_params
-          end.not_to change(RssFeed, :count)
-        end
+      before { sign_in admin }
 
-        it "renders new template" do
+      it "does not create an RSS feed" do
+        expect do
           post admin_rss_feeds_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_content).or have_http_status(:success)
-        end
+        end.not_to change(RssFeed, :count)
+      end
+
+      it "renders new template" do
+        post admin_rss_feeds_path, params: invalid_params
+        expect(response).to have_http_status(:unprocessable_content).or have_http_status(:success)
       end
     end
   end
@@ -120,43 +120,43 @@ RSpec.describe "Admin::RssFeeds", type: :request do
   describe "PATCH /admin/rss_feeds/:id" do
     let(:rss_feed) { create(:rss_feed, name: "Old Name") }
 
-    context "when user is admin" do
-      before { sign_in admin }
-
-      context "with valid parameters" do
-        let(:valid_params) do
-          {
-            rss_feed: {
-              name: "New Name"
-            }
+    context "when admin updates RSS feed with valid parameters" do
+      let(:valid_params) do
+        {
+          rss_feed: {
+            name: "New Name"
           }
-        end
-
-        it "updates the RSS feed" do
-          patch admin_rss_feed_path(rss_feed), params: valid_params
-          expect(rss_feed.reload.name).to eq("New Name")
-        end
-
-        it "redirects to RSS feeds index" do
-          patch admin_rss_feed_path(rss_feed), params: valid_params
-          expect(response).to redirect_to(admin_rss_feeds_path)
-        end
+        }
       end
 
-      context "with invalid parameters" do
-        let(:invalid_params) do
-          {
-            rss_feed: {
-              name: "",
-              url: "invalid"
-            }
-          }
-        end
+      before { sign_in admin }
 
-        it "does not update the RSS feed" do
-          patch admin_rss_feed_path(rss_feed), params: invalid_params
-          expect(rss_feed.reload.name).to eq("Old Name")
-        end
+      it "updates the RSS feed" do
+        patch admin_rss_feed_path(rss_feed), params: valid_params
+        expect(rss_feed.reload.name).to eq("New Name")
+      end
+
+      it "redirects to RSS feeds index" do
+        patch admin_rss_feed_path(rss_feed), params: valid_params
+        expect(response).to redirect_to(admin_rss_feeds_path)
+      end
+    end
+
+    context "when admin updates RSS feed with invalid parameters" do
+      let(:invalid_params) do
+        {
+          rss_feed: {
+            name: "",
+            url: "invalid"
+          }
+        }
+      end
+
+      before { sign_in admin }
+
+      it "does not update the RSS feed" do
+        patch admin_rss_feed_path(rss_feed), params: invalid_params
+        expect(rss_feed.reload.name).to eq("Old Name")
       end
     end
   end

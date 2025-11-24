@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Admin
+  # Admin controller for managing organizational locations/branches.
+  # Handles CRUD operations for locations that can be assigned to users and and posts.
   class LocationsController < BaseController
     before_action :require_admin!
     before_action :set_location, only: %i[edit update destroy]

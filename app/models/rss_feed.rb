@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
+# Represents an RSS feed source that can be fetched and displayed
 class RssFeed < ApplicationRecord
-  # Refresh interval
-  REFRESH_INTERVAL = 1.hour
-
-  # Health status thresholds
-  ERROR_WARNING_THRESHOLD = 3
-  ERROR_CRITICAL_THRESHOLD = 3
-
   # Associations
   has_many :rss_feed_items, dependent: :destroy
 
@@ -21,8 +15,8 @@ class RssFeed < ApplicationRecord
   # Scopes
   scope :active, -> { where(active: true) }
   scope :ordered, -> { order(:name) }
-  scope :healthy, -> { where(error_count: ...ERROR_WARNING_THRESHOLD) }
-  scope :unhealthy, -> { where(error_count: ...ERROR_CRITICAL_THRESHOLD) }
+  scope :healthy, -> { where('error_count < ?', 3) }
+  scope :unhealthy, -> { where('error_count >= ?', 3) }
 
   # Mark as fetched successfully
   def mark_as_fetched!
@@ -43,18 +37,19 @@ class RssFeed < ApplicationRecord
     )
   end
 
-  # Check if feed needs refresh
+  # Check if feed needs refresh (older than 1 hour)
   def needs_refresh?
     return true if last_fetched_at.nil?
 
-    last_fetched_at <= REFRESH_INTERVAL.ago
+    # Use addition to avoid timing precision issues with comparing two 1.hour.ago evaluations
+    last_fetched_at.to_i + 1.hour.to_i < Time.current.to_i
   end
 
   # Health status
   def health_status
     return :healthy if error_count.zero?
-    return :warning if error_count < ERROR_WARNING_THRESHOLD
-    return :critical if error_count >= ERROR_CRITICAL_THRESHOLD
+    return :warning if error_count < 3
+    return :critical if error_count >= 3
 
     :unknown
   end

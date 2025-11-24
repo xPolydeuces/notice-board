@@ -44,129 +44,133 @@ RSpec.describe "Admin::Passwords", type: :request do
   end
 
   describe "PATCH /admin/password" do
-    context "when user is signed in" do
+    context "when user updates password with valid parameters" do
+      let(:valid_params) do
+        {
+          user: {
+            current_password: "password123",
+            password: "newpassword123",
+            password_confirmation: "newpassword123"
+          }
+        }
+      end
+
       before { sign_in user }
 
-      context "with valid parameters" do
-        let(:valid_params) do
-          {
-            user: {
-              current_password: "password123",
-              password: "newpassword123",
-              password_confirmation: "newpassword123"
-            }
-          }
-        end
-
-        it "updates the password" do
-          patch admin_password_path, params: valid_params
-          user.reload
-          expect(user.valid_password?("newpassword123")).to be true
-        end
-
-        it "redirects to admin root" do
-          patch admin_password_path, params: valid_params
-          expect(response).to redirect_to(admin_root_path)
-        end
-
-        it "displays success message" do
-          patch admin_password_path, params: valid_params
-          follow_redirect!
-          expect(response.body).to include(I18n.t("admin.passwords.updated", default: "Password updated successfully"))
-        end
-
-        it "keeps user signed in" do
-          patch admin_password_path, params: valid_params
-          expect(controller.current_user).to eq(user)
-        end
+      it "updates the password" do
+        patch admin_password_path, params: valid_params
+        user.reload
+        expect(user.valid_password?("newpassword123")).to be true
       end
 
-      context "with force_password_change flag set" do
-        let(:forced_user) { create(:user, :general, force_password_change: true) }
-        let(:valid_params) do
-          {
-            user: {
-              current_password: "password123",
-              password: "newpassword123",
-              password_confirmation: "newpassword123"
-            }
-          }
-        end
-
-        before { sign_in forced_user }
-
-        it "clears the force_password_change flag" do
-          patch admin_password_path, params: valid_params
-          forced_user.reload
-          expect(forced_user.force_password_change).to be false
-        end
+      it "redirects to admin root" do
+        patch admin_password_path, params: valid_params
+        expect(response).to redirect_to(admin_root_path)
       end
 
-      context "with invalid current password" do
-        let(:invalid_params) do
-          {
-            user: {
-              current_password: "wrongpassword",
-              password: "newpassword123",
-              password_confirmation: "newpassword123"
-            }
-          }
-        end
-
-        it "does not update the password" do
-          old_encrypted_password = user.encrypted_password
-          patch admin_password_path, params: invalid_params
-          user.reload
-          expect(user.encrypted_password).to eq(old_encrypted_password)
-        end
-
-        it "renders edit template" do
-          patch admin_password_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_content)
-        end
+      it "displays success message" do
+        patch admin_password_path, params: valid_params
+        follow_redirect!
+        expect(response.body).to include(I18n.t("admin.passwords.updated", default: "Password updated successfully"))
       end
 
-      context "with mismatched password confirmation" do
-        let(:invalid_params) do
-          {
-            user: {
-              current_password: "password123",
-              password: "newpassword123",
-              password_confirmation: "differentpassword"
-            }
+      it "keeps user signed in" do
+        patch admin_password_path, params: valid_params
+        expect(controller.current_user).to eq(user)
+      end
+    end
+
+    context "when user with force_password_change flag updates password" do
+      let(:forced_user) { create(:user, :general, force_password_change: true) }
+      let(:valid_params) do
+        {
+          user: {
+            current_password: "password123",
+            password: "newpassword123",
+            password_confirmation: "newpassword123"
           }
-        end
-
-        it "does not update the password" do
-          old_encrypted_password = user.encrypted_password
-          patch admin_password_path, params: invalid_params
-          user.reload
-          expect(user.encrypted_password).to eq(old_encrypted_password)
-        end
-
-        it "renders edit template" do
-          patch admin_password_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_content)
-        end
+        }
       end
 
-      context "with password too short" do
-        let(:invalid_params) do
-          {
-            user: {
-              current_password: "password123",
-              password: "short",
-              password_confirmation: "short"
-            }
-          }
-        end
+      before { sign_in forced_user }
 
-        it "does not update the password" do
-          old_encrypted_password = user.encrypted_password
-          patch admin_password_path, params: invalid_params
-          user.reload
-          expect(user.encrypted_password).to eq(old_encrypted_password)
-        end
+      it "clears the force_password_change flag" do
+        patch admin_password_path, params: valid_params
+        forced_user.reload
+        expect(forced_user.force_password_change).to be false
+      end
+    end
+
+    context "when user updates password with invalid current password" do
+      let(:invalid_params) do
+        {
+          user: {
+            current_password: "wrongpassword",
+            password: "newpassword123",
+            password_confirmation: "newpassword123"
+          }
+        }
+      end
+
+      before { sign_in user }
+
+      it "does not update the password" do
+        old_encrypted_password = user.encrypted_password
+        patch admin_password_path, params: invalid_params
+        user.reload
+        expect(user.encrypted_password).to eq(old_encrypted_password)
+      end
+
+      it "renders edit template" do
+        patch admin_password_path, params: invalid_params
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context "when user updates password with mismatched confirmation" do
+      let(:invalid_params) do
+        {
+          user: {
+            current_password: "password123",
+            password: "newpassword123",
+            password_confirmation: "differentpassword"
+          }
+        }
+      end
+
+      before { sign_in user }
+
+      it "does not update the password" do
+        old_encrypted_password = user.encrypted_password
+        patch admin_password_path, params: invalid_params
+        user.reload
+        expect(user.encrypted_password).to eq(old_encrypted_password)
+      end
+
+      it "renders edit template" do
+        patch admin_password_path, params: invalid_params
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context "when user updates password with too short password" do
+      let(:invalid_params) do
+        {
+          user: {
+            current_password: "password123",
+            password: "short",
+            password_confirmation: "short"
+          }
+        }
+      end
+
+      before { sign_in user }
+
+      it "does not update the password" do
+        old_encrypted_password = user.encrypted_password
+        patch admin_password_path, params: invalid_params
+        user.reload
+        expect(user.encrypted_password).to eq(old_encrypted_password)
       end
     end
 
