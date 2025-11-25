@@ -207,7 +207,7 @@ pl:
         actions: "Akcje"
       form:
         name: "Nazwa kanału"
-        name_placeholder: "np. TechCrunch, Hacker News"
+        name_placeholder: "np. Wiadomości ze Świata, PolandNews"
         name_help: "Przyjazna nazwa dla tego źródła RSS"
         url: "Adres URL"
         url_placeholder: "https://example.com/feed.xml"

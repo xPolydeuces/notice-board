@@ -13,6 +13,7 @@ module AppConfig
   APP_SUBTITLE = ENV.fetch("APP_SUBTITLE", "Panel Administracyjny")
   COMPANY_NAME = ENV.fetch("COMPANY_NAME", "Your Company")
   LOGO_URL = ENV.fetch("LOGO_URL", "")
+  LOCATION = ENV.fetch("LOCATION", "Lokalizacja")
 
   # Default pagination
   DEFAULT_PER_PAGE = 25

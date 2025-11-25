@@ -13,7 +13,7 @@ locations = []
 
 3.times do |i|
   locations << Location.find_or_create_by!(code: "R-#{i + 1}") do |location|
-    location.name = "Lokalizacja R-#{i + 1}"
+    location.name = "#{AppConfig::LOCATION} R-#{i + 1}"
     location.active = true
   end
 end
@@ -46,7 +46,7 @@ end
 
 # Location users (can only manage their location's posts)
 locations.each_with_index do |location, index|
-  User.find_or_create_by!(username: "lokalizacja#{index + 1}") do |user|
+  User.find_or_create_by!(username: "#{AppConfig::LOCATION}#{index + 1}") do |user|
     user.password = "password123"
     user.password_confirmation = "password123"
     user.role = :location
@@ -59,17 +59,17 @@ Rails.logger.debug { "✅ Created #{User.count} users" }
 # Create RSS Feeds
 Rails.logger.debug "📡 Creating RSS feeds..."
 
-RssFeed.find_or_create_by!(name: "TechCrunch") do |feed|
-  feed.url = "https://techcrunch.com/feed/"
+RssFeed.find_or_create_by!(name: "Warszawa News") do |feed|
+  feed.url = "http://rss.gazeta.pl/pub/rss/warszawa.xml "
   feed.active = true
 end
 
-RssFeed.find_or_create_by!(name: "Hacker News") do |feed|
-  feed.url = "https://hnrss.org/frontpage"
+RssFeed.find_or_create_by!(name: "Poland News") do |feed|
+  feed.url = "https://www.polsatnews.pl/rss/polska.xml"
   feed.active = true
 end
 
-RssFeed.find_or_create_by!(name: "BBC News") do |feed|
+RssFeed.find_or_create_by!(name: "World News") do |feed|
   feed.url = "http://feeds.bbci.co.uk/news/rss.xml"
   feed.active = false # Example of inactive feed
 end
@@ -84,7 +84,7 @@ if Rails.env.development?
   NewsPost.find_or_create_by!(
     title: "Witamy w systemie tablicy ogłoszeń"
   ) do |post|
-    post.content = "To jest ogłoszenie generalne widoczne na wszystkich lokalizacjach."
+    post.content = "To jest ogłoszenie generalne widoczne na wszystkich #{AppConfig::LOCATION}ch."
     post.post_type = :plain_text
     post.location = nil  # nil = general post
     post.user = general_user
@@ -181,7 +181,7 @@ Rails.logger.debug "  Superadmin: username='superadmin', password='password123'"
 Rails.logger.debug "  Admin: username='admin', password='password123'"
 Rails.logger.debug "  General: username='general', password='password123'"
 locations.each_with_index do |location, index|
-  Rails.logger.debug "  Location #{location.code}: username='lokalizacja#{index + 1}', password='password123'"
+  Rails.logger.debug "  Location #{location.code}: username='#{AppConfig::LOCATION}#{index + 1}', password='password123'"
 end
 Rails.logger.debug "\n📝 How posts work:"
 Rails.logger.debug "  - General posts (location: nil) → shown on ALL location screens"
