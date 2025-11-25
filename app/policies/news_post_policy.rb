@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Authorization policy for NewsPost model
 # Controls access based on user roles and location assignments
 class NewsPostPolicy < ApplicationPolicy

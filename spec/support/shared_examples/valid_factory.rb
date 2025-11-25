@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.shared_examples "a valid factory" do
   it "has a valid factory" do
     expect(build(described_class.name.underscore.to_sym)).to be_valid

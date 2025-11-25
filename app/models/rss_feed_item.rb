@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Represents an individual item from an RSS feed
 class RssFeedItem < ApplicationRecord
   belongs_to :rss_feed

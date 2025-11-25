@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Application-wide configuration
 module AppConfig
   # Brand colors
@@ -28,5 +26,5 @@ module AppConfig
   RSS_FEED_MAX_ITEMS = 10
 
   # Location settings
-  DEFAULT_LOCATION_PREFIX = "R-"
+  DEFAULT_LOCATION_PREFIX = "R-".freeze
 end

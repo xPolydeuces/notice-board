@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 FactoryBot.define do
   factory :rss_feed do
     sequence(:name) { |n| "RSS Feed #{n}" }

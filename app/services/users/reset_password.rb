@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Users
   class ResetPassword < ApplicationService
     attr_reader :user, :current_user

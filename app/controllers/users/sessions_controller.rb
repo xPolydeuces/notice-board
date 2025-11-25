@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Users
   # Custom Devise Sessions Controller
   class SessionsController < Devise::SessionsController

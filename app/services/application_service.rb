@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Base class for service objects that provides common result handling
 class ApplicationService
   attr_reader :errors

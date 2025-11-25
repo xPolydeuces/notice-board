@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Display
   # RSS marquee component for notice board display
   class MarqueeComponent < ApplicationViewComponent

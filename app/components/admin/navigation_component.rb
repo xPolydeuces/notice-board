@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin
   # Navigation component for admin sidebar
   class NavigationComponent < ApplicationViewComponent
@@ -20,20 +18,20 @@ module Admin
     end
 
     def dashboard_item
-      { name: t('.dashboard'), path: admin_root_path, icon: 'layout-dashboard' }
+      { name: t(".dashboard"), path: admin_root_path, icon: "layout-dashboard" }
     end
 
     def admin_only_items
       [
-        { name: t('.users'), path: admin_users_path, icon: 'users' },
-        { name: t('.locations'), path: admin_locations_path, icon: 'map-pin' }
+        { name: t(".users"), path: admin_users_path, icon: "users" },
+        { name: t(".locations"), path: admin_locations_path, icon: "map-pin" }
       ]
     end
 
     def content_management_items
       [
-        { name: t('.news_posts'), path: admin_news_posts_path, icon: 'newspaper' },
-        { name: t('.rss_feeds'), path: admin_rss_feeds_path, icon: 'rss' }
+        { name: t(".news_posts"), path: admin_news_posts_path, icon: "newspaper" },
+        { name: t(".rss_feeds"), path: admin_rss_feeds_path, icon: "rss" }
       ]
     end
 

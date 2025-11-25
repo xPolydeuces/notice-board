@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "rails_helper"
 
 RSpec.describe User, type: :model do
@@ -40,7 +38,7 @@ RSpec.describe User, type: :model do
 
   describe "enums" do
     it {
-      is_expected.to define_enum_for(:role)
+      expect(subject).to define_enum_for(:role)
         .with_values(general: 0, location: 1, admin: 2, superadmin: 3)
         .with_default(:general)
     }
@@ -68,7 +66,7 @@ RSpec.describe User, type: :model do
         user_a = create(:user, username: "apple")
         user_m = create(:user, username: "middle")
 
-        expect(User.alphabetical).to eq([user_a, user_m, user_z])
+        expect(described_class.alphabetical).to eq([user_a, user_m, user_z])
       end
     end
 
@@ -77,8 +75,8 @@ RSpec.describe User, type: :model do
         admin = create(:user, :admin)
         general = create(:user, :general)
 
-        expect(User.by_role(:admin)).to include(admin)
-        expect(User.by_role(:admin)).not_to include(general)
+        expect(described_class.by_role(:admin)).to include(admin)
+        expect(described_class.by_role(:admin)).not_to include(general)
       end
     end
   end

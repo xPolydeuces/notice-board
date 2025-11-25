@@ -1,7 +1,5 @@
-# frozen_string_literal: true
-
-require 'rss'
-require 'open-uri'
+require "rss"
+require "open-uri"
 
 module RssFeeds
   # Service to fetch and parse RSS feeds
@@ -31,10 +29,10 @@ module RssFeeds
     private
 
     def fetch_and_parse_feed
-      content = URI.open(rss_feed.url, 'User-Agent' => 'NoticeBoard RSS Reader').read
+      content = URI.open(rss_feed.url, "User-Agent" => "NoticeBoard RSS Reader").read
       parsed_rss = RSS::Parser.parse(content, false)
 
-      return handle_failure(:parse_error, 'Failed to parse RSS feed') unless parsed_rss
+      return handle_failure(:parse_error, "Failed to parse RSS feed") unless parsed_rss
 
       items_created = process_feed_items(parsed_rss)
       rss_feed.mark_as_fetched!

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Clear existing data (development only)
 if Rails.env.development?
   Rails.logger.debug "🧹 Clearing existing data..."

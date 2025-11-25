@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Enable Prosopite to find N+1 queries
 unless Rails.env.production?
   require "prosopite/middleware/rack"

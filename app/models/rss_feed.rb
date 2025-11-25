@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Represents an RSS feed source that can be fetched and displayed
 class RssFeed < ApplicationRecord
   # Associations
@@ -15,8 +13,8 @@ class RssFeed < ApplicationRecord
   # Scopes
   scope :active, -> { where(active: true) }
   scope :ordered, -> { order(:name) }
-  scope :healthy, -> { where('error_count < ?', 3) }
-  scope :unhealthy, -> { where('error_count >= ?', 3) }
+  scope :healthy, -> { where(error_count: ...3) }
+  scope :unhealthy, -> { where(error_count: 3..) }
 
   # Mark as fetched successfully
   def mark_as_fetched!

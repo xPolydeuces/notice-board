@@ -48,7 +48,7 @@ RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
 
   # Ensure locale is set to English for all tests
-  config.around(:each) do |example|
+  config.around do |example|
     I18n.with_locale(:en) do
       example.run
     end

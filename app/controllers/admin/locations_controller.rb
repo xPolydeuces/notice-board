@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin
   # Admin controller for managing organizational locations/branches.
   # Handles CRUD operations for locations that can be assigned to users and and posts.

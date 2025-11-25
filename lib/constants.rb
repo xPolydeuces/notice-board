@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Constants
-  APPLICATION_NAME = "Szkoleo"
+  APPLICATION_NAME = "Szkoleo".freeze
 end

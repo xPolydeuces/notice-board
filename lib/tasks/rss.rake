@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 namespace :rss do
   desc "Fetch all active RSS feeds"
   task fetch: :environment do

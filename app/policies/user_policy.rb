@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Authorization policy for User model
 # Controls user management based on roles and permissions
 class UserPolicy < ApplicationPolicy

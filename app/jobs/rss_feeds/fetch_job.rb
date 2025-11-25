@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module RssFeeds
   # Job to fetch a single RSS feed
   class FetchJob < ApplicationJob

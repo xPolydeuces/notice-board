@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Represents a physical location/branch in the organization.
 # Locations can have associated users and location-specific news posts.
 class Location < ApplicationRecord

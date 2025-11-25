@@ -1,34 +1,31 @@
-# frozen_string_literal: true
-
 module Admin
   class RssFeedsController < BaseController
     before_action :require_admin!
-    before_action :set_rss_feed, only: [:edit, :update, :destroy, :refresh, :preview]
+    before_action :set_rss_feed, only: %i[edit update destroy refresh preview]
 
     def index
-      @rss_feeds = RssFeed.ordered.all
+      @rss_feeds = RssFeed.ordered.page(params[:page])
     end
 
     def new
       @rss_feed = RssFeed.new
     end
 
+    def edit; end
+
     def create
       @rss_feed = RssFeed.new(rss_feed_params)
 
       if @rss_feed.save
-        redirect_to admin_rss_feeds_path, notice: t('admin.rss_feeds.created')
+        redirect_to admin_rss_feeds_path, notice: t("admin.rss_feeds.created")
       else
         render :new, status: :unprocessable_content
       end
     end
 
-    def edit
-    end
-
     def update
       if @rss_feed.update(rss_feed_params)
-        redirect_to admin_rss_feeds_path, notice: t('admin.rss_feeds.updated')
+        redirect_to admin_rss_feeds_path, notice: t("admin.rss_feeds.updated")
       else
         render :edit, status: :unprocessable_content
       end
@@ -36,16 +33,16 @@ module Admin
 
     def destroy
       @rss_feed.destroy
-      redirect_to admin_rss_feeds_path, notice: t('admin.rss_feeds.deleted')
+      redirect_to admin_rss_feeds_path, notice: t("admin.rss_feeds.deleted")
     end
 
     def refresh
       result = RssFeeds::FetchService.new(rss_feed: @rss_feed).call
 
       if result.success?
-        flash[:notice] = t('admin.rss_feeds.refreshed', count: result.items_count)
+        flash[:notice] = t("admin.rss_feeds.refreshed", count: result.items_count)
       else
-        flash[:alert] = t('admin.rss_feeds.refresh_failed', errors: result.errors.join(', '))
+        flash[:alert] = t("admin.rss_feeds.refresh_failed", errors: result.errors.join(", "))
       end
 
       redirect_to admin_rss_feeds_path
@@ -68,7 +65,7 @@ module Admin
     end
 
     def rss_feed_params
-      params.require(:rss_feed).permit(:name, :url, :active)
+      params.expect(rss_feed: %i[name url active])
     end
 
     def fetch_and_validate_feed
@@ -80,12 +77,12 @@ module Admin
     end
 
     def handle_preview_failure(result)
-      flash[:alert] = t('admin.rss_feeds.preview_failed', errors: result.errors.join(', '))
+      flash[:alert] = t("admin.rss_feeds.preview_failed", errors: result.errors.join(", "))
       redirect_to admin_rss_feeds_path
     end
 
     def handle_preview_error(error)
-      flash[:alert] = t('admin.rss_feeds.preview_failed', errors: error.message)
+      flash[:alert] = t("admin.rss_feeds.preview_failed", errors: error.message)
       redirect_to admin_rss_feeds_path
     end
   end

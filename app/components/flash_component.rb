@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Component for displaying flash messages with icons and colors
 class FlashComponent < ApplicationViewComponent
   # Accept any object that responds to flash methods, not just Hash

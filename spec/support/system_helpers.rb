@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Helper methods for system/feature specs.
 # Provides common functionality for testing user interactions in browser-based tests.
 module SystemHelpers

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "rails_helper"
 
 RSpec.describe Display::CarouselBoxComponent, type: :component do
@@ -122,14 +120,14 @@ RSpec.describe Display::CarouselBoxComponent, type: :component do
     end
   end
 
-  describe "#has_posts?" do
+  describe "#any_posts?" do
     it "returns true when posts are present" do
       component = described_class.new(
         title: "Test",
         posts: posts,
         empty_message: "No posts"
       )
-      expect(component.has_posts?).to be true
+      expect(component.any_posts?).to be true
     end
 
     it "returns false when posts are empty" do
@@ -138,7 +136,7 @@ RSpec.describe Display::CarouselBoxComponent, type: :component do
         posts: [],
         empty_message: "No posts"
       )
-      expect(component.has_posts?).to be false
+      expect(component.any_posts?).to be false
     end
   end
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin
   # Page header component for admin pages
   class PageHeaderComponent < ApplicationViewComponent

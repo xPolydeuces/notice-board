@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Configure I18n (internationalization) settings
 Rails.application.configure do
   # Set default locale to Polish

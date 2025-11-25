@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateInitialSchema < ActiveRecord::Migration[8.1]
   def change
     # Locations table

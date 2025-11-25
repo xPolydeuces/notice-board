@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module RssFeeds
   # Job to fetch all active RSS feeds that need refresh
   # Skips critically unhealthy feeds (3+ consecutive errors)

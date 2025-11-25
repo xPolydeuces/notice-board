@@ -1,9 +1,7 @@
-# frozen_string_literal: true
-
 module Admin
   # Service to fetch and cache dashboard statistics
   class StatisticsQuery
-    CACHE_KEY = 'admin_dashboard_stats'
+    CACHE_KEY = "admin_dashboard_stats".freeze
     CACHE_EXPIRY = 10.minutes
 
     def self.call

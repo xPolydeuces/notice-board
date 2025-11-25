@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Display
   # Carousel box component for notice board display
   class CarouselBoxComponent < ApplicationViewComponent

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Catch slow queries in development and test
 class SlowQuerySubscriber < ActiveSupport::Subscriber
   SECONDS_THRESHOLD = 0.5

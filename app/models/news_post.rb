@@ -1,9 +1,11 @@
-# frozen_string_literal: true
-
 class NewsPost < ApplicationRecord
   # File size limits (in bytes)
   MAX_IMAGE_SIZE = 10.megabytes
   MAX_PDF_SIZE = 20.megabytes
+
+  # Display duration limits (in seconds)
+  MIN_DISPLAY_DURATION = 1
+  MAX_DISPLAY_DURATION = 300
 
   # Default display durations (in seconds) per post type
   DEFAULT_DURATIONS = {
@@ -29,7 +31,8 @@ class NewsPost < ApplicationRecord
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true, if: :plain_text?
   validates :post_type, presence: true
-  validates :display_duration, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 300 }
+  validates :display_duration, presence: true,
+                               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 300 }
   validate :validate_post_type_content
   validate :validate_image_format_and_size
   validate :validate_pdf_format_and_size
@@ -82,14 +85,13 @@ class NewsPost < ApplicationRecord
     return unless attachment.attached?
 
     # Validate content type
-    unless attachment.content_type.in?(allowed_types)
-      errors.add(attachment_name, format_error_message)
-    end
+    errors.add(attachment_name, format_error_message) unless attachment.content_type.in?(allowed_types)
 
     # Validate file size
-    if attachment.byte_size > max_size
-      errors.add(attachment_name, "must be less than #{max_size / 1.megabyte}MB (current size: #{(attachment.byte_size / 1.megabyte.to_f).round(2)}MB)")
-    end
+    return unless attachment.byte_size > max_size
+
+    errors.add(attachment_name,
+               "must be less than #{max_size / 1.megabyte}MB (current size: #{(attachment.byte_size / 1.megabyte.to_f).round(2)}MB)")
   end
 
   public
@@ -99,17 +101,18 @@ class NewsPost < ApplicationRecord
   scope :unpublished, -> { where(published: false, archived: false) }
   scope :archived, -> { where(archived: true) }
   scope :active, -> { where(archived: false) }
-  scope :general, -> { where(location_id: nil) }  # Posts for all locations
-  scope :for_location, ->(location_id) { where(location_id: location_id) }  # Location-specific
+  scope :general, -> { where(location_id: nil) } # Posts for all locations
+  scope :for_location, ->(location_id) { where(location_id: location_id) } # Location-specific
   scope :recent, -> { order(created_at: :desc) }
   scope :by_published_date, -> { order(Arel.sql("published_at DESC NULLS LAST, created_at DESC")) }
 
   # Eager loading associations to avoid N+1 queries
-  scope :with_associations, -> { includes(:user, :location).with_rich_text_rich_content.with_attached_image.with_attached_pdf }
+  scope :with_associations, lambda {
+    includes(:user, :location).with_rich_text_rich_content.with_attached_image.with_attached_pdf
+  }
 
   # Combined scope for displaying posts
   scope :for_display, -> { published.active.with_associations.by_published_date }
-
 
   # Type helpers - check if post is general (no location) or location-specific
   def general?

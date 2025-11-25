@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This migration comes from action_text (originally 20180528164000)
 class CreateActionTextTables < ActiveRecord::Migration[8.1]
   def change

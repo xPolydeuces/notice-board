@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Users
   class DeleteUser < ApplicationService
     attr_reader :user, :current_user
@@ -29,7 +27,7 @@ module Users
     end
 
     def last_superadmin?
-      user.superadmin? && User.where(role: :superadmin).count == 1
+      user.superadmin? && User.where(role: :superadmin).one?
     end
   end
 end

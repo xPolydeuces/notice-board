@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Main dashboard controller that displays news posts and RSS feeds
 # Handles both general announcements and location-specific content
 class DashboardController < ApplicationController
@@ -14,7 +12,7 @@ class DashboardController < ApplicationController
   private
 
   def find_location
-    return nil unless params[:location_id].present?
+    return nil if params[:location_id].blank?
 
     Location.find_by(id: params[:location_id])
   end
