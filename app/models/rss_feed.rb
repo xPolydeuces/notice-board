@@ -56,7 +56,7 @@ class RssFeed < ApplicationRecord
     health_status == :healthy
   end
 
-  def has_errors?
+  def errors?
     error_count.positive?
   end
 

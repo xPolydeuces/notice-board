@@ -134,12 +134,7 @@ module Admin
       return if allowed_to?(:assign_location?, @news_post)
 
       # Location users can only create posts for their location
-      @news_post.location_id = if current_user.location?
-                                 current_user.location_id
-                               else
-                                 # General users can only create general posts (no location)
-                                 nil
-                               end
+      @news_post.location_id = (current_user.location_id if current_user.location?)
     end
 
     def available_locations

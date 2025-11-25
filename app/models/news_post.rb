@@ -90,8 +90,8 @@ class NewsPost < ApplicationRecord
     # Validate file size
     return unless attachment.byte_size > max_size
 
-    errors.add(attachment_name,
-               "must be less than #{max_size / 1.megabyte}MB (current size: #{(attachment.byte_size / 1.megabyte.to_f).round(2)}MB)")
+    errors.add(attachment_name, "must be less than #{max_size / 1.megabyte}MB
+              (current size: #{(attachment.byte_size / 1.megabyte.to_f).round(2)}MB)")
   end
 
   public

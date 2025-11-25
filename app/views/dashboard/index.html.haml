@@ -1,4 +1,4 @@
-.h-screen.overflow-hidden.notice-board-gradient{ data: { controller: 'notice-board display-mode' } }
+.h-screen.overflow-hidden.notice-board-gradient.theme-default{ data: { controller: 'notice-board display-mode' } }
   .flex.flex-col.gap-3.sm:gap-4.md:gap-5.p-3.sm:p-4.md:p-5.h-full
 
     / Top row - Two announcement boxes (stack on mobile, side-by-side on desktop)
@@ -38,9 +38,49 @@
         / Location only mode button
         %button{ type: 'button', class: 'w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 text-center', data: { mode: 'location-only', action: 'click->display-mode#setMode' } }
           Tylko Oddziałowe (Pełny ekran)
-          
+
+      / Theme selector section
+      %div{ class: 'border-t border-gray-200 pt-6 mt-6' }
+        %h3{ class: 'text-lg font-semibold text-gray-700 mb-3' } Motyw Wyświetlania
+        %div{ class: 'grid grid-cols-2 gap-3' }
+          / Default theme button
+          %button{ type: 'button', class: 'bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm', data: { theme: 'default', action: 'click->display-mode#setTheme' }, title: 'Ciepły gradient (domyślny)' }
+            %div 🔥 Ciepły
+            %div{ class: 'text-xs opacity-90 mt-1' } Domyślny
+
+          / Dark theme button
+          %button{ type: 'button', class: 'bg-gradient-to-br from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm', data: { theme: 'dark', action: 'click->display-mode#setTheme' }, title: 'Tryb ciemny - idealny na noc' }
+            %div 🌙 Ciemny
+            %div{ class: 'text-xs opacity-90 mt-1' } Nocny
+
+          / Light theme button
+          %button{ type: 'button', class: 'bg-gradient-to-br from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 text-gray-800 font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm border border-gray-300', data: { theme: 'light', action: 'click->display-mode#setTheme' }, title: 'Jasny i czysty - nowoczesny' }
+            %div ☁️ Jasny
+            %div{ class: 'text-xs opacity-90 mt-1' } Czysty
+
+          / High contrast theme button
+          %button{ type: 'button', class: 'bg-black hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm border-2 border-white', data: { theme: 'contrast', action: 'click->display-mode#setTheme' }, title: 'Wysoki kontrast - maksymalna widoczność' }
+            %div ⚫ Kontrast
+            %div{ class: 'text-xs opacity-90 mt-1' } Wysoki
+
+      / Auto-theme toggle section
+      %div{ class: 'border-t border-gray-200 pt-6 mt-6' }
+        %h3{ class: 'text-lg font-semibold text-gray-700 mb-3' } Automatyczny Motyw
+        %p{ class: 'text-sm text-gray-600 mb-3' } Motyw zmienia się automatycznie według pory dnia (jasny: 6:00-20:00, ciemny: 20:00-6:00)
+
+        / Auto-theme toggle button
+        %button{ type: 'button', class: 'w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-between', data: { action: 'click->display-mode#toggleAutoTheme' } }
+          %div{ class: 'flex items-center gap-3' }
+            %span{ data: { auto_theme_icon: '' } } 🕐
+            %div{ class: 'text-left' }
+              %div Tryb Automatyczny
+              %div{ class: 'text-xs opacity-90 mt-1' }
+                %span{ data: { auto_theme_status: '' } } Wyłączony
+          %svg{ class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }
+            %path{ 'stroke-linecap' => 'round', 'stroke-linejoin' => 'round', 'stroke-width' => '2', d: 'M9 5l7 7-7 7' }
+
       / Location selector section
-      %div{ class: 'border-t border-gray-200 pt-6' }
+      %div{ class: 'border-t border-gray-200 pt-6 mt-6' }
         %h3{ class: 'text-lg font-semibold text-gray-700 mb-3' } Wybierz Oddział
 
         / Current location display
@@ -73,5 +113,3 @@
       / Close button
       %button{ type: 'button', class: 'w-full mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors duration-200', data: { action: 'click->display-mode#closeMenu' } }
         Zamknij
-
-      %p{ class: 'text-sm text-gray-500 text-center mt-4' } Wskazówka: Naciśnij 'M' aby otworzyć to menu
