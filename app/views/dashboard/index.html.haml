@@ -21,11 +21,11 @@
 
   / Hidden settings menu
   %div{ class: 'fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 hidden opacity-0 scale-95 transition-all duration-200', data: { display_mode_target: 'menu', action: 'click->display-mode#closeMenu' } }
-    %div{ class: 'bg-white rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto', data: { action: 'click->display-mode#preventClose' } }
-      %h2{ class: 'text-2xl font-bold text-gray-800 mb-6 text-center' } Ustawienia Wyświetlania
+    %div{ class: 'settings-modal-container rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto', data: { action: 'click->display-mode#preventClose' } }
+      %h2{ class: 'settings-modal-heading text-2xl font-bold mb-6 text-center' } Ustawienia Wyświetlania
 
       / Display mode section
-      %h3{ class: 'text-lg font-semibold text-gray-700 mb-3' } Tryb Wyświetlania
+      %h3{ class: 'settings-modal-subheading text-lg font-semibold mb-3' } Tryb Wyświetlania
       %div{ class: 'space-y-3 mb-6' }
         / Default mode button
         %button{ type: 'button', class: 'w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 text-center', data: { mode: 'default', action: 'click->display-mode#setMode' } }
@@ -40,38 +40,33 @@
           Tylko Oddziałowe (Pełny ekran)
 
       / Theme selector section
-      %div{ class: 'border-t border-gray-200 pt-6 mt-6' }
-        %h3{ class: 'text-lg font-semibold text-gray-700 mb-3' } Motyw Wyświetlania
+      %div{ class: 'settings-modal-divider border-t pt-6 mt-6' }
+        %h3{ class: 'settings-modal-subheading text-lg font-semibold mb-3' } Motyw Wyświetlania
         %div{ class: 'grid grid-cols-2 gap-3' }
           / Default theme button
           %button{ type: 'button', class: 'bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm', data: { theme: 'default', action: 'click->display-mode#setTheme' }, title: 'Ciepły gradient (domyślny)' }
-            %div 🔥 Ciepły
-            %div{ class: 'text-xs opacity-90 mt-1' } Domyślny
+            %div Domyślny
 
           / Dark theme button
           %button{ type: 'button', class: 'bg-gradient-to-br from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm', data: { theme: 'dark', action: 'click->display-mode#setTheme' }, title: 'Tryb ciemny - idealny na noc' }
-            %div 🌙 Ciemny
-            %div{ class: 'text-xs opacity-90 mt-1' } Nocny
+            %div Ciemny
 
           / Light theme button
           %button{ type: 'button', class: 'bg-gradient-to-br from-slate-100 to-slate-300 hover:from-slate-200 hover:to-slate-400 text-gray-800 font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm border border-gray-300', data: { theme: 'light', action: 'click->display-mode#setTheme' }, title: 'Jasny i czysty - nowoczesny' }
-            %div ☁️ Jasny
-            %div{ class: 'text-xs opacity-90 mt-1' } Czysty
+            %div Jasny
 
           / High contrast theme button
           %button{ type: 'button', class: 'bg-black hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center text-sm border-2 border-white', data: { theme: 'contrast', action: 'click->display-mode#setTheme' }, title: 'Wysoki kontrast - maksymalna widoczność' }
-            %div ⚫ Kontrast
-            %div{ class: 'text-xs opacity-90 mt-1' } Wysoki
+            %div Kontrast
 
       / Auto-theme toggle section
-      %div{ class: 'border-t border-gray-200 pt-6 mt-6' }
-        %h3{ class: 'text-lg font-semibold text-gray-700 mb-3' } Automatyczny Motyw
-        %p{ class: 'text-sm text-gray-600 mb-3' } Motyw zmienia się automatycznie według pory dnia (jasny: 6:00-20:00, ciemny: 20:00-6:00)
+      %div{ class: 'settings-modal-divider border-t pt-6 mt-6' }
+        %h3{ class: 'settings-modal-subheading text-lg font-semibold mb-3' } Automatyczny Motyw
+        %p{ class: 'settings-modal-text text-sm mb-3' } Motyw zmienia się automatycznie według pory dnia (jasny: 6:00-20:00, ciemny: 20:00-6:00)
 
         / Auto-theme toggle button
         %button{ type: 'button', class: 'w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-between', data: { action: 'click->display-mode#toggleAutoTheme' } }
           %div{ class: 'flex items-center gap-3' }
-            %span{ data: { auto_theme_icon: '' } } 🕐
             %div{ class: 'text-left' }
               %div Tryb Automatyczny
               %div{ class: 'text-xs opacity-90 mt-1' }
@@ -80,13 +75,13 @@
             %path{ 'stroke-linecap' => 'round', 'stroke-linejoin' => 'round', 'stroke-width' => '2', d: 'M9 5l7 7-7 7' }
 
       / Location selector section
-      %div{ class: 'border-t border-gray-200 pt-6 mt-6' }
-        %h3{ class: 'text-lg font-semibold text-gray-700 mb-3' } Wybierz Oddział
+      %div{ class: 'settings-modal-divider border-t pt-6 mt-6' }
+        %h3{ class: 'settings-modal-subheading text-lg font-semibold mb-3' } Wybierz Oddział
 
         / Current location display
-        %div{ class: 'mb-3 p-3 bg-gray-50 rounded-lg text-sm' }
-          %span{ class: 'text-gray-600' } Aktualny oddział:
-          %span{ class: 'font-semibold text-gray-800 ml-2', data: { display_mode_target: 'currentLocation' } }
+        %div{ class: 'settings-current-location-box mb-3 p-3 rounded-lg text-sm' }
+          %span{ class: 'settings-modal-text' } Aktualny oddział:
+          %span{ class: 'settings-modal-heading font-semibold ml-2', data: { display_mode_target: 'currentLocation' } }
             = @location ? @location.full_name : 'Nie wybrano'
 
         / Toggle button
@@ -96,20 +91,20 @@
             %path{ 'stroke-linecap' => 'round', 'stroke-linejoin' => 'round', 'stroke-width' => '2', d: 'M19 9l-7 7-7-7' }
 
         / Location list (collapsible)
-        %div{ class: 'hidden mt-3 max-h-48 overflow-y-auto border border-gray-200 rounded-lg', data: { display_mode_target: 'locationList' } }
+        %div{ class: 'settings-location-list hidden mt-3 max-h-48 overflow-y-auto rounded-lg', data: { display_mode_target: 'locationList' } }
           - if @locations.any?
             / Clear location button
-            %button{ type: 'button', class: 'w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors duration-150 border-b border-gray-200 text-sm font-medium text-red-600', data: { action: 'click->display-mode#clearLocation' } }
+            %button{ type: 'button', class: 'settings-location-item w-full text-left px-4 py-3 transition-colors duration-150 text-sm font-medium text-red-600', data: { action: 'click->display-mode#clearLocation' } }
               Wyczyść wybór oddziału
 
             / Location list items
             - @locations.each do |location|
-              %button{ type: 'button', class: "w-full text-left px-4 py-3 hover:bg-purple-50 transition-colors duration-150 border-b border-gray-200 last:border-b-0 #{'bg-purple-100 font-semibold' if @location&.id == location.id}", data: { action: 'click->display-mode#selectLocation', location_id: location.id, location_name: location.full_name } }
+              %button{ type: 'button', class: "settings-location-item w-full text-left px-4 py-3 transition-colors duration-150 last:border-b-0 #{'bg-purple-100 font-semibold' if @location&.id == location.id}", data: { action: 'click->display-mode#selectLocation', location_id: location.id, location_name: location.full_name } }
                 = location.full_name
           - else
-            %div{ class: 'px-4 py-3 text-sm text-gray-500 text-center' }
+            %div{ class: 'settings-modal-text px-4 py-3 text-sm text-center' }
               Brak dostępnych oddziałów
 
       / Close button
-      %button{ type: 'button', class: 'w-full mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors duration-200', data: { action: 'click->display-mode#closeMenu' } }
+      %button{ type: 'button', class: 'settings-modal-heading w-full mt-6 bg-gray-200 hover:bg-gray-300 font-semibold py-3 px-6 rounded-lg transition-colors duration-200', data: { action: 'click->display-mode#closeMenu' } }
         Zamknij

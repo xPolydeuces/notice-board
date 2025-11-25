@@ -178,7 +178,7 @@ export default class extends Controller {
     }
   }
 
-  // Select a location and reload page with location_id parameter
+  // Select a location and use Turbo for client-side navigation
   selectLocation(event) {
     event.preventDefault()
     event.stopPropagation()
@@ -186,22 +186,40 @@ export default class extends Controller {
     const locationName = event.currentTarget.dataset.locationName
 
     if (locationId) {
-      // Update URL with location_id parameter and reload
+      // Close menu first for better UX
+      this.closeMenu()
+
+      // Update URL with location_id parameter and use Turbo for smooth client-side navigation
       const url = new URL(window.location)
       url.searchParams.set('location_id', locationId)
-      window.location.href = url.toString()
+
+      // Use Turbo.visit for seamless navigation without full page reload
+      if (typeof Turbo !== 'undefined') {
+        Turbo.visit(url.toString(), { action: 'replace' })
+      } else {
+        window.location.href = url.toString()
+      }
     }
   }
 
-  // Clear location selection and reload page without location_id
+  // Clear location selection and use Turbo for client-side navigation
   clearLocation(event) {
     event.preventDefault()
     event.stopPropagation()
 
-    // Remove location_id parameter from URL and reload
+    // Close menu first for better UX
+    this.closeMenu()
+
+    // Remove location_id parameter from URL and use Turbo for smooth client-side navigation
     const url = new URL(window.location)
     url.searchParams.delete('location_id')
-    window.location.href = url.toString()
+
+    // Use Turbo.visit for seamless navigation without full page reload
+    if (typeof Turbo !== 'undefined') {
+      Turbo.visit(url.toString(), { action: 'replace' })
+    } else {
+      window.location.href = url.toString()
+    }
   }
 
   // Theme switching methods
