@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# User model with role-based permissions using Devise for authentication
 class User < ApplicationRecord
   # Devise modules - using username instead of email for authentication
   devise :database_authenticatable, :rememberable, :trackable, :timeoutable,
@@ -31,41 +30,13 @@ class User < ApplicationRecord
   scope :by_role, ->(role) { where(role: role) }
 
   # Permission methods
-  def can_edit_location?(location)
-    admin_or_superadmin? || (location? && self.location == location)
-  end
-
-  def can_create_general_news?
-    admin_or_superadmin? || general?
-  end
-
-  def can_manage_users?
-    admin_or_superadmin?
-  end
-
-  def can_manage_locations?
-    admin_or_superadmin?
-  end
-
-  def can_manage_rss_feeds?
-    admin_or_superadmin?
-  end
-
-  def can_delete_admin?
-    superadmin?
-  end
-
   def admin_or_superadmin?
     admin? || superadmin?
   end
 
   # Display methods
-  def display_name
-    username
-  end
-
   def to_s
-    display_name
+    username
   end
 
   # Override Devise method to use username for authentication

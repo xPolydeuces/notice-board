@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 module Users
-  # Service to reset user passwords and generate temporary credentials
-  class ResetPassword
-    attr_reader :user, :current_user, :errors
+  class ResetPassword < ApplicationService
+    attr_reader :user, :current_user
 
     def initialize(user:, current_user:)
+      super()
       @user = user
       @current_user = current_user
-      @errors = []
     end
 
     def call
@@ -23,10 +22,6 @@ module Users
       end
     end
 
-    def success?
-      @success == true
-    end
-
     # Expose the temporary password for flash message
     def temporary_password
       @temp_password
@@ -34,16 +29,9 @@ module Users
 
     private
 
-    def success(temp_password)
-      @success = true
+    def success(temp_password = nil)
       @temp_password = temp_password
-      self
-    end
-
-    def failure(reason)
-      @success = false
-      @errors << reason
-      self
+      super()
     end
   end
 end

@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 module Users
-  # Service to safely delete users with authorization checks
-  class DeleteUser
-    attr_reader :user, :current_user, :errors
+  class DeleteUser < ApplicationService
+    attr_reader :user, :current_user
 
     def initialize(user:, current_user:)
+      super()
       @user = user
       @current_user = current_user
-      @errors = []
     end
 
     def call
@@ -23,10 +22,6 @@ module Users
       end
     end
 
-    def success?
-      @success == true
-    end
-
     private
 
     def unauthorized_admin_deletion?
@@ -35,17 +30,6 @@ module Users
 
     def last_superadmin?
       user.superadmin? && User.where(role: :superadmin).count == 1
-    end
-
-    def success
-      @success = true
-      self
-    end
-
-    def failure(reason)
-      @success = false
-      @errors << reason
-      self
     end
   end
 end

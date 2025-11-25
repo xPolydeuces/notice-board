@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# Represents a news post/announcement that can be displayed on the dashboard
-# Supports multiple content types: plain text, rich text, images, and PDFs
 class NewsPost < ApplicationRecord
   # File size limits (in bytes)
   MAX_IMAGE_SIZE = 10.megabytes
@@ -49,66 +47,49 @@ class NewsPost < ApplicationRecord
   end
 
   def validate_post_type_content
-    return validate_plain_text_content if plain_text?
-    return validate_rich_text_content if rich_text?
-    return validate_image_content if image_only?
-    return validate_pdf_content if pdf_only?
-  end
-
-  def validate_plain_text_content
-    errors.add(:content, "can't be blank for text posts") if content.blank?
-  end
-
-  def validate_rich_text_content
-    errors.add(:rich_content, "can't be blank for rich text posts") if rich_content.body.blank?
-  end
-
-  def validate_image_content
-    errors.add(:image, "must be attached for image-only posts") unless image.attached?
-  end
-
-  def validate_pdf_content
-    errors.add(:pdf, "must be attached for PDF posts") unless pdf.attached?
+    case post_type
+    when "plain_text"
+      errors.add(:content, "can't be blank for text posts") if content.blank?
+    when "rich_text"
+      errors.add(:rich_content, "can't be blank for rich text posts") if rich_content.body.blank?
+    when "image_only"
+      errors.add(:image, "must be attached for image-only posts") unless image.attached?
+    when "pdf_only"
+      errors.add(:pdf, "must be attached for PDF posts") unless pdf.attached?
+    end
   end
 
   def validate_image_format_and_size
-    return unless image.attached?
-
-    validate_image_content_type
-    validate_image_file_size
-  end
-
-  def validate_image_content_type
-    return if image.content_type.in?(%w[image/png image/jpg image/jpeg image/gif image/webp])
-
-    errors.add(:image, "must be a PNG, JPG, GIF, or WebP image")
-  end
-
-  def validate_image_file_size
-    return if image.byte_size <= MAX_IMAGE_SIZE
-
-    size_mb = (image.byte_size / 1.megabyte.to_f).round(2)
-    errors.add(:image, "must be less than #{MAX_IMAGE_SIZE / 1.megabyte}MB (current size: #{size_mb}MB)")
+    validate_attachment_format_and_size(
+      :image,
+      %w[image/png image/jpg image/jpeg image/gif image/webp],
+      MAX_IMAGE_SIZE,
+      "must be a PNG, JPG, GIF, or WebP image"
+    )
   end
 
   def validate_pdf_format_and_size
-    return unless pdf.attached?
-
-    validate_pdf_content_type
-    validate_pdf_file_size
+    validate_attachment_format_and_size(
+      :pdf,
+      ["application/pdf"],
+      MAX_PDF_SIZE,
+      "must be a PDF file"
+    )
   end
 
-  def validate_pdf_content_type
-    return if pdf.content_type == "application/pdf"
+  def validate_attachment_format_and_size(attachment_name, allowed_types, max_size, format_error_message)
+    attachment = send(attachment_name)
+    return unless attachment.attached?
 
-    errors.add(:pdf, "must be a PDF file")
-  end
+    # Validate content type
+    unless attachment.content_type.in?(allowed_types)
+      errors.add(attachment_name, format_error_message)
+    end
 
-  def validate_pdf_file_size
-    return if pdf.byte_size <= MAX_PDF_SIZE
-
-    size_mb = (pdf.byte_size / 1.megabyte.to_f).round(2)
-    errors.add(:pdf, "must be less than #{MAX_PDF_SIZE / 1.megabyte}MB (current size: #{size_mb}MB)")
+    # Validate file size
+    if attachment.byte_size > max_size
+      errors.add(attachment_name, "must be less than #{max_size / 1.megabyte}MB (current size: #{(attachment.byte_size / 1.megabyte.to_f).round(2)}MB)")
+    end
   end
 
   public

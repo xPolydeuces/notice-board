@@ -40,7 +40,7 @@ RSpec.describe User, type: :model do
 
   describe "enums" do
     it {
-      expect(subject).to define_enum_for(:role)
+      is_expected.to define_enum_for(:role)
         .with_values(general: 0, location: 1, admin: 2, superadmin: 3)
         .with_default(:general)
     }
@@ -68,7 +68,7 @@ RSpec.describe User, type: :model do
         user_a = create(:user, username: "apple")
         user_m = create(:user, username: "middle")
 
-        expect(described_class.alphabetical).to eq([user_a, user_m, user_z])
+        expect(User.alphabetical).to eq([user_a, user_m, user_z])
       end
     end
 
@@ -77,146 +77,9 @@ RSpec.describe User, type: :model do
         admin = create(:user, :admin)
         general = create(:user, :general)
 
-        expect(described_class.by_role(:admin)).to include(admin)
-        expect(described_class.by_role(:admin)).not_to include(general)
+        expect(User.by_role(:admin)).to include(admin)
+        expect(User.by_role(:admin)).not_to include(general)
       end
-    end
-  end
-
-  describe "#can_edit_location?" do
-    let(:location) { create(:location) }
-    let(:other_location) { create(:location) }
-
-    context "when user is superadmin" do
-      let(:user) { create(:user, :superadmin) }
-
-      it "returns true for any location" do
-        expect(user.can_edit_location?(location)).to be true
-        expect(user.can_edit_location?(other_location)).to be true
-      end
-    end
-
-    context "when user is admin" do
-      let(:user) { create(:user, :admin) }
-
-      it "returns true for any location" do
-        expect(user.can_edit_location?(location)).to be true
-      end
-    end
-
-    context "when user is location user" do
-      let(:user) { create(:user, role: :location, location: location) }
-
-      it "returns true for their own location" do
-        expect(user.can_edit_location?(location)).to be true
-      end
-
-      it "returns false for other locations" do
-        expect(user.can_edit_location?(other_location)).to be false
-      end
-    end
-
-    context "when user is general" do
-      let(:user) { create(:user, :general) }
-
-      it "returns false for any location" do
-        expect(user.can_edit_location?(location)).to be false
-      end
-    end
-  end
-
-  describe "#can_create_general_news?" do
-    it "returns true for superadmin" do
-      user = create(:user, :superadmin)
-      expect(user.can_create_general_news?).to be true
-    end
-
-    it "returns true for admin" do
-      user = create(:user, :admin)
-      expect(user.can_create_general_news?).to be true
-    end
-
-    it "returns true for general user" do
-      user = create(:user, :general)
-      expect(user.can_create_general_news?).to be true
-    end
-
-    it "returns false for location user" do
-      user = create(:user, :location)
-      expect(user.can_create_general_news?).to be false
-    end
-  end
-
-  describe "#can_manage_users?" do
-    it "returns true for superadmin" do
-      user = create(:user, :superadmin)
-      expect(user.can_manage_users?).to be true
-    end
-
-    it "returns true for admin" do
-      user = create(:user, :admin)
-      expect(user.can_manage_users?).to be true
-    end
-
-    it "returns false for general user" do
-      user = create(:user, :general)
-      expect(user.can_manage_users?).to be false
-    end
-
-    it "returns false for location user" do
-      user = create(:user, :location)
-      expect(user.can_manage_users?).to be false
-    end
-  end
-
-  describe "#can_manage_locations?" do
-    it "returns true for superadmin" do
-      user = create(:user, :superadmin)
-      expect(user.can_manage_locations?).to be true
-    end
-
-    it "returns true for admin" do
-      user = create(:user, :admin)
-      expect(user.can_manage_locations?).to be true
-    end
-
-    it "returns false for general user" do
-      user = create(:user, :general)
-      expect(user.can_manage_locations?).to be false
-    end
-  end
-
-  describe "#can_manage_rss_feeds?" do
-    it "returns true for superadmin" do
-      user = create(:user, :superadmin)
-      expect(user.can_manage_rss_feeds?).to be true
-    end
-
-    it "returns true for admin" do
-      user = create(:user, :admin)
-      expect(user.can_manage_rss_feeds?).to be true
-    end
-
-    it "returns false for general user" do
-      user = create(:user, :general)
-      expect(user.can_manage_rss_feeds?).to be false
-    end
-  end
-
-  describe "#can_delete_admin?" do
-    it "returns true for superadmin" do
-      user = create(:user, :superadmin)
-      expect(user.can_delete_admin?).to be true
-    end
-
-    it "returns false for admin" do
-      user = create(:user, :admin)
-      expect(user.can_delete_admin?).to be false
-    end
-
-    it "returns false for general user" do
-      user = create(:user, :general)
-      expect(user.can_delete_admin?).to be false
     end
   end
 
@@ -242,15 +105,8 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#display_name" do
-    it "returns the username" do
-      user = create(:user, username: "testuser")
-      expect(user.display_name).to eq("testuser")
-    end
-  end
-
   describe "#to_s" do
-    it "returns the display name" do
+    it "returns the username" do
       user = create(:user, username: "testuser")
       expect(user.to_s).to eq("testuser")
     end
@@ -318,14 +174,20 @@ RSpec.describe User, type: :model do
     end
 
     describe "#force_password_change?" do
-      it "returns true when flag is set" do
-        user = create(:user, force_password_change: true)
-        expect(user.force_password_change?).to be true
+      context "when force_password_change is true" do
+        let(:user) { create(:user, force_password_change: true) }
+
+        it "returns true" do
+          expect(user.force_password_change?).to be true
+        end
       end
 
-      it "returns false when flag is not set" do
-        user = create(:user, force_password_change: false)
-        expect(user.force_password_change?).to be false
+      context "when force_password_change is false" do
+        let(:user) { create(:user, force_password_change: false) }
+
+        it "returns false" do
+          expect(user.force_password_change?).to be false
+        end
       end
     end
   end

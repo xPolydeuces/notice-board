@@ -5,12 +5,12 @@ require 'open-uri'
 
 module RssFeeds
   # Service to fetch and parse RSS feeds
-  class FetchService
-    attr_reader :rss_feed, :errors
+  class FetchService < ApplicationService
+    attr_reader :rss_feed
 
     def initialize(rss_feed:)
+      super()
       @rss_feed = rss_feed
-      @errors = []
     end
 
     def call
@@ -22,10 +22,6 @@ module RssFeeds
       Rails.logger.error("RSS Feed fetch failed for #{rss_feed.name}: #{error_message}")
       rss_feed.mark_as_failed!(error_message)
       failure(:fetch_error, error_message)
-    end
-
-    def success?
-      @success == true
     end
 
     def items_count
@@ -52,63 +48,38 @@ module RssFeeds
 
     def process_feed_items(parsed_rss)
       items_count = 0
-      existing_guids = preload_existing_guids
+
+      # Preload existing items to avoid N+1 queries
+      existing_guids = rss_feed.rss_feed_items.pluck(:guid).to_set
 
       parsed_rss.items.each do |item|
-        guid = extract_guid(item)
+        guid = item.guid&.content || item.link
+
+        # Skip if item already exists
         next if existing_guids.include?(guid)
 
-        items_count += 1 if create_feed_item(item, guid, existing_guids)
+        feed_item = rss_feed.rss_feed_items.build(
+          guid: guid,
+          title: item.title,
+          description: item.description,
+          link: item.link,
+          published_at: item.pubDate || item.dc_date || Time.current
+        )
+
+        if feed_item.save
+          items_count += 1
+          existing_guids.add(guid)
+        else
+          Rails.logger.warn("Failed to save RSS item: #{feed_item.errors.full_messages.join(', ')}")
+        end
       end
 
       items_count
     end
 
-    def preload_existing_guids
-      rss_feed.rss_feed_items.pluck(:guid).to_set
-    end
-
-    def extract_guid(item)
-      item.guid&.content || item.link
-    end
-
-    def create_feed_item(item, guid, existing_guids)
-      feed_item = build_feed_item(item, guid)
-
-      if feed_item.save
-        existing_guids.add(guid)
-        true
-      else
-        log_save_failure(feed_item)
-        false
-      end
-    end
-
-    def build_feed_item(item, guid)
-      rss_feed.rss_feed_items.build(
-        guid: guid,
-        title: item.title,
-        description: item.description,
-        link: item.link,
-        published_at: item.pubDate || item.dc_date || Time.current
-      )
-    end
-
-    def log_save_failure(feed_item)
-      Rails.logger.warn("Failed to save RSS item: #{feed_item.errors.full_messages.join(', ')}")
-    end
-
-    def success(items_count)
-      @success = true
+    def success(items_count = 0)
       @items_count = items_count
-      self
-    end
-
-    def failure(reason, message = nil)
-      @success = false
-      @errors << reason
-      @errors << message if message
-      self
+      super()
     end
 
     def handle_failure(reason, message)
