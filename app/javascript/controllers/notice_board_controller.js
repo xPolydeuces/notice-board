@@ -84,8 +84,11 @@ export default class extends Controller {
     const content = this.marqueeContentTarget
 
     // Create clones for seamless loop
-    for (let i = 0; i < 3; i++) {
+    if (!marquee.dataset.cloned) {
+      for (let i = 0; i < 3; i++) {
       marquee.appendChild(content.cloneNode(true))
+      }
+      marquee.dataset.cloned = 'true'
     }
 
     let position = 0

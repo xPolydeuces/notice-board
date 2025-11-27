@@ -39,6 +39,8 @@ class NewsPost < ApplicationRecord
 
   # Callbacks
   before_validation :set_default_display_duration
+  after_save :clear_dashboard_cache
+  after_destroy :clear_dashboard_cache
 
   private
 
@@ -170,5 +172,21 @@ class NewsPost < ApplicationRecord
     return nil unless rich_text?
 
     rich_content.to_s
+  end
+
+  private
+
+  # Clear dashboard cache when posts are created, updated, or deleted
+  def clear_dashboard_cache
+    # Clear general posts cache if current or previous location was nil
+    Rails.cache.delete("dashboard/general_posts") if location_id.nil? || location_id_previously_was.nil?
+
+    # Clear location-specific cache for current location
+    Rails.cache.delete("dashboard/location_posts/#{location_id}") if location_id.present?
+
+    # Clear location-specific cache for previous location if it changed
+    if location_id_previously_was.present? && location_id != location_id_previously_was
+      Rails.cache.delete("dashboard/location_posts/#{location_id_previously_was}")
+    end
   end
 end

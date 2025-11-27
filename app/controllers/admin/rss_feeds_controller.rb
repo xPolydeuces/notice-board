@@ -4,7 +4,7 @@ module Admin
     before_action :set_rss_feed, only: %i[edit update destroy refresh preview]
 
     def index
-      @rss_feeds = RssFeed.ordered.page(params[:page])
+      @rss_feeds = RssFeed.includes(:rss_feed_items).ordered.page(params[:page])
     end
 
     def new

@@ -22,32 +22,38 @@ class DashboardController < ApplicationController
   end
 
   def fetch_general_posts
-    NewsPost.published
-            .active
-            .general
-            .with_associations
-            .by_published_date
-            .limit(10)
-            .to_a
+    Rails.cache.fetch("dashboard/general_posts", expires_in: 5.minutes) do
+      NewsPost.published
+              .active
+              .general
+              .with_associations
+              .by_published_date
+              .limit(10)
+              .to_a
+    end
   end
 
   def fetch_location_posts
     return [] unless @location
 
-    NewsPost.published
-            .active
-            .for_location(@location.id)
-            .with_associations
-            .by_published_date
-            .limit(10)
-            .to_a
+    Rails.cache.fetch("dashboard/location_posts/#{@location.id}", expires_in: 5.minutes) do
+      NewsPost.published
+              .active
+              .for_location(@location.id)
+              .with_associations
+              .by_published_date
+              .limit(10)
+              .to_a
+    end
   end
 
   def fetch_rss_feed_items
-    active_feed_ids = RssFeed.active.pluck(:id)
-    RssFeedItem.where(rss_feed_id: active_feed_ids)
-               .includes(:rss_feed)
-               .recent(50)
-               .to_a
+    Rails.cache.fetch("dashboard/rss_feed_items", expires_in: 5.minutes) do
+      RssFeedItem.joins(:rss_feed)
+                .where(rss_feeds: { active: true})
+                .includes(:rss_feed)
+                .recent(50)
+                .to_a
+    end
   end
 end

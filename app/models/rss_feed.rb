@@ -5,6 +5,8 @@ class RssFeed < ApplicationRecord
 
   # Callbacks
   before_validation :strip_url_whitespace
+  after_save :clear_dashboard_cache, if: :saved_change_to_active?
+  after_destroy :clear_dashboard_cache
 
   # Validations
   validates :name, presence: true
@@ -64,5 +66,10 @@ class RssFeed < ApplicationRecord
 
   def strip_url_whitespace
     self.url = url&.strip
+  end
+
+  # Clear dashboard cache when feed active status changes
+  def clear_dashboard_cache
+    Rails.cache.delete("dashboard/rss_feed_items")
   end
 end
