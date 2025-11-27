@@ -63,3 +63,10 @@ database_consistency*.txt
 
 # To Do
 todo.md
+
+# Ignore key files for decrypting credentials and more.
+/config/*.key
+
+.kamal/
+credentials.yml.enc
+config/deploy.yml
