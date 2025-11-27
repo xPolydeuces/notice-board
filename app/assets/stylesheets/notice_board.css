@@ -200,7 +200,6 @@
 /* Marquee container - hide overflow for seamless scrolling */
 .marquee-container {
   overflow: hidden;
-  flex: 1;
   display: flex;
   align-items: center;
 }
@@ -270,4 +269,50 @@
 .notice-board-gradient .settings-modal-divider {
   border-color: var(--text-secondary) !important;
   transition: border-color 0.6s ease-in-out;
+}
+
+/* ============================================
+   Responsive Content Scaling
+   ============================================ */
+
+/* CSS Variables for dynamic scaling (set by responsive-scale controller) */
+:root {
+  --viewport-width: 100vw;
+  --viewport-height: 100vh;
+  --scale-factor: 1;
+  --width-scale: 1;
+  --height-scale: 1;
+}
+
+/* Enhanced responsive scaling for images */
+.notice-board-gradient img {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Ensure images scale smoothly during resize */
+.notice-board-gradient .object-contain {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* PDF viewer canvas scaling */
+.notice-board-gradient canvas {
+  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+/* Enhanced text scaling - smooth transitions during resize */
+.notice-board-gradient [class*="text-[clamp"] {
+  transition: font-size 0.2s ease-in-out;
+}
+
+/* Prevent layout shift during resize */
+.notice-board-gradient * {
+  box-sizing: border-box;
+}
+
+/* Optimize rendering during resize */
+@media (prefers-reduced-motion: no-preference) {
+  .notice-board-gradient {
+    will-change: transform;
+  }
 }

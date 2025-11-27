@@ -30,3 +30,6 @@ application.register("display-mode", DisplayModeController)
 
 import PdfViewerController from "./pdf_viewer_controller"
 application.register("pdf-viewer", PdfViewerController)
+
+import ResponsiveScaleController from "./responsive_scale_controller"
+application.register("responsive-scale", ResponsiveScaleController)

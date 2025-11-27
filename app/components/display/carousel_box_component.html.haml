@@ -1,6 +1,7 @@
 %div{ class: "box rounded-lg md:rounded-xl p-4 sm:p-6 md:p-8 flex flex-col relative bg-[#FEF3E2] #{box_classes}" }
-  %div{ class: 'font-semibold text-center mb-4 sm:mb-6 pb-3 sm:pb-4 border-b-2 sm:border-b-3 md:border-b-4 border-[#FA812F] text-[clamp(1.5rem,3vw,2.5rem)]' }
-    = title
+  -# Title section
+  -# %div{ class: 'font-semibold text-center mb-4 sm:mb-6 pb-3 sm:pb-4 border-b-2 sm:border-b-3 md:border-b-4 border-[#FA812F] text-[clamp(1.5rem,3vw,10rem)]' }
+  -#   = title
 
   .flex-1.relative.overflow-hidden{ data: { notice_board_target: 'carousel' } }
     - if any_posts?
@@ -12,5 +13,5 @@
           - posts.to_a.each_with_index do |_, i|
             %div{ class: "w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full transition-colors duration-300 #{i == 0 ? 'bg-orange-600' : 'bg-orange-300'}", data: { dot: 'true' } }
     - else
-      %div{ class: 'flex-1 flex items-center justify-center text-gray-400 text-center p-4 sm:p-6 md:p-10 text-[clamp(1.25rem,2.5vw,2rem)]' }
+      %div{ class: 'flex-1 flex items-center justify-center text-gray-400 text-center p-4 sm:p-6 md:p-10 text-[clamp(1.25rem,2.5vw,8rem)]' }
         = empty_message

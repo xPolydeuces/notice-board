@@ -18,7 +18,7 @@ module Display
 
     def content_classes
       "leading-relaxed text-gray-800 max-h-[60vh] overflow-y-auto " \
-        "notice-board-scroll text-[clamp(1.125rem,2.5vw,2.25rem)]"
+        "notice-board-scroll text-[clamp(1.125rem,2.5vw,10rem)]"
     end
 
     def prose_classes

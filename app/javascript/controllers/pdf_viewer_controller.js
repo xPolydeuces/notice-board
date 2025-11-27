@@ -13,12 +13,25 @@ export default class extends Controller {
   connect() {
     this.handleSlideActive = this.resetAndPlay.bind(this)
     this.element.addEventListener('slide:active', this.handleSlideActive)
+
+    // Listen for responsive scale updates
+    this.handleResponsiveScale = this.onResponsiveScale.bind(this)
+    this.element.addEventListener('responsive-scale:update', this.handleResponsiveScale)
+
     this.loadPdf()
   }
 
   disconnect() {
     this.stopAutoScroll()
     this.element.removeEventListener('slide:active', this.handleSlideActive)
+    this.element.removeEventListener('responsive-scale:update', this.handleResponsiveScale)
+  }
+
+  onResponsiveScale(event) {
+    // Only re-render if PDF is already loaded
+    if (this.pdf && this.rendered) {
+      this.reRenderPdf()
+    }
   }
 
   resetAndPlay() {
@@ -60,7 +73,7 @@ export default class extends Controller {
     for (let pageNum = 1; pageNum <= this.pdf.numPages; pageNum++) {
       const page = await this.pdf.getPage(pageNum)
       const viewport = page.getViewport({ scale: 1 })
-      const scale = Math.min(containerWidth / viewport.width, 2) // Cap scale at 2x
+      const scale = containerWidth / viewport.width
       const scaledViewport = page.getViewport({ scale })
 
       const canvas = document.createElement("canvas")
@@ -75,6 +88,33 @@ export default class extends Controller {
       }).promise
 
       container.appendChild(canvas)
+    }
+  }
+
+  async reRenderPdf() {
+    // Save current scroll position as percentage
+    const scrollPercentage = this.element.scrollTop / (this.element.scrollHeight - this.element.clientHeight)
+
+    // Stop any ongoing auto-scroll
+    this.stopAutoScroll()
+
+    // Clear existing canvases
+    this.element.innerHTML = ''
+
+    // Re-render all pages with new scale
+    await this.renderAllPages()
+
+    // Restore scroll position (approximately)
+    const newScrollHeight = this.element.scrollHeight - this.element.clientHeight
+    if (newScrollHeight > 0 && !isNaN(scrollPercentage)) {
+      this.element.scrollTop = scrollPercentage * newScrollHeight
+    }
+
+    // Restart auto-scroll if this is the active slide
+    // Check if parent has 'opacity-100' class (active slide indicator)
+    const slideElement = this.element.closest('[data-notice-board-target="slide"]')
+    if (slideElement && slideElement.classList.contains('opacity-100')) {
+      this.startAutoScroll()
     }
   }
 
