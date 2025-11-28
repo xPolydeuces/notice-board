@@ -50,10 +50,10 @@ class DashboardController < ApplicationController
   def fetch_rss_feed_items
     Rails.cache.fetch("dashboard/rss_feed_items", expires_in: 5.minutes) do
       RssFeedItem.joins(:rss_feed)
-                .where(rss_feeds: { active: true})
-                .includes(:rss_feed)
-                .recent(50)
-                .to_a
+                 .where(rss_feeds: { active: true })
+                 .includes(:rss_feed)
+                 .recent(50)
+                 .to_a
     end
   end
 end

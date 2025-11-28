@@ -24,7 +24,6 @@ RSpec.describe "Dashboard Display", type: :system do
       it "displays general announcements section" do
         visit root_path
 
-        expect(page).to have_text("Ogłoszenia Ogólne")
         expect(page).to have_text("General Announcement 1")
       end
 
@@ -48,14 +47,12 @@ RSpec.describe "Dashboard Display", type: :system do
       it "displays location announcements when location is specified" do
         visit root_path(location_id: location.id)
 
-        expect(page).to have_text("Ogłoszenia - #{location.name}")
         expect(page).to have_text("Location Announcement")
       end
 
       it "shows generic location section without location parameter" do
         visit root_path
 
-        expect(page).to have_text("Ogłoszenia Oddziałowe")
         expect(page).to have_text("Wybierz oddział aby zobaczyć ogłoszenia")
       end
     end

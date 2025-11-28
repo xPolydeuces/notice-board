@@ -39,8 +39,8 @@ class NewsPost < ApplicationRecord
 
   # Callbacks
   before_validation :set_default_display_duration
-  after_save :clear_dashboard_cache
   after_destroy :clear_dashboard_cache
+  after_save :clear_dashboard_cache
 
   private
 
@@ -185,8 +185,8 @@ class NewsPost < ApplicationRecord
     Rails.cache.delete("dashboard/location_posts/#{location_id}") if location_id.present?
 
     # Clear location-specific cache for previous location if it changed
-    if location_id_previously_was.present? && location_id != location_id_previously_was
-      Rails.cache.delete("dashboard/location_posts/#{location_id_previously_was}")
-    end
+    return unless location_id_previously_was.present? && location_id != location_id_previously_was
+
+    Rails.cache.delete("dashboard/location_posts/#{location_id_previously_was}")
   end
 end

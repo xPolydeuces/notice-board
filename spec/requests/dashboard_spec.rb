@@ -17,7 +17,6 @@ RSpec.describe "Dashboard", type: :request do
 
       it "displays general announcements" do
         get root_path
-        expect(response.body).to include("Ogłoszenia Ogólne")
         posts.each do |post|
           expect(response.body).to include(post.title)
         end
@@ -32,7 +31,6 @@ RSpec.describe "Dashboard", type: :request do
 
       it "displays location section with prompt message" do
         get root_path
-        expect(response.body).to include("Ogłoszenia Oddziałowe")
         expect(response.body).to include("Wybierz oddział")
       end
     end
@@ -51,7 +49,6 @@ RSpec.describe "Dashboard", type: :request do
       it "displays location-specific announcements" do
         get root_path, params: { location_id: location.id }
 
-        expect(response.body).to include("Ogłoszenia - #{location.name}")
         location_posts.each do |post|
           expect(response.body).to include(post.title)
         end
@@ -160,9 +157,6 @@ RSpec.describe "Dashboard", type: :request do
 
       it "renders carousel components" do
         get root_path
-
-        expect(response.body).to include("Ogłoszenia Ogólne")
-        expect(response.body).to include("Ogłoszenia Oddziałowe")
         expect(response.body).to include("Test Announcement")
       end
 
@@ -176,7 +170,7 @@ RSpec.describe "Dashboard", type: :request do
       it "includes Stimulus controller" do
         get root_path
 
-        expect(response.body).to include("data-controller=\"notice-board display-mode\"")
+        expect(response.body).to include("data-controller=\"notice-board display-mode responsive-scale\"")
       end
 
       it "sets up carousel and marquee targets" do

@@ -53,6 +53,11 @@ RSpec.configure do |config|
       example.run
     end
   end
+
+  # Clear Rails cache before each test to prevent cached data from leaking between tests
+  config.before do
+    Rails.cache.clear
+  end
 end
 
 RSpec::Sidekiq.configure do |config|

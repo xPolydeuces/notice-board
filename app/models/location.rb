@@ -5,9 +5,9 @@ class Location < ApplicationRecord
   has_many :users, dependent: :nullify, inverse_of: :location
   has_many :news_posts, dependent: :nullify, inverse_of: :location
 
+  after_destroy :clear_location_posts_cache
   # Callbacks
   after_save :clear_location_posts_cache
-  after_destroy :clear_location_posts_cache
 
   # Validations
   validates :code, presence: true, uniqueness: { case_sensitive: false }

@@ -5,9 +5,9 @@ class RssFeedItem < ApplicationRecord
   validates :title, presence: true
   validates :guid, presence: true, uniqueness: { scope: :rss_feed_id }
 
+  after_destroy :clear_dashboard_cache
   # Callbacks
   after_save :clear_dashboard_cache
-  after_destroy :clear_dashboard_cache
 
   scope :ordered, -> { order(published_at: :desc, created_at: :desc) }
   scope :recent, ->(limit = 50) { ordered.limit(limit) }

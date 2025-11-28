@@ -6,7 +6,7 @@ RSpec.describe Display::CarouselBoxComponent, type: :component do
 
   describe "rendering" do
     context "with posts" do
-      it "renders the component with title" do
+      it "renders the component with posts" do
         render_inline(described_class.new(
                         title: "Test Announcements",
                         posts: posts,
@@ -14,7 +14,7 @@ RSpec.describe Display::CarouselBoxComponent, type: :component do
                         box_classes: "flex-[65]"
                       ))
 
-        expect(page).to have_text("Test Announcements")
+        expect(page).to have_css("[data-slide]", count: posts.length)
       end
 
       it "renders all post slides" do

@@ -5,8 +5,8 @@ class RssFeed < ApplicationRecord
 
   # Callbacks
   before_validation :strip_url_whitespace
-  after_save :clear_dashboard_cache, if: :saved_change_to_active?
   after_destroy :clear_dashboard_cache
+  after_save :clear_dashboard_cache, if: :saved_change_to_active?
 
   # Validations
   validates :name, presence: true
