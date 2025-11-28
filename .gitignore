@@ -69,4 +69,6 @@ todo.md
 
 .kamal/
 credentials.yml.enc
+/config/*.yml
 config/deploy.yml
+.kamal/secrets
