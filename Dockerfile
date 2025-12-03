@@ -1,78 +1,115 @@
 # syntax=docker/dockerfile:1
-# check=error=true
-
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t noticeboard .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name noticeboard noticeboard
-
-# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
-
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
+############################################
+# Builder stage: installs deps, builds gems, bun and compiles assets
+############################################
 ARG RUBY_VERSION=3.4.7
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+FROM ruby:${RUBY_VERSION}-slim AS builder
 
-# Rails app lives here
-WORKDIR /rails
+ENV DEBIAN_FRONTEND=noninteractive \
+    BUNDLE_JOBS=4 \
+    BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_WITHOUT="development:test" \
+    RAILS_ENV=production \
+    BUN_VERSION=1.2.3 \
+    BUN_INSTALL=/usr/local/bun \
+    PATH=/usr/local/bun/bin:$PATH
 
-# Install base packages
+# System deps for building gems and runtime
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    apt-get install --no-install-recommends -y \
+      build-essential \
+      curl \
+      ca-certificates \
+      git \
+      libpq-dev \
+      pkg-config \
+      unzip \
+      gnupg \
+      libc6-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
-
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config unzip && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-ENV BUN_INSTALL=/usr/local/bun
-ENV PATH=/usr/local/bun/bin:$PATH
-ARG BUN_VERSION=1.2.3
+# Install bun (node) - pinned version
 RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
 
-# Install application gems
-COPY Gemfile Gemfile.lock* ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+WORKDIR /rails
 
-# Install node modules
+# Copy only what is needed for bundle install and bun install to use Docker cache
+COPY Gemfile Gemfile.lock ./
+RUN gem install bundler -v "$(awk '/^gem \"bundler\"/ {print $0}' Gemfile 2>/dev/null || true)" || true
+RUN bundle config set deployment 'true' && bundle config set without 'development:test' && bundle install --jobs 4 --retry 3
+
+# Copy JS manifest files and install node deps (bun)
 COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile
 
-# Copy application code
+# Copy the rest of the app
 COPY . .
 
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
+# Precompile bootsnap and Rails assets (propshaft + bun)
+RUN bundle exec bootsnap precompile --gemfile || true
 
-# Provide dummy DATABASE_URL to satisfy config/database.yml during build
-RUN SECRET_KEY_BASE_DUMMY=1 DATABASE_URL=postgresql://user:pass@localhost/dbname ./bin/rails assets:precompile
+# Provide a dummy DATABASE_URL to allow asset compilation during image build
+ENV SECRET_KEY_BASE=dummy SECRET_KEY_BASE_DUMMY=1
+RUN DATABASE_URL=postgresql://user:pass@localhost/dummy RAILS_ENV=production \
+    ./bin/rails assets:precompile
 
-# Final stage for app image
-FROM base
+# Remove build-only caches that won't be needed in final image
+############################################
+# Final runtime image
+############################################
+FROM ruby:${RUBY_VERSION}-slim AS final
 
-# Copy built artifacts: gems, application
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
+ENV RAILS_ENV=production \
+    RACK_ENV=production \
+    BUNDLE_PATH=/usr/local/bundle \
+    PATH=/usr/local/bun/bin:$PATH
 
-# Run and own only the runtime files as a non-root user for security
+# Install runtime deps only
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+      curl \
+      ca-certificates \
+      libpq5 \
+      libjemalloc2 \
+      gnupg && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install bun runtime (reuse same bun install command)
+ARG BUN_VERSION=1.2.3
+RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
+
+# Create app user and runtime directories
 RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log tmp
-USER 1000:1000
+    useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash rails && \
+    mkdir -p /rails /rails/tmp /rails/log /rails/storage && \
+    chown -R rails:rails /rails
 
-# Entrypoint prepares the database.
+WORKDIR /rails
+
+# Copy gems and app from builder
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /usr/local/bun /usr/local/bun
+COPY --from=builder /rails /rails
+
+# Ensure ownership and permissions
+RUN chown -R rails:rails /rails && chmod -R u+rwX /rails
+
+# Switch to non-root
+USER rails
+
+# Provide entrypoint (will be copied below)
+COPY --chown=rails:rails bin/docker-entrypoint /rails/bin/docker-entrypoint
+RUN chmod +x /rails/bin/docker-entrypoint
+
+# Expose port 80 for Kamal proxy
+EXPOSE 80
+
+# Healthcheck: hits /up endpoint expected to return 200
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost/up || exit 1
+
+# Entrypoint prepares DB and then execs the CMD
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Start server via Thruster by default, this can be overwritten at runtime
-EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
+# Default command: run Puma on port 80 (bind 0.0.0.0)
+CMD ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:80", "-C", "config/puma.rb"]

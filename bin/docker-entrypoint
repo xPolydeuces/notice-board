@@ -1,35 +1,70 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Remove a potentially pre-existing server.pid for Rails.
-rm -f /rails/tmp/pids/server.pid
+# Defaults (can be overridden at runtime)
+: "${SKIP_DB_MIGRATIONS:=false}"
+: "${DB_WAIT_RETRIES:=30}"
+: "${DB_WAIT_SLEEP:=1}"
 
-# Extract database host from DATABASE_URL
-# Format: postgresql://user:pass@host:port/database
-DB_HOST=$(echo $DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
-DB_USER=$(echo $DATABASE_URL | sed -n 's/.*:\/\/\([^:]*\):.*/\1/p')
- 
-# Wait for PostgreSQL
-echo "Waiting for PostgreSQL at ${DB_HOST}..."
-until pg_isready -h ${DB_HOST} -U ${DB_USER}; do
-  echo "PostgreSQL is unavailable - sleeping"
-  sleep 1
-done
-echo "PostgreSQL is up!"
+# Utility: wait for Postgres using DATABASE_URL or host/port fallback
+wait_for_db() {
+  if [ -n "${DATABASE_URL:-}" ]; then
+    # parse host and port from DATABASE_URL
+    host=$(echo "$DATABASE_URL" | sed -E 's#^[^:]+://([^:/]+).*#\1#')
+    port=$(echo "$DATABASE_URL" | sed -E 's#^[^:]+://[^:/]+:([0-9]+).*#\1#' || true)
+    if [ -z "$port" ]; then port=5432; fi
+  else
+    host="${DB_HOST:-localhost}"
+    port="${DB_PORT:-5432}"
+  fi
 
-# Check if database exists and create/migrate if needed
-echo "Checking database..."
-if bin/rails db:version 2>/dev/null; then
-  echo "Database exists, checking for pending migrations..."
-  bin/rails db:migrate
-else
-  echo "Database not found, creating..."
-  bin/rails db:create
-  bin/rails db:migrate
-  bin/rails db:seed
+  echo "Waiting for PostgreSQL at ${host}:${port}..."
+
+  tries=0
+  while ! pg_isready -h "$host" -p "$port" >/dev/null 2>&1; do
+    tries=$((tries+1))
+    if [ "$tries" -ge "$DB_WAIT_RETRIES" ]; then
+      echo "Postgres did not become available after $DB_WAIT_RETRIES attempts"
+      return 1
+    fi
+    sleep "$DB_WAIT_SLEEP"
+  done
+
+  echo "PostgreSQL is up!"
+  return 0
+}
+
+# ensure pg_isready is available; if not, use simple tcp check
+if ! command -v pg_isready >/dev/null 2>&1; then
+  echo "pg_isready not found, installing fallback check..."
+  # fallback: try nc if available
+  if command -v nc >/dev/null 2>&1; then
+    pg_isready() { nc -z "$1" "${2:-5432}"; }
+  else
+    echo "No pg_isready or nc available; continuing (may fail if DB unreachable)"
+  fi
 fi
 
-echo "Database ready!"
+# Wait for DB unless explicitly skipped
+if [ "${SKIP_DB_WAIT:-false}" != "true" ]; then
+  wait_for_db || exit 1
+fi
 
-# Then exec the container's main process (what's set as CMD in the Dockerfile)
+# Run DB migrations (unless explicitly disabled)
+if [ "$SKIP_DB_MIGRATIONS" != "true" ]; then
+  echo "Checking database..."
+  # Use rails db:prepare which creates DB and runs migrations if needed
+  bundle exec rails db:prepare || {
+    echo "Failed to prepare DB"
+    exit 1
+  }
+fi
+
+# Precompile assets at runtime if env var says so (optional)
+if [ "${ASSETS_PRECOMPILE_ON_START:-false}" = "true" ]; then
+  echo "Precompiling assets on container start..."
+  bundle exec rails assets:precompile
+fi
+
+# Exec the main container command (PID 1)
 exec "$@"
