@@ -4,9 +4,14 @@ set -e
 # Remove a potentially pre-existing server.pid for Rails.
 rm -f /rails/tmp/pids/server.pid
 
+# Extract database host from DATABASE_URL
+# Format: postgresql://user:pass@host:port/database
+DB_HOST=$(echo $DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
+DB_USER=$(echo $DATABASE_URL | sed -n 's/.*:\/\/\([^:]*\):.*/\1/p')
+ 
 # Wait for PostgreSQL
-echo "Waiting for PostgreSQL..."
-until pg_isready -h postgresql -U postgres; do
+echo "Waiting for PostgreSQL at ${DB_HOST}..."
+until pg_isready -h ${DB_HOST} -U ${DB_USER}; do
   echo "PostgreSQL is unavailable - sleeping"
   sleep 1
 done
