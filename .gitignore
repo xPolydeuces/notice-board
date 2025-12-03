@@ -71,5 +71,4 @@ todo.md
 credentials.yml.enc
 /config/*.yml
 config/deploy.yml
-.kamal/secrets
 .env.kamal

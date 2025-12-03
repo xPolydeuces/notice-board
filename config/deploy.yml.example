@@ -1,0 +1,87 @@
+# Kamal 2 deployment configuration for Notice Board
+# Copy this file to config/deploy.yml and update with your actual values
+# Documentation: https://kamal-deploy.org
+# Latest version: Kamal 2.9.0 (as of Nov 2025)
+
+service: noticeboard
+
+# Docker image configuration
+image: YOUR_DOCKERHUB_USERNAME/noticeboard
+
+# Docker registry configuration
+registry:
+  username: YOUR_DOCKERHUB_USERNAME  # Replace with your Docker Hub username
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Kamal Proxy configuration (replaces Traefik in Kamal 2)
+# Automatically handles zero-downtime deployments and SSL certificates
+proxy:
+  ssl: true  # Enable automatic Let's Encrypt SSL certificates
+  host: your-domain.com  # Replace with your actual domain
+  app_port: 80  # Port your Rails app listens on (changed from 3000 in Kamal 2)
+  healthcheck:
+    path: /up  # Rails 8 health check endpoint
+    interval: 10  # Check every 10 seconds
+    timeout: 30  # Timeout after 30 seconds
+
+# Environment variables for the application
+env:
+  clear:
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: true
+    RAILS_SERVE_STATIC_FILES: true
+    DB_HOST: noticeboard-db  # Kamal 2 network hostname for database
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL
+    - REDIS_URL
+
+# Database and Redis accessories
+# In Kamal 2, accessories communicate via the 'kamal' Docker network
+accessories:
+  db:
+    image: postgres:17-alpine
+    host: 192.168.1.100  # Same as your web server
+    port: 5432
+    env:
+      clear:
+        POSTGRES_USER: noticeboard_production
+        POSTGRES_DB: noticeboard_production
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    host: 192.168.1.100  # Same as your web server
+    port: 6379
+    directories:
+      - data:/data
+
+# Servers and roles configuration
+# Web servers run the Rails app, workers run Sidekiq for background jobs
+servers:
+  web:
+    hosts:
+      - 192.168.1.100  # Replace with your server IP
+  workers:
+    hosts:
+      - 192.168.1.100  # Can be same server or separate worker server
+    cmd: bundle exec sidekiq -e production
+
+# SSH configuration
+ssh:
+  user: deploy  # Replace with your SSH user
+
+# Builder configuration
+builder:
+  arch: amd64  # Use amd64 for most VPS providers, arm64 for ARM servers
+
+# Volumes to persist uploaded files and storage
+volumes:
+  - storage:/rails/storage
+
+# Retain previous deployments for easy rollback
+retain_containers: 5
