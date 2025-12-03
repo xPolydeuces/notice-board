@@ -22,6 +22,7 @@ RUN apt-get update -qq && \
       ca-certificates \
       git \
       libpq-dev \
+      libyaml-dev \
       pkg-config \
       unzip \
       gnupg \
