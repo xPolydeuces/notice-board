@@ -70,9 +70,12 @@ RUN apt-get update -qq && \
       curl \
       ca-certificates \
       libpq5 \
+      postgresql-client \
       libjemalloc2 \
-      gnupg && \
+      gnupg \
+      unzip && \
     rm -rf /var/lib/apt/lists/*
+
 
 # Install bun runtime (reuse same bun install command)
 ARG BUN_VERSION=1.2.3
