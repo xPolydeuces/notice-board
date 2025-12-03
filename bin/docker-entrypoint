@@ -1,70 +1,52 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Defaults (can be overridden at runtime)
-: "${SKIP_DB_MIGRATIONS:=false}"
-: "${DB_WAIT_RETRIES:=30}"
-: "${DB_WAIT_SLEEP:=1}"
+# Remove a potentially pre-existing server.pid for Rails.
+rm -f /rails/tmp/pids/server.pid
 
-# Utility: wait for Postgres using DATABASE_URL or host/port fallback
-wait_for_db() {
-  if [ -n "${DATABASE_URL:-}" ]; then
-    # parse host and port from DATABASE_URL
-    host=$(echo "$DATABASE_URL" | sed -E 's#^[^:]+://([^:/]+).*#\1#')
-    port=$(echo "$DATABASE_URL" | sed -E 's#^[^:]+://[^:/]+:([0-9]+).*#\1#' || true)
-    if [ -z "$port" ]; then port=5432; fi
-  else
-    host="${DB_HOST:-localhost}"
-    port="${DB_PORT:-5432}"
-  fi
+# Extract database connection details from DATABASE_URL
+# Format: postgresql://user:pass@host:port/database
+# This handles passwords with special characters correctly
+if [ -n "${DATABASE_URL:-}" ]; then
+  # Remove the protocol prefix
+  temp="${DATABASE_URL#*://}"
 
-  echo "Waiting for PostgreSQL at ${host}:${port}..."
+  # Extract username (everything before first colon)
+  DB_USER="${temp%%:*}"
 
-  tries=0
-  while ! pg_isready -h "$host" -p "$port" >/dev/null 2>&1; do
-    tries=$((tries+1))
-    if [ "$tries" -ge "$DB_WAIT_RETRIES" ]; then
-      echo "Postgres did not become available after $DB_WAIT_RETRIES attempts"
-      return 1
+  # Remove username and colon to get the rest
+  temp="${temp#*:}"
+
+  # Extract host (everything between @ and :)
+  # Find the LAST @ (in case password contains @)
+  temp2="${temp##*@}"
+  DB_HOST="${temp2%%:*}"
+
+  echo "Waiting for PostgreSQL at ${DB_HOST} (user: ${DB_USER})..."
+
+  # Wait for PostgreSQL with retry logic
+  retries=30
+  count=0
+  until pg_isready -h "${DB_HOST}" -U "${DB_USER}" -q; do
+    count=$((count + 1))
+    if [ $count -ge $retries ]; then
+      echo "ERROR: PostgreSQL did not become available after $retries attempts"
+      exit 1
     fi
-    sleep "$DB_WAIT_SLEEP"
+    echo "PostgreSQL is unavailable - sleeping (attempt $count/$retries)"
+    sleep 2
   done
 
   echo "PostgreSQL is up!"
-  return 0
-}
-
-# ensure pg_isready is available; if not, use simple tcp check
-if ! command -v pg_isready >/dev/null 2>&1; then
-  echo "pg_isready not found, installing fallback check..."
-  # fallback: try nc if available
-  if command -v nc >/dev/null 2>&1; then
-    pg_isready() { nc -z "$1" "${2:-5432}"; }
-  else
-    echo "No pg_isready or nc available; continuing (may fail if DB unreachable)"
-  fi
+else
+  echo "WARNING: DATABASE_URL not set, skipping database check"
 fi
 
-# Wait for DB unless explicitly skipped
-if [ "${SKIP_DB_WAIT:-false}" != "true" ]; then
-  wait_for_db || exit 1
-fi
+# Prepare database (creates if needed, runs migrations)
+echo "Preparing database..."
+bundle exec rails db:prepare
 
-# Run DB migrations (unless explicitly disabled)
-if [ "$SKIP_DB_MIGRATIONS" != "true" ]; then
-  echo "Checking database..."
-  # Use rails db:prepare which creates DB and runs migrations if needed
-  bundle exec rails db:prepare || {
-    echo "Failed to prepare DB"
-    exit 1
-  }
-fi
+echo "Database ready!"
 
-# Precompile assets at runtime if env var says so (optional)
-if [ "${ASSETS_PRECOMPILE_ON_START:-false}" = "true" ]; then
-  echo "Precompiling assets on container start..."
-  bundle exec rails assets:precompile
-fi
-
-# Exec the main container command (PID 1)
+# Exec the main container process (Puma)
 exec "$@"
