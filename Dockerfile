@@ -111,9 +111,9 @@ RUN chmod +x /rails/bin/docker-entrypoint
 ENV PORT=3000
 EXPOSE 3000
 
-# Healthcheck for Kamal
-HEALTHCHECK CMD curl -f http://localhost:$PORT/up || exit 1
+# Healthcheck for Kamal - use shell form to expand $PORT, with start period for db:prepare
+HEALTHCHECK --start-period=60s --interval=10s --timeout=5s --retries=3 \
+  CMD curl -f http://localhost:3000/up || exit 1
 
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
-EXPOSE 80
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
