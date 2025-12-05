@@ -44,7 +44,20 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use Redis for caching (same Redis as Sidekiq)
-  config.cache_store = :redis_cache_store, { url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1") }
+  # Fall back to memory_store during Docker build when Redis isn't available
+  if ENV["REDIS_URL"].present?
+    config.cache_store = :redis_cache_store, {
+      url: ENV["REDIS_URL"],
+      connect_timeout: 1,
+      read_timeout: 1,
+      write_timeout: 1,
+      error_handler: ->(method:, returning:, exception:) {
+        Rails.logger.warn("Redis cache error: #{exception.class} - #{exception.message}")
+      }
+    }
+  else
+    config.cache_store = :memory_store
+  end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
