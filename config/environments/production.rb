@@ -51,8 +51,9 @@ Rails.application.configure do
       connect_timeout: 1,
       read_timeout: 1,
       write_timeout: 1,
-      error_handler: ->(method:, returning:, exception:) {
-        Rails.logger.warn("Redis cache error: #{exception.class} - #{exception.message}")
+      error_handler: ->(*args, **kwargs) {
+        exception = kwargs[:exception] || args[2] rescue nil
+        Rails.logger.warn("Redis cache error: #{exception.class} - #{exception.message}") if exception
       }
     }
   else
