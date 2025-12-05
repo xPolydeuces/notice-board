@@ -63,4 +63,5 @@ fi
 echo "Starting application server..."
 
 # Exec the main container process (Puma)
-exec "$@"
+# Execute the first argument ($1) as the program, and pass the remaining arguments ($@).
+exec "$1" "${@:2}"
