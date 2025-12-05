@@ -1,30 +1,36 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# --- NEW: Check for an unexpected first argument and ignore it ---
+# This often happens when Kamal/Docker wraps the entrypoint execution.
+# This prevents the ArgumentError on db:prepare and runner commands.
+if [ "$1" = "sh" ] || [ "$1" = "bundle" ]; then
+    # Keep the argument if it's part of the actual command
+    true
+else
+    # If the first argument is NOT the intended command, shift it off
+    # to clean up the positional arguments for later Rails commands.
+    if [ "$#" -gt 0 ]; then
+        shift
+    fi
+fi
+# -----------------------------------------------------------------
+
 # Remove a potentially pre-existing server.pid for Rails.
 rm -f /rails/tmp/pids/server.pid
 
+# ... (Database check logic remains the same) ...
+
 # Extract database connection details from DATABASE_URL
-# Format: postgresql://user:pass@host:port/database
-# This handles passwords with special characters correctly
 if [ -n "${DATABASE_URL:-}" ]; then
-  # Remove the protocol prefix
   temp="${DATABASE_URL#*://}"
-
-  # Extract username (everything before first colon)
   DB_USER="${temp%%:*}"
-
-  # Remove username and colon to get the rest
   temp="${temp#*:}"
-
-  # Extract host (everything between @ and :)
-  # Find the LAST @ (in case password contains @)
   temp2="${temp##*@}"
   DB_HOST="${temp2%%:*}"
 
   echo "Waiting for PostgreSQL at ${DB_HOST} (user: ${DB_USER})..."
 
-  # Wait for PostgreSQL with retry logic
   retries=30
   count=0
   until pg_isready -h "${DB_HOST}" -U "${DB_USER}" -q; do
@@ -63,5 +69,5 @@ fi
 echo "Starting application server..."
 
 # Exec the main container process (Puma)
-# Execute the first argument ($1) as the program, and pass the remaining arguments ($@).
-exec "$1" "${@:2}"
+# REVERTED TO THE SIMPLER FORM SINCE SHIFTING CLEANSED ARGUMENTS
+exec "$@"
