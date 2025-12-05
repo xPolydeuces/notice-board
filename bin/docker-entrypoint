@@ -50,7 +50,7 @@ fi
 
 # Prepare database (creates if needed, runs migrations)
 echo "Preparing database..."
-if ! bundle exec rails db:prepare 2>&1; then
+if ! bin/rails db:prepare 2>&1; then
   echo "ERROR: db:prepare failed!"
   exit 1
 fi
@@ -59,7 +59,7 @@ echo "Database ready!"
 
 # Test Rails environment loads correctly before starting Puma
 echo "Testing Rails environment..."
-if ! bundle exec rails runner "puts 'Rails OK: ' + Rails.env" 2>&1; then
+if ! bin/rails runner "puts 'Rails OK: ' + Rails.env" 2>&1; then
   echo "ERROR: Rails environment failed to load!"
   echo "Dumping environment variables (redacted):"
   env | grep -E '^(RAILS_|DATABASE_|REDIS_|SECRET_)' | sed 's/=.*/=***REDACTED***/'
