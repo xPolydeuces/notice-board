@@ -3,7 +3,7 @@
 ############################################
 # Builder stage
 ############################################
-ARG RUBY_VERSION=3.4.7
+ARG RUBY_VERSION=3.3.6
 FROM ruby:${RUBY_VERSION}-slim AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive \
