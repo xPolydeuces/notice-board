@@ -2,7 +2,7 @@ module Display
   # RSS marquee component for notice board display
   class MarqueeComponent < ApplicationViewComponent
     option :rss_feed_items
-    option :logo_url, default: proc {}
+    option :logo_url, optional: true
 
     def render?
       true

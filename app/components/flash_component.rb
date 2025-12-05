@@ -1,8 +1,8 @@
 # Component for displaying flash messages with icons and colors
 class FlashComponent < ApplicationViewComponent
   # Accept any object that responds to flash methods, not just Hash
-  option :flash, default: proc { {} }
-  option :dismissible, Types::Bool, default: proc { true }
+  option :flash, default: proc { |*| {} }
+  option :dismissible, Types::Bool, default: proc { |*| true }
 
   FLASH_TYPES = {
     notice: { icon: "check-circle", bg: "bg-green-100", text: "text-green-800", border: "border-green-300" },

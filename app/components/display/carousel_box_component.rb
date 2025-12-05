@@ -4,7 +4,7 @@ module Display
     option :title
     option :posts
     option :empty_message
-    option :box_classes, default: proc { "" }
+    option :box_classes, default: proc { |*| "" }
 
     def render?
       title.present?
