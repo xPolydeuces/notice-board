@@ -36,6 +36,9 @@ gem "thruster", "~> 0.1", require: false
 gem "sidekiq", "~> 8.0"
 gem "sidekiq-cron", "~> 2.0"
 
+# Redis for caching and Sidekiq
+gem "redis", "~> 4.7"
+
 # RSS feed parsing
 gem "rss"
 
