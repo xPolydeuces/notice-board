@@ -33,14 +33,9 @@ test:
   url: <%= ENV.fetch("DATABASE_URL") %>
 
 production:
-  primary: &primary_production
-    <<: *default
-    url: <%= ENV.fetch("DATABASE_URL") %>
-    connect_timeout: 5
-    variables:
-      statement_timeout: 15s
-      lock_timeout: 10s
-  cache:
-    <<: *primary_production
-    url: <%= ENV.fetch("CACHE_DATABASE_URL", ENV.fetch("DATABASE_URL")) %>
-    migrations_paths: db/cache_migrate
+  <<: *default
+  url: <%= ENV.fetch("DATABASE_URL") %>
+  connect_timeout: 5
+  variables:
+    statement_timeout: 15s
+    lock_timeout: 10s

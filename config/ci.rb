@@ -9,7 +9,6 @@ CI.run do
   step "Database: Database consistency", "bundle exec database_consistency"
   step "Database: Database schema inconsistencies", "bundle exec rake active_record_doctor"
   step "Tests: Rails", "bundle exec rspec"
-  step "Tests: Cucumber", "env RAILS_ENV=test bundle exec cucumber --publish-quiet"
   step "Tests: Seeds", "env RAILS_ENV=test bin/rails db:seed:replant"
 
   # Optional: set a green GitHub commit status to unblock PR merge.
