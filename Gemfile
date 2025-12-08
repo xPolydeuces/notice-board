@@ -34,7 +34,10 @@ gem "sidekiq", "~> 8.0"
 gem "sidekiq-cron", "~> 2.0"
 
 # Redis for caching and Sidekiq
-gem "redis", "~> 4.7"
+gem "redis", ">= 5.0"
+
+# Pin connection_pool to 2.x for Rails 8.1 compatibility
+gem "connection_pool", "~> 2.4"
 
 # RSS feed parsing
 gem "rss"

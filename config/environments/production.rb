@@ -1,5 +1,4 @@
 require "active_support/core_ext/integer/time"
-puts ">> start loading production.rb"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -49,12 +48,8 @@ Rails.application.configure do
   if ENV["REDIS_URL"].present?
     config.cache_store = :redis_cache_store, {
       url: ENV["REDIS_URL"],
-      connect_timeout: 1,
-      read_timeout: 1,
-      write_timeout: 1,
-      error_handler: ->(*args, **kwargs) {
-        exception = kwargs[:exception] || args[2] rescue nil
-        Rails.logger.warn("Redis cache error: #{exception.class} - #{exception.message}") if exception
+      error_handler: ->(method:, returning:, exception:) {
+        Rails.logger.warn("Redis cache error: #{exception.class} - #{exception.message}")
       }
     }
   else
@@ -86,5 +81,3 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
-
-puts ">> closing production.rb"
