@@ -51,8 +51,8 @@ fi
 # Prepare database (creates if needed, runs migrations)
 echo "Preparing database..."
 
-# Run the command and capture its output/status cleanly
-if ! output=$(bundle exec rails db:prepare 2>&1); then
+# Use a separate shell process to execute the command cleanly
+if ! /bin/bash -c "bundle exec rails db:prepare" 2>&1; then
   echo "ERROR: db:prepare failed!"
   echo "$output" # Print the error output
   exit 1
