@@ -2,4 +2,4 @@
 require_relative "application"
 
 # Initialize the Rails application.
-Rails.application.initialize!(*args)
+lambda { |*args| Rails.application.initialize! }.call
