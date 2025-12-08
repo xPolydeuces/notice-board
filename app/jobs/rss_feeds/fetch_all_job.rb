@@ -2,7 +2,7 @@ module RssFeeds
   # Job to fetch all active RSS feeds that need refresh
   # Skips critically unhealthy feeds (3+ consecutive errors)
   class FetchAllJob < ApplicationJob
-    sidekiq_options queue :default
+    sidekiq_options queue: :default
 
     def perform
       feeds_to_fetch = RssFeed.active.healthy.where("
