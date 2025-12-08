@@ -1,9 +1,7 @@
 module RssFeeds
   # Job to fetch a single RSS feed
   class FetchJob < ApplicationJob
-    queue_as :default
-
-    sidekiq_options retry: 3
+    sidekiq_options queue: :default, retry: 3
 
     # Sidekiq exponential backoff retry
     sidekiq_retry_in do |count|
