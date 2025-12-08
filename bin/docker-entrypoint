@@ -54,7 +54,7 @@ echo "Preparing database..."
 # Use command substitution to capture all output (stdout/stderr) from the rails command.
 # 1. The entire command is run in a subshell using $() to isolate execution.
 # 2. '2>&1' redirects standard error (2) to standard output (1) so it is captured in the 'output' variable.
-OUTPUT=$(/bin/bash -c "bundle exec rails db:prepare" 2>&1)
+OUTPUT=$(/bin/bash -c "bundle exec rails db:prepare --trace" 2>&1)
 EXIT_CODE=$?
 
 if [ "$EXIT_CODE" -ne 0 ]; then
