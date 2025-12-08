@@ -1,0 +1,236 @@
+Build and push app image...
+  INFO [2049fcc2] Running docker --version && docker buildx version as bkot@localhost
+  INFO [2049fcc2] Finished in 6.011 seconds with exit status 0 (successful).
+  INFO [4d45a1b1] Running docker login -u [REDACTED] -p [REDACTED] as bkot@localhost
+  INFO [4d45a1b1] Finished in 4.180 seconds with exit status 0 (successful).
+Building from a local git clone, so ignoring these uncommitted changes:
+ M check_initialize.rb
+?? deploy_error.log
+  INFO Cloning repo into build directory `/tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/`...
+  INFO [efcd5c26] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1 clone /mnt/c/code/notice-board --recurse-submodules as bkot@localhost
+  INFO Resetting local clone as `/tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/` already exists...
+  INFO [35d0d4a2] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/ remote set-url origin /mnt/c/code/notice-board as bkot@localhost
+  INFO [35d0d4a2] Finished in 0.042 seconds with exit status 0 (successful).
+  INFO [b46f74a9] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/ fetch origin as bkot@localhost
+  INFO [b46f74a9] Finished in 0.710 seconds with exit status 0 (successful).
+  INFO [d23ab91b] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/ reset --hard 22b7f741f55471ce81cb1dfb9077024cf6f470dc as bkot@localhost
+  INFO [d23ab91b] Finished in 0.692 seconds with exit status 0 (successful).
+  INFO [14275606] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/ clean -fdx as bkot@localhost
+  INFO [14275606] Finished in 0.097 seconds with exit status 0 (successful).
+  INFO [e8df80cb] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/ submodule update --init as bkot@localhost
+  INFO [e8df80cb] Finished in 0.193 seconds with exit status 0 (successful).
+  INFO [230e956b] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/ status --porcelain as bkot@localhost
+  INFO [230e956b] Finished in 0.020 seconds with exit status 0 (successful).
+  INFO [d93c077b] Running /usr/bin/env git -C /tmp/kamal-clones/spi-4d5b6f03223b1/notice-board/ rev-parse HEAD as bkot@localhost
+  INFO [d93c077b] Finished in 0.009 seconds with exit status 0 (successful).
+  INFO [3b0dfa0b] Running docker buildx inspect kamal-local-docker-container as bkot@localhost
+  INFO [3b0dfa0b] Finished in 3.643 seconds with exit status 0 (successful).
+  INFO [ad1474fd] Running docker buildx build --output=type=registry --platform linux/amd64 --builder kamal-local-docker-container -t xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc -t xpolydeuces/spi:latest --label service="spi" --file Dockerfile . 2>&1 as bkot@localhost
+ DEBUG [ad1474fd] Command: docker buildx build --output=type=registry --platform linux/amd64 --builder kamal-local-docker-container -t xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc -t xpolydeuces/spi:latest --label service="spi" --file Dockerfile . 2>&1
+ DEBUG [ad1474fd] 	#0 building with "kamal-local-docker-container" instance using docker-container driver
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#1 [internal] load build definition from Dockerfile
+ DEBUG [ad1474fd] 	#1 transferring dockerfile: 3.25kB 0.0s done
+ DEBUG [ad1474fd] 	#1 DONE 0.1s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+ DEBUG [ad1474fd] 	#2 ...
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#3 [auth] docker/dockerfile:pull token for registry-1.docker.io
+ DEBUG [ad1474fd] 	#3 DONE 0.0s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+ DEBUG [ad1474fd] 	#2 DONE 2.2s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#4 docker-image://docker.io/docker/dockerfile:1@sha256:b6afd42430b15f2d2a4c5a02b919e98a525b785b1aaff16747d2f623364e39b6
+ DEBUG [ad1474fd] 	#4 resolve docker.io/docker/dockerfile:1@sha256:b6afd42430b15f2d2a4c5a02b919e98a525b785b1aaff16747d2f623364e39b6 0.1s done
+ DEBUG [ad1474fd] 	#4 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#5 [internal] load metadata for docker.io/library/ruby:3.4.7-slim
+ DEBUG [ad1474fd] 	#5 ...
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#6 [auth] library/ruby:pull token for registry-1.docker.io
+ DEBUG [ad1474fd] 	#6 DONE 0.0s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#5 [internal] load metadata for docker.io/library/ruby:3.4.7-slim
+ DEBUG [ad1474fd] 	#5 DONE 0.8s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#7 [internal] load .dockerignore
+ DEBUG [ad1474fd] 	#7 transferring context: 967B 0.0s done
+ DEBUG [ad1474fd] 	#7 DONE 0.1s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#8 [builder  1/12] FROM docker.io/library/ruby:3.4.7-slim@sha256:c1bc8f6bc1075857b9138a600b59127f5570a494e84e80725ea276812465e24e
+ DEBUG [ad1474fd] 	#8 resolve docker.io/library/ruby:3.4.7-slim@sha256:c1bc8f6bc1075857b9138a600b59127f5570a494e84e80725ea276812465e24e 0.1s done
+ DEBUG [ad1474fd] 	#8 DONE 0.1s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#9 [internal] load build context
+ DEBUG [ad1474fd] 	#9 transferring context: 36.77kB 0.8s done
+ DEBUG [ad1474fd] 	#9 DONE 0.9s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#10 [builder 11/12] RUN bundle exec bootsnap precompile --gemfile || true
+ DEBUG [ad1474fd] 	#10 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#11 [final  9/11] RUN chown -R rails:rails /rails
+ DEBUG [ad1474fd] 	#11 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#12 [builder 10/12] COPY . .
+ DEBUG [ad1474fd] 	#12 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#13 [final  8/11] COPY --from=builder /rails /rails
+ DEBUG [ad1474fd] 	#13 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#14 [final  5/11] WORKDIR /rails
+ DEBUG [ad1474fd] 	#14 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#15 [builder  7/12] RUN bundle config set deployment true &&     bundle config set without 'development:test' &&     bundle install --jobs 4 --retry 3
+ DEBUG [ad1474fd] 	#15 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#16 [builder  6/12] RUN gem install bundler -v "~> 2.5"
+ DEBUG [ad1474fd] 	#16 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#17 [builder  3/12] RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v1.2.3"
+ DEBUG [ad1474fd] 	#17 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#18 [final  3/11] RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v1.2.3"
+ DEBUG [ad1474fd] 	#18 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#19 [builder  9/12] RUN bun install --frozen-lockfile
+ DEBUG [ad1474fd] 	#19 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#20 [final  4/11] RUN groupadd --system --gid 1000 rails &&     useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash rails &&     mkdir -p /rails &&     chown -R rails:rails /rails
+ DEBUG [ad1474fd] 	#20 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#21 [final  2/11] RUN apt-get update -qq &&     apt-get install --no-install-recommends -y       curl       ca-certificates       libpq5       libjemalloc2       postgresql-client       unzip       gnupg &&     rm -rf /var/lib/apt/lists/*
+ DEBUG [ad1474fd] 	#21 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#22 [builder  5/12] COPY Gemfile Gemfile.lock ./
+ DEBUG [ad1474fd] 	#22 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#23 [builder 12/12] RUN DATABASE_URL=postgres://user:pass@localhost/dummy     RAILS_ENV=production     ./bin/rails assets:precompile
+ DEBUG [ad1474fd] 	#23 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#24 [final  7/11] COPY --from=builder /usr/local/bun /usr/local/bun
+ DEBUG [ad1474fd] 	#24 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#25 [final 10/11] COPY --chown=rails:rails bin/docker-entrypoint /rails/bin/docker-entrypoint
+ DEBUG [ad1474fd] 	#25 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#26 [final  6/11] COPY --from=builder /usr/local/bundle /usr/local/bundle
+ DEBUG [ad1474fd] 	#26 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#27 [builder  4/12] WORKDIR /rails
+ DEBUG [ad1474fd] 	#27 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#28 [builder  2/12] RUN apt-get update -qq &&     apt-get install --no-install-recommends -y       build-essential       curl       ca-certificates       git       libpq-dev       libyaml-dev       pkg-config       unzip       gnupg       libc6-dev &&     rm -rf /var/lib/apt/lists/*
+ DEBUG [ad1474fd] 	#28 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#29 [builder  8/12] COPY package.json bun.lock* ./
+ DEBUG [ad1474fd] 	#29 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#30 [final 11/11] RUN chmod +x /rails/bin/docker-entrypoint
+ DEBUG [ad1474fd] 	#30 CACHED
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#31 exporting to image
+ DEBUG [ad1474fd] 	#31 exporting layers
+ DEBUG [ad1474fd] 	#31 exporting layers 0.0s done
+ DEBUG [ad1474fd] 	#31 exporting manifest sha256:dcac79de1437bb2b99c47a61a80512e48e214c5e517cea20e49794202a64252a 0.0s done
+ DEBUG [ad1474fd] 	#31 exporting config sha256:e2bfd696eec0147bcfe1f6703d7457815e41a716afeb25d353b33fc358ec247d 0.0s done
+ DEBUG [ad1474fd] 	#31 exporting attestation manifest sha256:8d54e689c066b2d6f49b7b0b6f45798962126a5d19f5d25b8388b78b688f9678
+ DEBUG [ad1474fd] 	#31 exporting attestation manifest sha256:8d54e689c066b2d6f49b7b0b6f45798962126a5d19f5d25b8388b78b688f9678 0.1s done
+ DEBUG [ad1474fd] 	#31 exporting manifest list sha256:fd652a8dd9d79a30ac8121c88e7d07b9d963a31e4cc1e0f7a46d62cb7a0c61df
+ DEBUG [ad1474fd] 	#31 exporting manifest list sha256:fd652a8dd9d79a30ac8121c88e7d07b9d963a31e4cc1e0f7a46d62cb7a0c61df 0.1s done
+ DEBUG [ad1474fd] 	#31 pushing layers
+ DEBUG [ad1474fd] 	#31 ...
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#32 [auth] xpolydeuces/spi:pull,push token for registry-1.docker.io
+ DEBUG [ad1474fd] 	#32 DONE 0.0s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	#31 exporting to image
+ DEBUG [ad1474fd] 	#31 pushing layers 1.4s done
+ DEBUG [ad1474fd] 	#31 pushing manifest for docker.io/xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc@sha256:fd652a8dd9d79a30ac8121c88e7d07b9d963a31e4cc1e0f7a46d62cb7a0c61df
+ DEBUG [ad1474fd] 	#31 pushing manifest for docker.io/xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc@sha256:fd652a8dd9d79a30ac8121c88e7d07b9d963a31e4cc1e0f7a46d62cb7a0c61df 2.4s done
+ DEBUG [ad1474fd] 	#31 pushing layers 0.6s done
+ DEBUG [ad1474fd] 	#31 pushing manifest for docker.io/xpolydeuces/spi:latest@sha256:fd652a8dd9d79a30ac8121c88e7d07b9d963a31e4cc1e0f7a46d62cb7a0c61df
+ DEBUG [ad1474fd] 	#31 pushing manifest for docker.io/xpolydeuces/spi:latest@sha256:fd652a8dd9d79a30ac8121c88e7d07b9d963a31e4cc1e0f7a46d62cb7a0c61df 2.6s done
+ DEBUG [ad1474fd] 	#31 DONE 7.5s
+ DEBUG [ad1474fd] 	
+ DEBUG [ad1474fd] 	 [33m1 warning found (use docker --debug to expand):
+ DEBUG [ad1474fd] 	[0m - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "SECRET_KEY_BASE") (line 58)
+  INFO [ad1474fd] Finished in 15.885 seconds with exit status 0 (successful).
+  INFO [0113fc30] Running docker login -u [REDACTED] -p [REDACTED] on 192.168.254.147
+Enter passphrase for /home/bkot/.ssh/kamal_deploy:
+  INFO [0113fc30] Finished in 10.569 seconds with exit status 0 (successful).
+  INFO [71de6013] Running docker image rm --force xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc on 192.168.254.147
+  INFO [71de6013] Finished in 0.094 seconds with exit status 0 (successful).
+  INFO [86a57489] Running docker pull xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc on 192.168.254.147
+  INFO [86a57489] Finished in 4.088 seconds with exit status 0 (successful).
+  INFO [e9755ad3] Running docker inspect -f '{{ .Config.Labels.service }}' xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc | grep -x spi || (echo "Image xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc is missing the 'service' label" && exit 1) on 192.168.254.147
+  INFO [e9755ad3] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [c9e20979] Running /usr/bin/env mkdir -p .kamal on 192.168.254.147
+  INFO [c9e20979] Finished in 0.055 seconds with exit status 0 (successful).
+Acquiring the deploy lock...
+Ensure kamal-proxy is running...
+  INFO [1d3ea439] Running docker network create kamal on 192.168.254.147
+  INFO [2d266ee1] Running docker login -u [REDACTED] -p [REDACTED] on 192.168.254.147
+  INFO [2d266ee1] Finished in 3.503 seconds with exit status 0 (successful).
+  INFO [1b755b18] Running docker inspect kamal-proxy --format '{{.Config.Image}}' | awk -F: '{print $NF}' on 192.168.254.147
+  INFO [1b755b18] Finished in 0.087 seconds with exit status 0 (successful).
+  INFO [2fe2fde6] Running /usr/bin/env mkdir -p .kamal/proxy/apps-config on 192.168.254.147
+  INFO [2fe2fde6] Finished in 0.057 seconds with exit status 0 (successful).
+  INFO [aba054de] Running docker container start kamal-proxy || echo $(cat .kamal/proxy/options 2> /dev/null || echo "--publish 80:80 --publish 443:443 --log-opt max-size=10m") $(cat .kamal/proxy/image 2> /dev/null || echo "basecamp/kamal-proxy"):$(cat .kamal/proxy/image_version 2> /dev/null || echo "v0.9.0") $(cat .kamal/proxy/run_command 2> /dev/null || echo "") | xargs docker run --name kamal-proxy --network kamal --detach --restart unless-stopped --volume kamal-proxy-config:/home/kamal-proxy/.config/kamal-proxy --volume $(pwd)/.kamal/proxy/apps-config:/home/kamal-proxy/.apps-config on 192.168.254.147
+  INFO [aba054de] Finished in 0.078 seconds with exit status 0 (successful).
+Detect stale containers...
+  INFO [609a852a] Running docker ps --filter label=service=spi --filter label=destination= --filter label=role=web --format "{{.Names}}" | while read line; do echo ${line#spi-web-}; done on 192.168.254.147
+  INFO [609a852a] Finished in 0.055 seconds with exit status 0 (successful).
+  INFO [b8fb5e5a] Running /usr/bin/env sh -c 'docker ps --latest --format '\''{{.Names}}'\'' --filter label=service=spi --filter label=destination= --filter label=role=web --filter status=running --filter status=restarting --filter ancestor=$(docker image ls --filter reference=xpolydeuces/spi:latest --format '\''{{.ID}}'\'') ; docker ps --latest --format '\''{{.Names}}'\'' --filter label=service=spi --filter label=destination= --filter label=role=web --filter status=running --filter status=restarting' | head -1 | while read line; do echo ${line#spi-web-}; done on 192.168.254.147
+  INFO [b8fb5e5a] Finished in 0.162 seconds with exit status 0 (successful).
+  INFO [cd3d2782] Running docker ps --filter label=service=spi --filter label=destination= --filter label=role=workers --format "{{.Names}}" | while read line; do echo ${line#spi-workers-}; done on 192.168.254.147
+  INFO [cd3d2782] Finished in 0.086 seconds with exit status 0 (successful).
+  INFO [c01e3f6b] Running /usr/bin/env sh -c 'docker ps --latest --format '\''{{.Names}}'\'' --filter label=service=spi --filter label=destination= --filter label=role=workers --filter status=running --filter status=restarting --filter ancestor=$(docker image ls --filter reference=xpolydeuces/spi:latest --format '\''{{.ID}}'\'') ; docker ps --latest --format '\''{{.Names}}'\'' --filter label=service=spi --filter label=destination= --filter label=role=workers --filter status=running --filter status=restarting' | head -1 | while read line; do echo ${line#spi-workers-}; done on 192.168.254.147
+  INFO [c01e3f6b] Finished in 0.156 seconds with exit status 0 (successful).
+Start container with version 22b7f741f55471ce81cb1dfb9077024cf6f470dc (or reboot if already running)...
+  INFO [8dabd79b] Running docker container ls --all --filter name=^spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc$ --quiet on 192.168.254.147
+  INFO [8dabd79b] Finished in 0.088 seconds with exit status 0 (successful).
+  INFO Renaming container 22b7f741f55471ce81cb1dfb9077024cf6f470dc to 22b7f741f55471ce81cb1dfb9077024cf6f470dc_replaced_9af093aeeb6a2b42 as already deployed on 192.168.254.147
+  INFO [a9e8a2fa] Running docker rename spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc_replaced_9af093aeeb6a2b42 on 192.168.254.147
+  INFO [a9e8a2fa] Finished in 0.094 seconds with exit status 0 (successful).
+  INFO [ae100cff] Running /usr/bin/env sh -c 'docker ps --latest --format '\''{{.Names}}'\'' --filter label=service=spi --filter label=destination= --filter label=role=web --filter status=running --filter status=restarting --filter ancestor=$(docker image ls --filter reference=xpolydeuces/spi:latest --format '\''{{.ID}}'\'') ; docker ps --latest --format '\''{{.Names}}'\'' --filter label=service=spi --filter label=destination= --filter label=role=web --filter status=running --filter status=restarting' | head -1 | while read line; do echo ${line#spi-web-}; done on 192.168.254.147
+  INFO [ae100cff] Finished in 0.155 seconds with exit status 0 (successful).
+  INFO [3fa98a2b] Running /usr/bin/env mkdir -p .kamal/apps/spi/env/roles on 192.168.254.147
+  INFO [3fa98a2b] Finished in 0.054 seconds with exit status 0 (successful).
+  INFO Uploading .kamal/apps/spi/env/roles/web.env 100.0%
+  INFO [7142529b] Running docker run --detach --restart unless-stopped --name spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc --network kamal --hostname 192.168.254.147-adeb52cb58c2 --env KAMAL_CONTAINER_NAME="spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc" --env KAMAL_VERSION="22b7f741f55471ce81cb1dfb9077024cf6f470dc" --env KAMAL_HOST="192.168.254.147" --env KAMAL_DESTINATION="" --env RAILS_ENV="production" --env RAILS_LOG_TO_STDOUT="true" --env RAILS_SERVE_STATIC_FILES="true" --env TZ="Europe/Warsaw" --env PORT="3000" --env-file .kamal/apps/spi/env/roles/web.env --log-opt max-size="10m" --volume /data/spi/shared/storage:/rails/storage --volume /data/spi/shared/log:/rails/log --volume /data/spi/shared/tmp:/rails/tmp --label service="spi" --label role="web" --label destination xpolydeuces/spi:22b7f741f55471ce81cb1dfb9077024cf6f470dc on 192.168.254.147
+  INFO [7142529b] Finished in 0.454 seconds with exit status 0 (successful).
+  INFO [180a318b] Running docker container ls --all --filter name=^spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc$ --quiet on 192.168.254.147
+  INFO [180a318b] Finished in 0.119 seconds with exit status 0 (successful).
+  INFO [7ae5f317] Running docker exec kamal-proxy kamal-proxy deploy spi-web --target="c2d2653e7d95:3000" --host="spi.mza.waw.pl" --tls --deploy-timeout="30s" --drain-timeout="30s" --buffer-requests --buffer-responses --log-request-header="Cache-Control" --log-request-header="Last-Modified" --log-request-header="User-Agent" on 192.168.254.147
+ ERROR Failed to boot web on 192.168.254.147
+  INFO First web container is unhealthy on 192.168.254.147, not booting any other roles
+  INFO [49f9ae14] Running docker container ls --all --filter name=^spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc$ --quiet | xargs docker logs --timestamps 2>&1 on 192.168.254.147
+  INFO [49f9ae14] Finished in 0.176 seconds with exit status 0 (successful).
+ ERROR 2025-12-08T10:52:09.444224035Z Waiting for PostgreSQL at spi-db (user: spi_production)...
+2025-12-08T10:52:09.516592415Z PostgreSQL is up!
+2025-12-08T10:52:09.516619446Z Preparing database...
+2025-12-08T10:52:15.516567085Z Waiting for PostgreSQL at spi-db (user: spi_production)...
+2025-12-08T10:52:15.585871922Z PostgreSQL is up!
+2025-12-08T10:52:15.585901784Z Preparing database...
+2025-12-08T10:52:21.534653455Z Waiting for PostgreSQL at spi-db (user: spi_production)...
+2025-12-08T10:52:21.600993174Z PostgreSQL is up!
+2025-12-08T10:52:21.601058268Z Preparing database...
+2025-12-08T10:52:27.838436372Z Waiting for PostgreSQL at spi-db (user: spi_production)...
+2025-12-08T10:52:27.906232874Z PostgreSQL is up!
+2025-12-08T10:52:27.906260902Z Preparing database...
+2025-12-08T10:52:34.510292744Z Waiting for PostgreSQL at spi-db (user: spi_production)...
+2025-12-08T10:52:34.579237047Z PostgreSQL is up!
+2025-12-08T10:52:34.579273525Z Preparing database...
+  INFO [f2929129] Running docker container ls --all --filter name=^spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc$ --quiet | xargs docker inspect --format '{{json .State.Health}}' on 192.168.254.147
+  INFO [f2929129] Finished in 0.170 seconds with exit status 0 (successful).
+ ERROR {"Status":"starting","FailingStreak":0,"Log":[{"Start":"2025-12-08T11:52:14.438733276+01:00","End":"2025-12-08T11:52:14.557435377+01:00","ExitCode":1,"Output":"  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (7) Failed to connect to localhost port 3000 after 1 ms: Could not connect to server\n"},{"Start":"2025-12-08T11:52:20.53371672+01:00","End":"2025-12-08T11:52:20.655796339+01:00","ExitCode":1,"Output":"  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (7) Failed to connect to localhost port 3000 after 2 ms: Could not connect to server\n"},{"Start":"2025-12-08T11:52:26.531144707+01:00","End":"2025-12-08T11:52:26.651960382+01:00","ExitCode":1,"Output":"  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (7) Failed to connect to localhost port 3000 after 0 ms: Could not connect to server\n"},{"Start":"2025-12-08T11:52:32.835308259+01:00","End":"2025-12-08T11:52:32.954437818+01:00","ExitCode":1,"Output":"  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (7) Failed to connect to localhost port 3000 after 1 ms: Could not connect to server\n"},{"Start":"2025-12-08T11:52:39.50593965+01:00","End":"2025-12-08T11:52:39.630881801+01:00","ExitCode":1,"Output":"  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (7) Failed to connect to localhost port 3000 after 1 ms: Could not connect to server\n"}]}
+  INFO [58730337] Running docker container ls --all --filter name=^spi-web-22b7f741f55471ce81cb1dfb9077024cf6f470dc$ --quiet | xargs docker stop on 192.168.254.147
+  INFO [58730337] Finished in 0.209 seconds with exit status 0 (successful).
+Releasing the deploy lock...
+  Finished all in 94.0 seconds
+  [31mERROR (SSHKit::Command::Failed): Exception while executing on host 192.168.254.147: docker exit status: 1
+docker stdout: Nothing written
+docker stderr: Error: target failed to become healthy within configured timeout (30s)
+[0m
