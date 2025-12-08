@@ -51,12 +51,27 @@ fi
 # Prepare database (creates if needed, runs migrations)
 echo "Preparing database..."
 
-# Use a separate shell process to execute the command cleanly
-if ! /bin/bash -c "bundle exec rails db:prepare" 2>&1; then
-  echo "ERROR: db:prepare failed!"
-  echo "$output" # Print the error output
+# Use command substitution to capture all output (stdout/stderr) from the rails command.
+# 1. The entire command is run in a subshell using $() to isolate execution.
+# 2. '2>&1' redirects standard error (2) to standard output (1) so it is captured in the 'output' variable.
+OUTPUT=$(/bin/bash -c "bundle exec rails db:prepare" 2>&1)
+EXIT_CODE=$?
+
+if [ "$EXIT_CODE" -ne 0 ]; then
+  echo "--- ❌ ERROR: db:prepare failed! ---"
+  echo "Rails command exit code: $EXIT_CODE"
+  echo ""
+  echo "Captured Output (Actual Database Error Below):"
+  echo "-----------------------------------------------"
+  # Print the captured output, which should contain the stack trace or specific error.
+  echo "$OUTPUT"
+  echo "-----------------------------------------------"
   exit 1
 fi
+
+echo "--- ✅ db:prepare succeeded. ---"
+# If the command succeeded, we can optionally print its output (e.g., successful migration messages)
+# echo "$OUTPUT"
 
 echo "Database ready!"
 
