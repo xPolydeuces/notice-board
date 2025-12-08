@@ -20,8 +20,6 @@ gem "cssbundling-rails", "~> 1.4"
 gem "action_policy", "~> 0.7.5"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[windows jruby]
-# Use the database-backed adapters for Rails.cache
-gem "solid_cache", "~> 1.0"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", "~> 1.18", require: false
@@ -37,7 +35,7 @@ gem "sidekiq", "~> 8.0"
 gem "sidekiq-cron", "~> 2.0"
 
 # Redis for caching and Sidekiq
-gem "redis", "~> 4.7"
+gem "redis", "~> 5.4.0"
 
 # RSS feed parsing
 gem "rss"
@@ -55,9 +53,6 @@ gem "dry-types", "~> 1.8" # Type system for Ruby
 
 # Lograge for 1 line logging
 gem "lograge", "~> 0.14"
-
-# Interactor for business logic
-gem "interactor-rails", "~> 2.3"
 
 # Haml for HTML templates
 gem "haml-rails", "~> 3.0"

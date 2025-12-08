@@ -11,12 +11,16 @@ module Users
     def call
       return failure(:cannot_delete_self) if user == current_user
       return failure(:cannot_delete_admin) if unauthorized_admin_deletion?
-      return failure(:cannot_delete_last_superadmin) if last_superadmin?
 
-      if user.destroy
-        success
-      else
-        failure(:destroy_failed)
+      # Use transaction with lock to prevent race condition when checking last superadmin
+      ActiveRecord::Base.transaction do
+        return failure(:cannot_delete_last_superadmin) if last_superadmin_with_lock?
+
+        if user.destroy
+          success
+        else
+          failure(:destroy_failed)
+        end
       end
     end
 
@@ -26,8 +30,8 @@ module Users
       user.admin_or_superadmin? && !current_user.superadmin?
     end
 
-    def last_superadmin?
-      user.superadmin? && User.where(role: :superadmin).one?
+    def last_superadmin_with_lock?
+      user.superadmin? && User.lock.where(role: :superadmin).one?
     end
   end
 end

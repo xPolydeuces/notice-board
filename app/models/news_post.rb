@@ -152,7 +152,7 @@ class NewsPost < ApplicationRecord
   end
 
   def scope_badge
-    general? ? "General" : "Location: #{location.code}"
+    general? ? "General" : "Location: #{location&.code || 'Unknown'}"
   end
 
   # Serialization helpers for JSON/API

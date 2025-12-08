@@ -8,13 +8,15 @@ module Admin
     end
 
     def update
-      if current_user.update_with_password(password_params)
-        current_user.update!(force_password_change: false) if current_user.force_password_change?
+      ActiveRecord::Base.transaction do
+        if current_user.update_with_password(password_params)
+          current_user.update!(force_password_change: false) if current_user.force_password_change?
 
-        bypass_sign_in(current_user)
-        redirect_to admin_root_path, notice: t("admin.passwords.updated", default: "Password successfully updated.")
-      else
-        render :edit, status: :unprocessable_content
+          bypass_sign_in(current_user)
+          redirect_to admin_root_path, notice: t("admin.passwords.updated", default: "Password successfully updated.")
+        else
+          render :edit, status: :unprocessable_content
+        end
       end
     end
 
